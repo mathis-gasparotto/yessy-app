@@ -7,6 +7,10 @@ const routes = [
         path: "",
         component: () => import("pages/IndexPage.vue"),
       },
+      {
+        path: "bets/public",
+        component: () => import("pages/PublicBets.vue"),
+      },
     ],
   },
 
