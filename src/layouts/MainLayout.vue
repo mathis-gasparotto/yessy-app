@@ -14,9 +14,11 @@
 
     <q-footer>
       <q-tabs align="center">
-        <q-route-tab to="/bets/public" label="Paris publiques" />
-        <q-route-tab to="/page2" label="Page Two" />
-        <q-route-tab to="/page3" label="Page Three" />
+        <q-route-tab to="/" label="Accueil" />
+        <q-route-tab to="/bets/public" label="Paris" />
+        <q-route-tab to="/bets/create" label="Créer un pari" />
+        <!-- <q-route-tab to="/friends" label="Amis" /> -->
+        <q-route-tab to="/account" label="Compte" />
       </q-tabs>
     </q-footer>
   </q-layout>
@@ -24,6 +26,6 @@
 
 <script>
 export default {
-  name: 'MainLayout',
-}
+  name: "MainLayout",
+};
 </script>

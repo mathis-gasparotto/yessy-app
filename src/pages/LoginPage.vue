@@ -1,5 +1,6 @@
 <template>
   <q-page class="flex flex-center">
+    Login
     <img
       alt="Quasar logo"
       src="~assets/quasar-logo-vertical.svg"
@@ -10,6 +11,6 @@
 
 <script>
 export default {
-  name: "IndexPage",
+  name: "LoginPage",
 };
 </script>
