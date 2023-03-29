@@ -1,10 +1,10 @@
 const routes = [
   {
     path: "/",
-    middleware: "guest",
     children: [
       {
         path: "login",
+        name: "login",
         component: () => import("pages/LoginPage.vue"),
       },
     ],
@@ -12,7 +12,6 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    middleware: "auth",
     children: [
       {
         path: "",
