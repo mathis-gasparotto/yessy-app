@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore("isAuthentiticated", {
-  getters: {
-    isAuthentiticated() {
-      return true;
+export const useIsAuthenticatedStore = defineStore('isAuthenticated', {
+  state: () => true,
+  actions: {
+    login() {
+      this = true
+    },
+    disconnect() {
+      this = false
     },
   },
-});
+})
