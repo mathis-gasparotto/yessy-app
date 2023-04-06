@@ -13,6 +13,7 @@
       <q-btn label="Se connecter" type="submit" color="secondary" rounded @click.prevent="onsubmit()" :loading="loading"
         padding="sm 50px" size="18px" />
     </q-form>
+    <router-link to="#">Mot de passe oublié ?</router-link>
     <p>Tu n’as pas de compte ? <router-link to="/signup">Inscris toi</router-link></p>
   </q-page>
 </template>
