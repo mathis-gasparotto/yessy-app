@@ -1,5 +1,9 @@
 <template>
   <q-page class="flex flex-center column">
+    <p class="text-h6 q-py-md bg-primary text-center text-bold"
+      :style="{ width: '300px', color: 'white', borderRadius: '15px' }">
+      Inscription
+    </p>
     <q-form class="flex flex-center column" ref="signupForm">
       <q-input name="username" rounded outlined label="Nom d'utilisateur*" autofocus class="q-mb-md" type="text"
         v-model="form.username" :rules="[(val) => val.length > 3 || 'Veullez renseigner au minimum 3 caractères']"
@@ -36,11 +40,18 @@
       <q-input name="referralCode" rounded outlined label="Code de parrainage" class="q-mb-md" type="text"
         v-model="form.referralCode" :style="{ width: '300px' }" hide-bottom-space></q-input>
       <p class="flex-end text-right" :style="{ width: '300px' }">*Champ obligatoire</p>
+      <q-toggle v-model="form.minAgeCheck"
+        label="Je certifie d’avoir plus de 14 ans. J’ai lu et j’accepte les conditions générales."
+        :style="{ width: '300px' }" />
+      <q-toggle v-model="form.newsletterCheck"
+        label="J’accepte de recevoir le bonus d’inscription, les offres spéciales et les informations de la part de Yessy."
+        class="q-mb-lg" :style="{ width: '300px' }" />
 
-      <q-btn label="S'inscrire" type="submit" :color="(validate ? 'secondary' : 'grey')" :disable="!validate" rounded
-        @click.prevent="onsubmit()" :loading="loading" padding="sm 50px" size="20px" class="q-mb-xl" />
+      <q-btn label="S'inscrire" type="submit" :style="{ textTransform: 'unset' }"
+        :color="(validate ? 'secondary' : 'grey')" :disable="!validate" rounded @click.prevent="onsubmit()"
+        :loading="loading" padding="sm 50px" size="20px" />
     </q-form>
-    <p>Tu as déjà un compte ? <router-link to="/logib">Connecte toi</router-link></p>
+    <!-- <p>Tu as déjà un compte ? <router-link to="/login">Connecte toi</router-link></p> -->
   </q-page>
 </template>
 
@@ -56,7 +67,9 @@ export default {
         birthday: "",
         email: "",
         password: "",
-        referralCode: ""
+        referralCode: "",
+        minAgeCheck: false,
+        newsletterCheck: false,
       },
       loading: false,
       validate: false

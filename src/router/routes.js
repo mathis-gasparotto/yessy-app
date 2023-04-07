@@ -1,6 +1,7 @@
 const routes = [
   {
     path: "/",
+    component: () => import("layouts/WelcomeLayout.vue"),
     children: [
       {
         path: "login",

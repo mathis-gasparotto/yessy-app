@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center column bg-primary login-page">
+  <q-page class="flex flex-center column bg-primary login-page" :style="{ color: 'white' }">
     <q-img src="~assets/quasar-logo-vertical.svg" style="width: 200px; height: 200px" class="q-mb-xl"></q-img>
     <q-form class="flex flex-center column" ref="loginForm">
       <q-input name="username" rounded outlined label="Nom d'utilisateur/adresse mail" autofocus class="q-mb-md"
