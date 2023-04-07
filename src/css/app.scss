@@ -1,5 +1,2 @@
 // app global css in Sass form
-a {
-  text-decoration: none;
-  color: unset;
-}
+@import "common/global";

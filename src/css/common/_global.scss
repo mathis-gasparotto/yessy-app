@@ -1,0 +1,40 @@
+a {
+  text-decoration: none;
+  color: unset;
+}
+
+.bg {
+  &-dark {
+    color: #fff;
+    .q-card {
+      background-color: $dark;
+    }
+    .q-field__control {
+      background-color: #fff;
+    }
+  }
+  &-primary {
+    color: #fff;
+    .q-card {
+      background-color: $primary;
+    }
+    .q-field {
+      &__control {
+        background-color: #fff;
+      }
+      &--error {
+        .q-field__bottom {
+          color: #fff;
+        }
+      }
+    }
+  }
+  &-light {
+    color: #000;
+  }
+}
+
+body {
+  font-weight: 300;
+  letter-spacing: 1px;
+}

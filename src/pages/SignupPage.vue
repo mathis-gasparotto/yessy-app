@@ -3,15 +3,22 @@
     <q-form class="flex flex-center column" ref="signupForm">
       <q-input name="username" rounded outlined label="Nom d'utilisateur*" autofocus class="q-mb-md" type="text"
         v-model="form.username" :rules="[(val) => val.length > 3 || 'Veullez renseigner au minimum 3 caractères']"
-        lazy-rules :input-style="{
-          width: '250px'
-        }" hide-bottom-space></q-input>
-      <q-input rounded outlined v-model="form.birthday" mask="date" lazy-rules :rules="['date']"
-        label="Date d'anniversaire*" class="q-mb-md" :input-style="{ width: '214px' }" hide-bottom-space>
+        lazy-rules :style="{ width: '300px' }" hide-bottom-space></q-input>
+      <q-input rounded outlined v-model="form.birthday" mask="date" lazy-rules :rules="[(val) => /^-?[\d]+\/[0-1]\d\/[0-3]\d$/.test(val) || 'Veullez renseigner une date valide', (val) => {
+        const date = new Date(val)
+        const min = new Date()
+        min.setFullYear(min.getFullYear() - 16)
+        return date < min || 'Cette application est réservée aux personnes de plus de 16 ans'
+      }, (val) => {
+        const date = new Date(val)
+        const max = new Date()
+        max.setFullYear(max.getFullYear() - 100)
+        return date >= max || 'Veuillez renseigner votre vrai date de naissance'
+      }]" label="Date d'anniversaire*" class="q-mb-md" :style="{ width: '300px' }" hide-bottom-space>
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-              <q-date v-model="form.birthday">
+              <q-date v-model="form.birthday" navigation-max-year-month="2023/01">
                 <div class="row items-center justify-end">
                   <q-btn v-close-popup label="Close" color="primary" flat />
                 </div>
@@ -22,21 +29,17 @@
       </q-input>
       <q-input name="email" rounded outlined label="Addresse email*" class="q-mb-md" type="text" v-model="form.email"
         :rules="[(val, rules) => rules.email(val) || 'Veullez rensigner une addresse email valide']" lazy-rules
-        :input-style="{
-          width: '250px'
-        }" hide-bottom-space></q-input>
+        :style="{ width: '300px' }" hide-bottom-space></q-input>
       <q-input name="password" rounded outlined label="Mot de passe*" class="q-mb-md" type="password"
-        v-model="form.password" :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']" lazy-rules :input-style="{
-          width: '250px'
-        }" hide-bottom-space></q-input>
+        v-model="form.password" :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']" lazy-rules
+        :style="{ width: '300px' }" hide-bottom-space></q-input>
       <q-input name="referralCode" rounded outlined label="Code de parrainage" class="q-mb-md" type="text"
-        v-model="form.referralCode" :input-style="{
-          width: '250px'
-        }" hide-bottom-space></q-input>
+        v-model="form.referralCode" :style="{ width: '300px' }" hide-bottom-space></q-input>
+      <p class="flex-end text-right" :style="{ width: '300px' }">*Champ obligatoire</p>
+
       <q-btn label="S'inscrire" type="submit" :color="(validate ? 'secondary' : 'grey')" :disable="!validate" rounded
         @click.prevent="onsubmit()" :loading="loading" padding="sm 50px" size="20px" class="q-mb-xl" />
     </q-form>
-    <p class="flex-end">*Champ obligatoire</p>
     <p>Tu as déjà un compte ? <router-link to="/logib">Connecte toi</router-link></p>
   </q-page>
 </template>
@@ -58,6 +61,9 @@ export default {
       loading: false,
       validate: false
     };
+  },
+  created() {
+    // this.$store.commit("setPageTitle", "Inscription");
   },
   watch: {
     form: {
