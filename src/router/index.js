@@ -35,8 +35,13 @@ export default route(function ({ store, ssrContext }) {
 
   Router.beforeEach((to, from, next) => {
     // if (!store.getters["auth/isAuthenticated"] && to.name !== "login" && to.name !== "signup") {
-    if (true && to.name !== "login" && to.name !== "signup") {
-      next({ name: "login" });
+    if (
+      true &&
+      to.name !== "login" &&
+      to.name !== "signup" &&
+      to.name !== "welcome"
+    ) {
+      next({ name: "welcome" });
     } else {
       next();
     }
