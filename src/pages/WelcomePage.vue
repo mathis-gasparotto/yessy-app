@@ -16,18 +16,6 @@
     <q-btn
       label="Se connecter"
       type="button"
-      color="secondary"
-      rounded
-      @click.prevent="$router.push({ name: 'login' })"
-      :loading="loading"
-      :style="{ textTransform: 'unset', width: '75%' }"
-      padding="sm 50px"
-      size="22px"
-      class="q-mb-md text-bold"
-    />
-    <q-btn
-      label="S'inscrire"
-      type="button"
       text-color="secondary"
       color="white"
       rounded
@@ -35,10 +23,22 @@
       :loading="loading"
       :style="{
         textTransform: 'unset',
-        border: '5px solid #ff0c55',
+        border: '4px solid #ff0c55',
         width: '75%',
       }"
       padding="xs 50px"
+      size="22px"
+      class="q-mb-md text-bold"
+    />
+    <q-btn
+      label="S'inscrire"
+      type="button"
+      color="secondary"
+      rounded
+      @click.prevent="$router.push({ name: 'login' })"
+      :loading="loading"
+      :style="{ textTransform: 'unset', width: '75%' }"
+      padding="sm 50px"
       size="22px"
       class="text-bold"
     />
