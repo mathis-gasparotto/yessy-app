@@ -198,14 +198,16 @@ export default {
   watch: {
     form: {
       handler(oldVal, newVal) {
-        this.$refs.signupForm.validate().then((success) => {
-          if (success && this.form.minAgeCheck) {
-            this.validate = true;
-          } else {
-            this.validate = false;
-          }
-          console.log(this.validate);
-        });
+        if (this.form.minAgeCheck) {
+          this.$refs.signupForm.validate().then((success) => {
+            if (success) {
+              this.validate = true;
+            } else {
+              this.validate = false;
+            }
+            console.log(this.validate);
+          });
+        }
       },
       deep: true,
     },
