@@ -12,5 +12,5 @@
 <script>
 export default {
   name: "CreateBetPage",
-};
+}
 </script>

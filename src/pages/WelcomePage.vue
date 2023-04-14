@@ -46,7 +46,7 @@
 </template>
 
 <script>
-// import { cp } from "fs";
+// import { cp } from "fs"
 
 export default {
   name: "LoginPage",
@@ -55,21 +55,21 @@ export default {
       username: "",
       password: "",
       loading: false,
-    };
+    }
   },
   methods: {
     onsubmit() {
-      this.loading = true;
+      this.loading = true
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
           console.log(`username: ${this.username}
-          password: ${this.password}`);
+          password: ${this.password}`)
         } else {
-          console.log("error");
-          this.loading = false;
+          console.log("error")
+          this.loading = false
         }
-      });
+      })
     },
   },
-};
+}
 </script>

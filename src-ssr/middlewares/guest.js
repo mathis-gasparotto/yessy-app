@@ -1,9 +1,9 @@
-import { ssrMiddleware } from "quasar/wrappers";
+import { ssrMiddleware } from "quasar/wrappers"
 
 export default ssrMiddleware(({ app, resolveUrlPath, publicPath, render }) => {
   if (true) {
-    render();
+    render()
   } else {
     // redirect to home page
   }
-});
+})
