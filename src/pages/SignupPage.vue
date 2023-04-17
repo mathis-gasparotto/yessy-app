@@ -111,7 +111,7 @@ export default {
   },
   watch: {
     form: {
-      handler(oldVal, newVal) {
+      handler() {
         if (this.form.minAgeCheck) {
           this.$refs.signupForm.validate().then((success) => {
             if (success) {
