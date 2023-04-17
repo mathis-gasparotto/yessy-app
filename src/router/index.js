@@ -36,13 +36,19 @@ export default route(function () {
 
   Router.beforeEach((to, from, next) => {
     // if (!store.getters["auth/isAuthenticated"] && to.name !== "login" && to.name !== "signup") {
+    const isAuthenticated = true
     if (
-      true &&
+      !isAuthenticated &&
       to.name !== "login" &&
       to.name !== "signup" &&
       to.name !== "welcome"
     ) {
       next({ name: "welcome" })
+    } else if (
+      isAuthenticated &&
+      (to.name === "login" || to.name === "signup" || to.name === "welcome")
+    ) {
+      next({ name: "home" })
     } else {
       next()
     }
