@@ -112,14 +112,13 @@ export default {
   watch: {
     form: {
       handler() {
-        if (this.form.minAgeCheck) {
+        if (this.form.minAgeCheck && this.form.username && this.form.birthday && this.form.email && this.form.password) {
           this.$refs.signupForm.validate().then((success) => {
             if (success) {
               this.validate = true
             } else {
               this.validate = false
             }
-            console.log(this.validate)
           })
         }
       },
