@@ -21,7 +21,7 @@
         autofocus
         class="q-mb-md"
         type="text"
-        v-model="username"
+        v-model="form.username"
         :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
         lazy-rules
         hide-bottom-space
@@ -34,7 +34,7 @@
         label="Mot de passe"
         class="q-mb-md"
         type="password"
-        v-model="password"
+        v-model="form.password"
         :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
         lazy-rules
         :style="{ width: '75%' }"
@@ -43,7 +43,7 @@
       <q-btn
         label="Se connecter"
         type="submit"
-        color="secondary"
+        :color="validate ? 'secondary' : 'grey'"
         rounded
         @click.prevent="onsubmit()"
         :loading="loading"
@@ -76,10 +76,32 @@ export default {
   name: "LoginPage",
   data() {
     return {
-      username: "",
-      password: "",
+      form: {
+        username: "",
+        password: "",
+      },
       loading: false,
+      validate: false
     }
+  },
+  watch: {
+    form: {
+      handler() {
+        if (this.form.username && this.form.password) {
+          // this.$refs.loginForm.validate().then((success) => {
+          //   if (success) {
+          //     this.validate = true
+          //   } else {
+          //     this.validate = false
+          //   }
+          // })
+          this.validate = true
+        } else {
+          this.validate = false
+        }
+      },
+      deep: true,
+    },
   },
   methods: {
     onsubmit() {

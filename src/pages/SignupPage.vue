@@ -120,6 +120,8 @@ export default {
               this.validate = false
             }
           })
+        } else {
+          this.validate = false
         }
       },
       deep: true,
