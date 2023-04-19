@@ -27,10 +27,11 @@ const routes = [
       {
         path: "",
         name: "home",
-        component: () => import("pages/IndexPage.vue"),
+        component: () => import("src/pages/HomePage.vue"),
       },
       {
         path: "account",
+        name: "account",
         component: () => import("pages/AccountPage.vue"),
       },
       {
@@ -38,10 +39,12 @@ const routes = [
         children: [
           {
             path: "public",
+            name: "public-bets",
             component: () => import("src/pages/Bets/PublicBetsPage.vue"),
           },
           {
             path: "create",
+            name: "create-bets",
             component: () => import("src/pages/Bets/CreateBetPage.vue"),
           },
         ],

@@ -1,5 +1,5 @@
 <template>
-  <q-container class="flex flex-center column bg-primary login-page container">
+  <q-container class="flex flex-center column bg-primary login-page page">
     <q-img
       src="~assets/quasar-logo-vertical.svg"
       style="width: 200px; height: 200px"
@@ -52,7 +52,7 @@
       <q-card-section>
         <p class="q-my-xs text-center">
           Tu n'as pas de compte ?
-          <router-link to="/signup" class="text-bold">Inscris toi</router-link>
+          <router-link :to="{ name: 'signup'}" class="text-bold">Inscris toi</router-link>
         </p>
       </q-card-section>
     </q-card>
@@ -111,7 +111,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.page {
   color: white;
 }
 </style>

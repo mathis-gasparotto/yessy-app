@@ -1,5 +1,5 @@
 <template>
-  <q-container class="flex flex-center column container">
+  <q-container class="flex flex-center column page">
     <p class="text-h6 q-py-md bg-primary text-center text-bold title">
       Inscription
     </p>
