@@ -142,8 +142,7 @@
       <q-btn
         label="S'inscrire"
         type="submit"
-        :color="validate ? 'secondary' : 'grey'"
-        class="form-btn"
+        :class="`form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
         :disable="!validate"
         rounded
         @click.prevent="onsubmit()"

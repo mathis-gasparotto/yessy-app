@@ -34,13 +34,12 @@
       <q-btn
         label="Se connecter"
         type="submit"
-        :color="validate ? 'secondary' : 'grey'"
         rounded
         @click.prevent="onsubmit()"
         :loading="loading"
         padding="sm 50px"
         size="18px"
-        class="form-btn"
+        :class="`form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
       />
     </q-form>
     <q-card flat>
@@ -52,7 +51,7 @@
       <q-separator spaced size="2px" color="white" rounded />
       <q-card-section>
         <p class="q-my-xs text-center">
-          Tu n’as pas de compte ?
+          Tu n'as pas de compte ?
           <router-link to="/signup" class="text-bold">Inscris toi</router-link>
         </p>
       </q-card-section>

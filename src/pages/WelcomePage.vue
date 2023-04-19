@@ -21,14 +21,9 @@
       rounded
       @click.prevent="$router.push({ name: 'signup' })"
       :loading="loading"
-      :style="{
-        textTransform: 'unset',
-        border: '4px solid #ff0c55',
-        width: '75%',
-      }"
       padding="xs 50px"
       size="22px"
-      class="q-mb-md text-bold"
+      class="q-mb-md text-bold btn btn-secondary btn-bordered"
     />
     <q-btn
       label="S'inscrire"
@@ -37,10 +32,9 @@
       rounded
       @click.prevent="$router.push({ name: 'login' })"
       :loading="loading"
-      :style="{ textTransform: 'unset', width: '75%' }"
       padding="sm 50px"
       size="22px"
-      class="text-bold"
+      class="text-bold btn btn-secondary"
     />
   </q-container>
 </template>
@@ -73,3 +67,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.btn {
+  width: 75%;
+}
+</style>
