@@ -14,11 +14,11 @@
 
     <q-footer>
       <q-tabs align="center">
-        <q-route-tab :to="{name: 'home'}" label="Accueil" />
-        <q-route-tab :to="{name: 'public-bets'}" label="Paris" />
-        <q-route-tab :to="{name: 'create-bets'}" label="Créer un pari" />
+        <q-route-tab :to="{ name: 'home' }" label="Accueil" />
+        <q-route-tab :to="{ name: 'public-bets' }" label="Paris" />
+        <q-route-tab :to="{ name: 'create-bets' }" label="Créer un pari" />
         <!-- <q-route-tab :to="{name: 'friends'}" label="Amis" /> -->
-        <q-route-tab :to="{name: 'account'}" label="Compte" />
+        <q-route-tab :to="{ name: 'account' }" label="Compte" />
       </q-tabs>
     </q-footer>
   </q-layout>
@@ -26,6 +26,6 @@
 
 <script>
 export default {
-  name: "MainLayout",
+  name: 'MainLayout'
 }
 </script>

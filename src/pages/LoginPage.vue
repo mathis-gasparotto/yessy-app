@@ -52,7 +52,9 @@
       <q-card-section>
         <p class="q-my-xs text-center">
           Tu n'as pas de compte ?
-          <router-link :to="{ name: 'signup'}" class="text-bold">Inscris toi</router-link>
+          <router-link :to="{ name: 'signup' }" class="text-bold"
+            >Inscris toi</router-link
+          >
         </p>
       </q-card-section>
     </q-card>
@@ -63,12 +65,12 @@
 // import { cp } from "fs";
 
 export default {
-  name: "LoginPage",
+  name: 'LoginPage',
   data() {
     return {
       form: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
       loading: false,
       validate: false
@@ -101,7 +103,7 @@ export default {
           console.log(`username: ${this.username}
           password: ${this.password}`)
         } else {
-          console.log("error")
+          console.log('error')
           this.loading = false
         }
       })

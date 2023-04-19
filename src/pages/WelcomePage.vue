@@ -43,12 +43,12 @@
 // import { cp } from "fs"
 
 export default {
-  name: "LoginPage",
+  name: 'LoginPage',
   data() {
     return {
-      username: "",
-      password: "",
-      loading: false,
+      username: '',
+      password: '',
+      loading: false
     }
   },
   methods: {
@@ -59,12 +59,12 @@ export default {
           console.log(`username: ${this.username}
           password: ${this.password}`)
         } else {
-          console.log("error")
+          console.log('error')
           this.loading = false
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

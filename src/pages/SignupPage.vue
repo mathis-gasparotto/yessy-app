@@ -128,7 +128,7 @@
       <q-toggle v-model="form.minAgeCheck" class="q-mb-md login-toggle">
         <p>
           Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les
-          <router-link to="/login" class="text-underline"
+          <router-link :to="{ name: 'login' }" class="text-underline"
             >conditions générales</router-link
           >.
         </p>
@@ -159,15 +159,15 @@
 // import { cp } from "fs"
 
 export default {
-  name: "SignupPage",
+  name: 'SignupPage',
   data() {
     return {
       form: {
-        username: "",
-        birthday: "",
-        email: "",
-        password: "",
-        referralCode: "",
+        username: '',
+        birthday: '',
+        email: '',
+        password: '',
+        referralCode: '',
         minAgeCheck: false,
         newsletterCheck: false
       },
@@ -211,7 +211,7 @@ export default {
           console.log(`username: ${this.username}
           password: ${this.password}`)
         } else {
-          console.log("error")
+          console.log('error')
           this.loading = false
         }
       })

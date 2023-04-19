@@ -1,11 +1,11 @@
-import { route } from "quasar/wrappers"
+import { route } from 'quasar/wrappers'
 import {
   createRouter,
   createMemoryHistory,
   createWebHistory,
-  createWebHashHistory,
-} from "vue-router"
-import routes from "./routes"
+  createWebHashHistory
+} from 'vue-router'
+import routes from './routes'
 
 /*
  * If not building with SSR mode, you can
@@ -20,7 +20,7 @@ import routes from "./routes"
 export default route(function () {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : process.env.VUE_ROUTER_MODE === "history"
+    : process.env.VUE_ROUTER_MODE === 'history'
     ? createWebHistory
     : createWebHashHistory
 
@@ -31,7 +31,7 @@ export default route(function () {
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
-    history: createHistory(process.env.VUE_ROUTER_BASE),
+    history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
   Router.beforeEach((to, from, next) => {
@@ -39,16 +39,16 @@ export default route(function () {
     const isAuthenticated = true
     if (
       !isAuthenticated &&
-      to.name !== "login" &&
-      to.name !== "signup" &&
-      to.name !== "welcome"
+      to.name !== 'login' &&
+      to.name !== 'signup' &&
+      to.name !== 'welcome'
     ) {
-      next({ name: from.name || "welcome" })
+      next({ name: from.name || 'welcome' })
     } else if (
       isAuthenticated &&
-      (to.name === "login" || to.name === "signup" || to.name === "welcome")
+      (to.name === 'login' || to.name === 'signup' || to.name === 'welcome')
     ) {
-      next({ name: from.name || "home" })
+      next({ name: from.name || 'home' })
     } else {
       next()
     }
