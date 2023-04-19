@@ -1,0 +1,14 @@
+.form {
+  &-btn {
+    text-transform: unset;
+  }
+}
+
+.login {
+  &-input, &-toggle, &-text {
+    width: 100%;
+  }
+  &-form {
+    width: 75%;
+  }
+}

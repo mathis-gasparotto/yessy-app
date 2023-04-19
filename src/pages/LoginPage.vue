@@ -1,7 +1,6 @@
 <template>
   <q-container
-    class="flex flex-center column bg-primary login-page"
-    :style="{ color: 'white', width: '100%' }"
+    class="flex flex-center column bg-primary login-page container"
   >
     <q-img
       src="~assets/quasar-logo-vertical.svg"
@@ -9,9 +8,8 @@
       class="q-mb-xl"
     ></q-img>
     <q-form
-      class="flex flex-center column"
+      class="flex flex-center column form login-form"
       ref="loginForm"
-      :style="{ width: '100%' }"
     >
       <q-input
         name="username"
@@ -19,25 +17,23 @@
         outlined
         label="Nom d'utilisateur/adresse mail"
         autofocus
-        class="q-mb-md"
+        class="q-mb-md login-input"
         type="text"
         v-model="form.username"
         :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
         lazy-rules
         hide-bottom-space
-        :style="{ width: '75%' }"
       ></q-input>
       <q-input
         name="password"
         rounded
         outlined
         label="Mot de passe"
-        class="q-mb-md"
+        class="q-mb-md login-input"
         type="password"
         v-model="form.password"
         :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
         lazy-rules
-        :style="{ width: '75%' }"
         hide-bottom-space
       ></q-input>
       <q-btn
@@ -47,9 +43,9 @@
         rounded
         @click.prevent="onsubmit()"
         :loading="loading"
-        :style="{ textTransform: 'unset' }"
         padding="sm 50px"
         size="18px"
+        class="form-btn"
       />
     </q-form>
     <q-card flat>
@@ -119,3 +115,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.container {
+  color: white;
+}
+</style>

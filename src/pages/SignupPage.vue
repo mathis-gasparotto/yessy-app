@@ -1,15 +1,15 @@
 <template>
-  <q-container class="flex flex-center column">
+  <q-container class="flex flex-center column container">
     <p class="text-h6 q-py-md bg-primary text-center text-bold"
       :style="{ width: '75%', color: 'white', borderRadius: '15px' }">
       Inscription
     </p>
-    <q-form class="flex flex-center column" ref="signupForm">
-      <q-input name="username" rounded outlined label="Nom d'utilisateur*" autofocus class="q-mb-md" type="text"
+    <q-form class="flex flex-center column form login-form" ref="signupForm">
+      <q-input name="username" rounded outlined label="Nom d'utilisateur*" autofocus class="q-mb-md login-input" type="text"
         v-model="form.username" lazy-rules :rules="[
           (val) =>
             val.length > 3 || 'Veullez renseigner au minimum 3 caractères',
-        ]" :style="{ width: '75%' }" hide-bottom-space></q-input>
+        ]" hide-bottom-space></q-input>
       <q-input rounded outlined v-model="form.birthday" mask="date" lazy-rules :rules="[
         (val) =>
           /^-?[\d]+\/[0-1]\d\/[0-3]\d$/.test(val) ||
@@ -31,7 +31,7 @@
             date >= max || 'Veuillez renseigner votre vrai date de naissance'
           )
         },
-      ]" label="Date d'anniversaire*" class="q-mb-md" :style="{ width: '75%' }" hide-bottom-space>
+      ]" label="Date d'anniversaire*" class="q-mb-md login-input" hide-bottom-space>
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -44,31 +44,31 @@
           </q-icon>
         </template>
       </q-input>
-      <q-input name="email" rounded outlined label="Addresse email*" class="q-mb-md" type="text" v-model="form.email"
+      <q-input name="email" rounded outlined label="Addresse email*" class="q-mb-md login-input" type="text" v-model="form.email"
         lazy-rules :rules="[
           (val, rules) =>
             rules.email(val) || 'Veullez rensigner une addresse email valide',
-        ]" :style="{ width: '75%' }" hide-bottom-space></q-input>
-      <q-input name="password" rounded outlined label="Mot de passe*" class="q-mb-md"
+        ]" hide-bottom-space></q-input>
+      <q-input name="password" rounded outlined label="Mot de passe*" class="q-mb-md login-input"
         :type="showPassword ? 'text' : 'password'" v-model="form.password" lazy-rules
         hint="8 caractères minimum, une majuscule, une minuscule, un chiffre et un caractère spécial" hide-hint :rules="[
           (val) => val.length > 0 || 'Veullez remplir ce champ',
           (val) =>
             /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/g.test(val) ||
             'Veullez renseigner un mot de passe contetant un caractère spécial, une majuscule, une minuscule et un chiffre, et d\'au moins 8 caractères',
-        ]" :style="{ width: '75%' }" hide-bottom-space>
+        ]" hide-bottom-space>
         <template v-slot:append>
           <q-icon :name="showPassword ? 'visibility' : 'visibility_off'" class="cursor-pointer"
             @click="showPassword = !showPassword" />
         </template>
       </q-input>
-      <q-input name="referralCode" rounded outlined label="Code de parrainage" class="q-mb-md" type="text"
-        v-model="form.referralCode" :style="{ width: '75%' }" hide-bottom-space></q-input>
+      <q-input name="referralCode" rounded outlined label="Code de parrainage" class="q-mb-md login-input" type="text"
+        v-model="form.referralCode" hide-bottom-space></q-input>
 
-      <p class="flex-end text-right" :style="{ width: '75%' }">
+      <p class="flex-end text-right login-text">
         *Champ obligatoire
       </p>
-      <q-toggle v-model="form.minAgeCheck" :style="{ width: '75%' }" class="q-mb-md">
+      <q-toggle v-model="form.minAgeCheck" class="q-mb-md login-toggle">
         <p>
           Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les
           <router-link to="/login" class="text-underline">conditions générales</router-link>.
@@ -76,9 +76,9 @@
       </q-toggle>
       <q-toggle v-model="form.newsletterCheck"
         label="J'accepte de recevoir le bonus d'inscription, les offres spéciales et les informations de la part de Yessy."
-        class="q-mb-lg" :style="{ width: '75%' }" />
+        class="q-mb-lg login-toggle" />
 
-      <q-btn label="S'inscrire" type="submit" :style="{ textTransform: 'unset' }" :color="validate ? 'secondary' : 'grey'"
+      <q-btn label="S'inscrire" type="submit" :color="validate ? 'secondary' : 'grey'" class="form-btn"
         :disable="!validate" rounded @click.prevent="onsubmit()" :loading="loading" padding="sm 50px" size="20px" />
     </q-form>
     <!-- <p>Tu as déjà un compte ? <router-link to="/login">Connecte toi</router-link></p> -->

@@ -36,7 +36,7 @@ export default route(function () {
 
   Router.beforeEach((to, from, next) => {
     // if (!store.getters["auth/isAuthenticated"] && to.name !== "login" && to.name !== "signup") {
-    const isAuthenticated = true
+    const isAuthenticated = false
     if (
       !isAuthenticated &&
       to.name !== "login" &&
