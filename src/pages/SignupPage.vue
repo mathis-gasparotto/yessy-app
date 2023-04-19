@@ -16,7 +16,7 @@
         lazy-rules
         :rules="[
           (val) =>
-            val.length > 3 || 'Veullez renseigner au minimum 3 caractères',
+            val.length > 3 || 'Veullez renseigner au minimum 3 caractères'
         ]"
         hide-bottom-space
       ></q-input>
@@ -46,7 +46,7 @@
             return (
               date >= max || 'Veuillez renseigner votre vrai date de naissance'
             )
-          },
+          }
         ]"
         label="Date d'anniversaire*"
         class="q-mb-md login-input"
@@ -82,7 +82,7 @@
         lazy-rules
         :rules="[
           (val, rules) =>
-            rules.email(val) || 'Veullez rensigner une addresse email valide',
+            rules.email(val) || 'Veullez rensigner une addresse email valide'
         ]"
         hide-bottom-space
       ></q-input>
@@ -101,7 +101,7 @@
           (val) => val.length > 0 || 'Veullez remplir ce champ',
           (val) =>
             /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/g.test(val) ||
-            'Veullez renseigner un mot de passe contetant un caractère spécial, une majuscule, une minuscule et un chiffre, et d\'au moins 8 caractères',
+            'Veullez renseigner un mot de passe contetant un caractère spécial, une majuscule, une minuscule et un chiffre, et d\'au moins 8 caractères'
         ]"
         hide-bottom-space
       >
@@ -170,11 +170,11 @@ export default {
         password: "",
         referralCode: "",
         minAgeCheck: false,
-        newsletterCheck: false,
+        newsletterCheck: false
       },
       loading: false,
       validate: false,
-      showPassword: false,
+      showPassword: false
     }
   },
   created() {
@@ -201,8 +201,8 @@ export default {
           this.validate = false
         }
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     onsubmit() {
@@ -216,8 +216,8 @@ export default {
           this.loading = false
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

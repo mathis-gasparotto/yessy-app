@@ -1,16 +1,11 @@
 <template>
-  <q-container
-    class="flex flex-center column bg-primary login-page container"
-  >
+  <q-container class="flex flex-center column bg-primary login-page container">
     <q-img
       src="~assets/quasar-logo-vertical.svg"
       style="width: 200px; height: 200px"
       class="q-mb-xl"
     ></q-img>
-    <q-form
-      class="flex flex-center column form login-form"
-      ref="loginForm"
-    >
+    <q-form class="flex flex-center column form login-form" ref="loginForm">
       <q-input
         name="username"
         rounded
@@ -74,7 +69,7 @@ export default {
     return {
       form: {
         username: "",
-        password: "",
+        password: ""
       },
       loading: false,
       validate: false
@@ -96,8 +91,8 @@ export default {
           this.validate = false
         }
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     onsubmit() {
@@ -111,8 +106,8 @@ export default {
           this.loading = false
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 
