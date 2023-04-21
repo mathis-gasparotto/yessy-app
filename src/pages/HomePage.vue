@@ -1,11 +1,9 @@
 <template>
-  <q-page class="flex flex-center column">
-    Home
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    />
+  <q-page class="flex flex-center column page bg-2">
+    <div class="home-cat-title">
+      <p class="text-h6">Chauffe toi sur ces paris</p>
+      <span class="underliner"></span>
+    </div>
     <BetList />
   </q-page>
 </template>
@@ -20,3 +18,22 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.home {
+  &-cat-title {
+    position: relative;
+    p {
+      z-index: 1;
+    }
+    .underliner {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      background-color: $secondary;
+      height: 12px;
+      display: inline-block;
+    }
+  }
+}
+</style>

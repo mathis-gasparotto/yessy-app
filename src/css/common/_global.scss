@@ -46,3 +46,9 @@ body {
 .content {
   width: 75%;
 }
+
+.bg {
+  &-2 {
+    background-color: #ededed;
+  }
+}

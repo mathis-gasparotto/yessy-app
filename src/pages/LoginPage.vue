@@ -51,10 +51,7 @@
       <q-separator spaced size="2px" color="white" rounded />
       <q-card-section>
         <p class="q-my-xs text-center">
-          Tu n'as pas de compte ?
-          <router-link :to="{ name: 'signup' }" class="text-bold"
-            >Inscris toi</router-link
-          >
+          Tu n'as pas de compte ? <router-link :to="{ name: 'signup' }" class="text-bold">Inscris toi</router-link>
         </p>
       </q-card-section>
     </q-card>

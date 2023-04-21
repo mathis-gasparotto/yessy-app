@@ -1,7 +1,7 @@
 <template>
   <q-item clickable :to="`/bets/${item.id}`" class="bet-card-container">
     <div class="bet-card-section bet-card-section--img">
-      <q-img src="~assets/quasar-logo-vertical.svg" class="bet-card-cat-icon" />
+      <img src="~assets/quasar-logo-vertical.svg" class="bet-card-cat-icon" />
     </div>
 
     <div class="bet-card-section bet-card-section--text flex justify-center column">
@@ -26,13 +26,14 @@ export default {
 
 <style lang="scss" scoped>
 $spacing: 12px;
-$height: 130px;
+$height: 110px;
 .bet {
   &-card {
     &-container {
       height: $height;
       padding: $spacing 0;
-      gap: 20px;
+      gap: 15px;
+      margin-left: -15px;
     }
     &-section {
       &--img {
@@ -49,7 +50,7 @@ $height: 130px;
       width: calc(#{$height} - 2 * #{$spacing});
       height: calc(#{$height} - 2 * #{$spacing});
       background-color: $primary;
-      padding: 10px;
+      padding: 12px;
       border-radius: 500000px;
       color: white;
     }
