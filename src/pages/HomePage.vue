@@ -24,12 +24,14 @@ export default {
   &-cat-title {
     position: relative;
     p {
+      position: relative;
       z-index: 1;
     }
     .underliner {
       position: absolute;
       top: 20px;
-      width: 100%;
+      left: -10px;
+      width: 110%;
       background-color: $secondary;
       height: 12px;
       display: inline-block;
