@@ -26,7 +26,7 @@ export default {
 
 <style lang="scss" scoped>
 $spacing: 12px;
-$height: 110px;
+$height: 100px;
 .bet {
   &-card {
     &-container {
@@ -62,11 +62,9 @@ $height: 110px;
       border-radius: 500000px;
     }
     &-pre-title {
-      font-weight: bold;
+      font-weight: 800;
       color: $secondary;
-    }
-    &-title {
-      font-weight: 400;
+      font-size: 1.1rem;
     }
   }
 }

@@ -10,8 +10,32 @@ $inconsolata: (
   900: './fonts/Inconsolata/Inconsolata-Black.woff2',
 );
 
+$inconsolataCondensed: (
+  100: './fonts/Inconsolata-Condensed/Inconsolata-CondensedExtraLight.woff2',
+  200: './fonts/Inconsolata-Condensed/Inconsolata-CondensedLight.woff2',
+  300: './fonts/Inconsolata-Condensed/Inconsolata-CondensedThin.woff2',
+  400: './fonts/Inconsolata-Condensed/Inconsolata-CondensedRegular.woff2',
+  500: './fonts/Inconsolata-Condensed/Inconsolata-CondensedMedium.woff2',
+  600: './fonts/Inconsolata-Condensed/Inconsolata-CondensedSemiBold.woff2',
+  700: './fonts/Inconsolata-Condensed/Inconsolata-CondensedBold.woff2',
+  800: './fonts/Inconsolata-Condensed/Inconsolata-CondensedExtraBold.woff2',
+  900: './fonts/Inconsolata-Condensed/Inconsolata-CondensedBlack.woff2',
+);
+
+$inconsolataSemiCondensed: (
+  100: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedExtraLight.woff2',
+  200: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedLight.woff2',
+  300: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedThin.woff2',
+  400: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedRegular.woff2',
+  500: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedMedium.woff2',
+  600: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedSemiBold.woff2',
+  700: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedBold.woff2',
+  800: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedExtraBold.woff2',
+  900: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedBlack.woff2',
+);
+
 @each $weight,
-$url in $inconsolata {
+$url in $inconsolataSemiCondensed {
   @font-face {
     font-family: 'Inconsolata';
     src: url($url);
@@ -28,4 +52,5 @@ $url in $inconsolata {
 
 *:not(i) {
   font-family: 'Inconsolata', monospace;
+  font-weight: 500;
 }

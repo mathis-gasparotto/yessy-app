@@ -10,9 +10,17 @@
 
 <script>
 import BetList from 'src/components/BetList.vue'
+import { useRoute } from 'vue-router'
 
 export default {
-  name: 'HomePage',
+  setup() {
+    const route = useRoute()
+    console.log(route.params.id)
+    return {
+      route
+    }
+  },
+  name: 'SingleBetPage',
   components: {
     BetList
   }

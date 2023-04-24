@@ -13,7 +13,7 @@
     </q-page-container>
 
     <q-footer>
-      <q-tabs align="center">
+      <q-tabs align="center" class="bg-dark">
         <q-route-tab :to="{ name: 'home' }" label="Accueil" />
         <q-route-tab :to="{ name: 'public-bets' }" label="Paris" />
         <q-route-tab :to="{ name: 'create-bets' }" label="Créer un pari" />
@@ -29,3 +29,7 @@ export default {
   name: 'MainLayout'
 }
 </script>
+
+<style lang="scss" scoped>
+
+</style>

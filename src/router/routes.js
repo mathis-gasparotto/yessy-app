@@ -46,6 +46,11 @@ const routes = [
             path: 'create',
             name: 'create-bets',
             component: () => import('src/pages/Bets/CreateBetPage.vue')
+          },
+          {
+            path: ':id',
+            name: 'single-bet',
+            component: () => import('src/pages/Bets/SingleBetPage.vue')
           }
         ]
       }
