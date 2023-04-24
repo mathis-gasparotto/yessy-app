@@ -31,6 +31,12 @@
         </span>
         <p class="single-bet__prop-text">{{ bet.endAt }}</p>
       </q-item>
+      <q-item class="single-bet__prop" v-if="bet.customCost">
+        <span class="single-bet__prop-icon-container">
+          <img class="single-bet__prop-icon" src="~assets/quasar-logo-vertical.svg" >
+        </span>
+        <p class="single-bet__prop-text">{{ bet.customCost }}</p>
+      </q-item>
     </q-list>
   </q-page>
 </template>
