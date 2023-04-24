@@ -1,20 +1,20 @@
 $inconsolata: (
-  100: './fonts/Inconsolata/Inconsolata-ExtraLight.ttf',
-  200: './fonts/Inconsolata/Inconsolata-Light.ttf',
-  300: './fonts/Inconsolata/Inconsolata-Light.ttf',
-  400: './fonts/Inconsolata/Inconsolata-Regular.ttf',
-  500: './fonts/Inconsolata/Inconsolata-Medium.ttf',
-  600: './fonts/Inconsolata/Inconsolata-SemiBold.ttf',
-  700: './fonts/Inconsolata/Inconsolata-Bold.ttf',
-  800: './fonts/Inconsolata/Inconsolata-ExtraBold.ttf',
-  900: './fonts/Inconsolata/Inconsolata-Black.ttf',
+  100: './fonts/Inconsolata/Inconsolata-ExtraLight.woff2',
+  200: './fonts/Inconsolata/Inconsolata-Light.woff2',
+  300: './fonts/Inconsolata/Inconsolata-Thin.woff2',
+  400: './fonts/Inconsolata/Inconsolata-Regular.woff2',
+  500: './fonts/Inconsolata/Inconsolata-Medium.woff2',
+  600: './fonts/Inconsolata/Inconsolata-SemiBold.woff2',
+  700: './fonts/Inconsolata/Inconsolata-Bold.woff2',
+  800: './fonts/Inconsolata/Inconsolata-ExtraBold.woff2',
+  900: './fonts/Inconsolata/Inconsolata-Black.woff2',
 );
 
 @each $weight,
 $url in $inconsolata {
   @font-face {
     font-family: 'Inconsolata';
-    src: url($url), format('truetype');
+    src: url($url);
     font-weight: $weight;
     // font-style: normal;
   }
@@ -26,6 +26,6 @@ $url in $inconsolata {
   }
 }
 
-* {
+*:not(i) {
   font-family: 'Inconsolata', monospace;
 }
