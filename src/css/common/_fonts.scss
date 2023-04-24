@@ -1,12 +1,31 @@
-@font-face {
-  font-family: Inconsolata;
-  font-style: normal;
-  font-weight: normal;
-  src: url(./fonts/Inconsolata/Inconsolata-Regular.ttf);
+$inconsolata: (
+  100: './fonts/Inconsolata/Inconsolata-ExtraLight.ttf',
+  200: './fonts/Inconsolata/Inconsolata-Light.ttf',
+  300: './fonts/Inconsolata/Inconsolata-Light.ttf',
+  400: './fonts/Inconsolata/Inconsolata-Regular.ttf',
+  500: './fonts/Inconsolata/Inconsolata-Medium.ttf',
+  600: './fonts/Inconsolata/Inconsolata-SemiBold.ttf',
+  700: './fonts/Inconsolata/Inconsolata-Bold.ttf',
+  800: './fonts/Inconsolata/Inconsolata-ExtraBold.ttf',
+  900: './fonts/Inconsolata/Inconsolata-Black.ttf',
+);
+
+@each $weight,
+$url in $inconsolata {
+  @font-face {
+    font-family: 'Inconsolata';
+    src: url($url), format('truetype');
+    font-weight: $weight;
+    // font-style: normal;
+  }
 }
 
 .text {
   &-underline {
     text-decoration: underline;
   }
+}
+
+* {
+  font-family: 'Inconsolata', monospace;
 }
