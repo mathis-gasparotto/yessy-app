@@ -53,9 +53,6 @@ export default {
     }
   },
   name: 'SingleBetPage',
-  components: {
-    BetList
-  },
   data() {
     return {
       bet: {
