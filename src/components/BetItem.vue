@@ -1,7 +1,7 @@
 <template>
   <q-item clickable :to="`/bets/${item.id}`" class="bet-card-container">
     <div class="bet-card-section bet-card-section--img">
-      <img src="~assets/quasar-logo-vertical.svg" class="bet-card-cat-icon" />
+      <img :src="item.category.iconPath" class="bet-card-cat-icon" />
     </div>
 
     <div class="bet-card-section bet-card-section--text flex justify-center column">

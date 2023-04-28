@@ -62,12 +62,12 @@ export default {
         author: {
           id: 1,
           pseudo: 'John Doe',
-          avatarPath: '~assets/quasar-logo-vertical.svg'
+          avatarPath: '/src/assets/quasar-logo-vertical.svg'
         },
         category: {
           id: 1,
           title: 'Sport',
-          iconPath: '~assets/quasar-logo-vertical.svg'
+          iconPath: '/src/assets/quasar-logo-vertical.svg'
         },
         customReward: 'Le gagnant obtiendra un skin',
         endAt: '2023-03-11T12:00:00'
@@ -78,5 +78,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+img {
+  width: 50px;
+  height: 50px;
+}
 </style>
