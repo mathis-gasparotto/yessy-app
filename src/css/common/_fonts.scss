@@ -34,11 +34,10 @@ $inconsolataSemiCondensed: (
   900: './fonts/Inconsolata-SemiCondensed/Inconsolata-SemiCondensedBlack.woff2',
 );
 
-@each $weight,
-$url in $inconsolataSemiCondensed {
+@each $weight, $url in $inconsolataSemiCondensed {
   @font-face {
     font-family: 'Inconsolata';
-    src: url($url);
+    src: url($url) format('woff2');
     font-weight: $weight;
     // font-style: normal;
   }
