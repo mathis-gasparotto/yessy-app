@@ -13,12 +13,12 @@
     </q-page-container>
 
     <q-footer>
-      <q-tabs align="center" class="bg-dark">
-        <q-route-tab :to="{ name: 'home' }" label="Accueil" />
-        <q-route-tab :to="{ name: 'public-bets' }" label="Paris" />
-        <q-route-tab :to="{ name: 'create-bets' }" label="Créer un pari" />
+      <q-tabs align="center" class="bg-dark" indicator-color="transparent" active-color="secondary" >
+        <q-route-tab :to="{ name: 'home' }" icon="home" label="Accueil" />
+        <q-route-tab :to="{ name: 'public-bets' }" icon="fa fa-trophy" label="Paris" />
         <!-- <q-route-tab :to="{name: 'friends'}" label="Amis" /> -->
-        <q-route-tab :to="{ name: 'account' }" label="Compte" />
+        <!-- <q-route-tab :to="{name: 'shop'}" label="Boutique" /> -->
+        <q-route-tab :to="{ name: 'account' }" icon="account_circle" label="Compte" />
       </q-tabs>
     </q-footer>
   </q-layout>
