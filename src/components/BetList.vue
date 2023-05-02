@@ -23,6 +23,7 @@ export default {
           id: 1,
           title: 'Bet 1',
           description: 'Description 1',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -40,6 +41,7 @@ export default {
           id: 2,
           title: 'Bet 2',
           description: 'Description 2',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -57,6 +59,7 @@ export default {
           id: 3,
           title: 'Bet 3',
           description: 'Description 3',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -74,6 +77,7 @@ export default {
           id: 4,
           title: 'Bet 4',
           description: 'Description 4',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -91,6 +95,7 @@ export default {
           id: 5,
           title: 'Bet 5',
           description: 'Description 5',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -108,6 +113,7 @@ export default {
           id: 6,
           title: 'Bet 6',
           description: 'Description 6',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -125,6 +131,7 @@ export default {
           id: 7,
           title: 'Bet 7',
           description: 'Description 7',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -142,6 +149,7 @@ export default {
           id: 8,
           title: 'Bet 8',
           description: 'Description 8',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -159,6 +167,7 @@ export default {
           id: 9,
           title: 'Bet 9',
           description: 'Description 9',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
@@ -176,6 +185,7 @@ export default {
           id: 10,
           title: 'Bet 10',
           description: 'Description 10',
+          privacy: 'public',
           author: {
             id: 1,
             pseudo: 'John Doe',
