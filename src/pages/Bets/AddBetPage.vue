@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
-    <q-page class="flex flex-center">
-      CreateBetPage
+    <q-page class="flex flex-center add-bet">
+      AddBetPage
       <img
         alt="Quasar logo"
         src="~assets/quasar-logo-vertical.svg"
@@ -13,6 +13,6 @@
 
 <script>
 export default {
-  name: 'CreateBetPage'
+  name: 'AddBetPage'
 }
 </script>
