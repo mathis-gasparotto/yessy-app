@@ -1,8 +1,8 @@
 <template>
   <div class="page-container">
-    <q-page class="flex flex-center public-bets">
+    <q-page class="flex flex-center column public-bets">
       <BetList class="bet-list-component" />
-      <div class="public-bets__add-bet-container">
+      <div class="public-bets__add-bet-container fixed">
         <q-btn
           class="public-bets__add-bet"
           color="primary"
@@ -25,3 +25,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.public-bets {
+  .public-bets__add-bet-container {
+    bottom: 100px;
+    right: 20px;
+  }
+}
+</style>
