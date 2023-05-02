@@ -2,14 +2,16 @@
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
       <div class="single-bet__title-container">
-        <img class="single-bet__privacy" src="~assets/quasar-logo-vertical.svg" />
+        <img
+          class="single-bet__privacy"
+          src="~assets/quasar-logo-vertical.svg"
+        />
         <div class="single-bet__title-text">
           <h1 class="single-bet__title text-h6">{{ bet.title }}</h1>
         </div>
       </div>
       <p class="single-bet__subtitle">
-        <span class="single-bet__created-by">créé par</span>
-        <span class="single-bet__author">{{ bet.author.pseudo }}</span>
+        <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.pseudo }}</span>
       </p>
       <q-list class="single-bet__props">
         <q-item class="single-bet__prop">
@@ -67,8 +69,32 @@
         </q-item>
       </q-list>
       <div class="single-bet__participants">
-        <span class="single-bet__participants-count">{{ bet.participants }}</span> participants
+        <span class="single-bet__participants-count">{{
+          bet.participants
+        }}</span>
+        participants
       </div>
+      <q-btn
+        label="Rejoindre le paris"
+        type="button"
+        color="secondary"
+        rounded
+        @click.prevent="joinBet()"
+        :loading="joinLoading"
+        padding="xs"
+        class="text-bold btn btn-secondary single-bet__join-btn"
+      />
+      <!-- <q-btn
+        label="Annuler le paris"
+        type="button"
+        text-color="secondary"
+        color="white"
+        rounded
+        @click.prevent="$router.push({ name: 'signup' })"
+        :loading="loading"
+        padding="xs"
+        class="q-mb-md text-bold btn btn-secondary btn-bordered"
+      /> -->
     </q-page>
   </div>
 </template>
@@ -105,7 +131,14 @@ export default {
         customReward: 'Le gagnant obtiendra un skin',
         endAt: '2023-03-11T12:00:00',
         participants: 86
-      }
+      },
+      joinLoading: false
+    }
+  },
+  methods: {
+    joinBet() {
+      this.joinLoading = true
+      console.log('join bet')
     }
   }
 }
@@ -159,15 +192,20 @@ img {
     margin: 20px 0;
     color: white;
     background-color: $primary;
-    padding: 8px 15px;
+    padding: 8px;
     width: 100%;
-    border-radius: 5px;
+    border-radius: 10px;
     text-align: center;
-    font-size: 1.2em;
-    font-weight: 300;
+    font-size: 1.5em;
+    font-weight: 200;
     &-count {
-      font-size: 1.5rem;
+      font-weight: 300;
+      font-size: 1.7rem;
     }
+  }
+  &__join-btn {
+    width: 100%;
+    font-size: 1.2rem;
   }
 }
 </style>
