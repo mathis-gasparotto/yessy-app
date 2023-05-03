@@ -1,15 +1,17 @@
 <template>
   <div class="page-container">
     <q-page class="flex flex-center column public-bets">
-      <BetList class="bet-list-component" />
-      <div class="public-bets__add-bet-container fixed">
-        <q-btn
-          class="public-bets__add-bet"
-          color="primary"
-          icon="add"
-          round
-          @click="() => $router.push({ name: 'add-bets' })"
-        />
+      <div class="page-content">
+        <BetList class="bet-list-component" />
+        <div class="public-bets__add-bet-container fixed">
+          <q-btn
+            class="public-bets__add-bet"
+            color="primary"
+            icon="add"
+            round
+            @click="() => $router.push({ name: 'add-bets' })"
+          />
+        </div>
       </div>
     </q-page>
   </div>

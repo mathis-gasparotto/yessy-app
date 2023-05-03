@@ -1,100 +1,102 @@
 <template>
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
-      <div class="single-bet__title-container">
-        <img
-          class="single-bet__privacy"
-          src="~assets/quasar-logo-vertical.svg"
-        />
-        <div class="single-bet__title-text">
-          <h1 class="single-bet__title text-h6">{{ bet.title }}</h1>
+      <div class="page-content">
+        <div class="single-bet__title-container">
+          <img
+            class="single-bet__privacy"
+            src="~assets/quasar-logo-vertical.svg"
+          />
+          <div class="single-bet__title-text">
+            <h1 class="single-bet__title text-h6">{{ bet.title }}</h1>
+          </div>
         </div>
+        <p class="single-bet__subtitle">
+          <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.pseudo }}</span>
+        </p>
+        <q-list class="single-bet__props">
+          <q-item class="single-bet__prop">
+            <span class="single-bet__prop-icon-container">
+              <img class="single-bet__prop-icon" :src="bet.category.iconPath" />
+            </span>
+            <p class="single-bet__prop-text">{{ bet.category.title }}</p>
+          </q-item>
+          <q-item class="single-bet__prop">
+            <span class="single-bet__prop-icon-container">
+              <img
+                class="single-bet__prop-icon"
+                src="~assets/quasar-logo-vertical.svg"
+              />
+            </span>
+            <p class="single-bet__prop-text">{{ bet.description }}</p>
+          </q-item>
+          <q-item class="single-bet__prop" v-if="bet.customReward">
+            <span class="single-bet__prop-icon-container">
+              <img
+                class="single-bet__prop-icon"
+                src="~assets/quasar-logo-vertical.svg"
+              />
+            </span>
+            <p class="single-bet__prop-text">{{ bet.customReward }}</p>
+          </q-item>
+          <q-item class="single-bet__prop" v-else-if="bet.tokenRewardOdd">
+            <span class="single-bet__prop-icon-container">
+              <img
+                class="single-bet__prop-icon"
+                src="~assets/quasar-logo-vertical.svg"
+              />
+            </span>
+            <p class="single-bet__prop-text">
+              La quote est de {{ bet.tokenRewardOdd }}
+            </p>
+          </q-item>
+          <q-item class="single-bet__prop">
+            <span class="single-bet__prop-icon-container">
+              <img
+                class="single-bet__prop-icon"
+                src="~assets/quasar-logo-vertical.svg"
+              />
+            </span>
+            <p class="single-bet__prop-text">{{ bet.endAt }}</p>
+          </q-item>
+          <q-item class="single-bet__prop" v-if="bet.customCost">
+            <span class="single-bet__prop-icon-container">
+              <img
+                class="single-bet__prop-icon"
+                src="~assets/quasar-logo-vertical.svg"
+              />
+            </span>
+            <p class="single-bet__prop-text">{{ bet.customCost }}</p>
+          </q-item>
+        </q-list>
+        <div class="single-bet__participants">
+          <span class="single-bet__participants-count">{{
+            bet.participants
+          }}</span>
+          participants
+        </div>
+        <q-btn
+          label="Rejoindre le paris"
+          type="button"
+          color="secondary"
+          rounded
+          @click.prevent="joinBet()"
+          :loading="joinLoading"
+          padding="xs"
+          class="text-bold btn btn-secondary single-bet__join-btn"
+        />
+        <!-- <q-btn
+          label="Annuler le paris"
+          type="button"
+          text-color="secondary"
+          color="white"
+          rounded
+          @click.prevent="$router.push({ name: 'signup' })"
+          :loading="loading"
+          padding="xs"
+          class="q-mb-md text-bold btn btn-secondary btn-bordered"
+        /> -->
       </div>
-      <p class="single-bet__subtitle">
-        <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.pseudo }}</span>
-      </p>
-      <q-list class="single-bet__props">
-        <q-item class="single-bet__prop">
-          <span class="single-bet__prop-icon-container">
-            <img class="single-bet__prop-icon" :src="bet.category.iconPath" />
-          </span>
-          <p class="single-bet__prop-text">{{ bet.category.title }}</p>
-        </q-item>
-        <q-item class="single-bet__prop">
-          <span class="single-bet__prop-icon-container">
-            <img
-              class="single-bet__prop-icon"
-              src="~assets/quasar-logo-vertical.svg"
-            />
-          </span>
-          <p class="single-bet__prop-text">{{ bet.description }}</p>
-        </q-item>
-        <q-item class="single-bet__prop" v-if="bet.customReward">
-          <span class="single-bet__prop-icon-container">
-            <img
-              class="single-bet__prop-icon"
-              src="~assets/quasar-logo-vertical.svg"
-            />
-          </span>
-          <p class="single-bet__prop-text">{{ bet.customReward }}</p>
-        </q-item>
-        <q-item class="single-bet__prop" v-else-if="bet.tokenRewardOdd">
-          <span class="single-bet__prop-icon-container">
-            <img
-              class="single-bet__prop-icon"
-              src="~assets/quasar-logo-vertical.svg"
-            />
-          </span>
-          <p class="single-bet__prop-text">
-            La quote est de {{ bet.tokenRewardOdd }}
-          </p>
-        </q-item>
-        <q-item class="single-bet__prop">
-          <span class="single-bet__prop-icon-container">
-            <img
-              class="single-bet__prop-icon"
-              src="~assets/quasar-logo-vertical.svg"
-            />
-          </span>
-          <p class="single-bet__prop-text">{{ bet.endAt }}</p>
-        </q-item>
-        <q-item class="single-bet__prop" v-if="bet.customCost">
-          <span class="single-bet__prop-icon-container">
-            <img
-              class="single-bet__prop-icon"
-              src="~assets/quasar-logo-vertical.svg"
-            />
-          </span>
-          <p class="single-bet__prop-text">{{ bet.customCost }}</p>
-        </q-item>
-      </q-list>
-      <div class="single-bet__participants">
-        <span class="single-bet__participants-count">{{
-          bet.participants
-        }}</span>
-        participants
-      </div>
-      <q-btn
-        label="Rejoindre le paris"
-        type="button"
-        color="secondary"
-        rounded
-        @click.prevent="joinBet()"
-        :loading="joinLoading"
-        padding="xs"
-        class="text-bold btn btn-secondary single-bet__join-btn"
-      />
-      <!-- <q-btn
-        label="Annuler le paris"
-        type="button"
-        text-color="secondary"
-        color="white"
-        rounded
-        @click.prevent="$router.push({ name: 'signup' })"
-        :loading="loading"
-        padding="xs"
-        class="q-mb-md text-bold btn btn-secondary btn-bordered"
-      /> -->
     </q-page>
   </div>
 </template>

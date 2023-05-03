@@ -52,7 +52,11 @@ a {
   }
 }
 
-.page {
+.page-content {
   width: 90%;
   margin: auto;
+}
+
+.clickable {
+  cursor: pointer;
 }

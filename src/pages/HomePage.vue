@@ -1,11 +1,13 @@
 <template>
   <div class="page-container bg-2">
     <q-page class="flex flex-center column page">
-      <div class="home-cat-title">
-        <h2 class="text-h6">Chauffe toi sur ces paris</h2>
-        <span class="underliner"></span>
+      <div class="page-content">
+        <div class="home-cat-title">
+          <h2 class="text-h6">Chauffe toi sur ces paris</h2>
+          <span class="underliner"></span>
+        </div>
+        <BetList class="bet-list-component" />
       </div>
-      <BetList class="bet-list-component" />
     </q-page>
   </div>
 </template>
