@@ -27,6 +27,9 @@ export default {
 .home {
   &-cat-title {
     position: relative;
+    width: 70%;
+    margin: auto;
+    text-align: center;
     h2 {
       position: relative;
       z-index: 1;

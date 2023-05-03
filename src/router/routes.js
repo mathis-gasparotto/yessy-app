@@ -45,13 +45,7 @@ const routes = [
           {
             path: 'add',
             name: 'add-bets',
-            children: [
-              {
-                path: '',
-                name: 'add-bet-privacy',
-                component: () => import('src/pages/Bets/AddBet/PrivacyPage.vue')
-              },
-            ]
+            component: () => import('src/pages/Bets/AddBetPage.vue')
           },
           {
             path: ':id',
