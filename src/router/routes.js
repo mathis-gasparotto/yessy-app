@@ -36,9 +36,10 @@ const routes = [
       },
       {
         path: 'bets/',
+        name: 'bets',
         children: [
           {
-            path: 'public',
+            path: '',
             name: 'public-bets',
             component: () => import('src/pages/Bets/PublicBetsPage.vue')
           },

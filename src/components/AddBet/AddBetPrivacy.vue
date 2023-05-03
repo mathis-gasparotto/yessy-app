@@ -23,7 +23,7 @@ export default {
     &__choice {
       &s {
         width: 100%;
-        height: 65vh;
+        height: 100%;
       }
       &-text {
         margin: 0;
