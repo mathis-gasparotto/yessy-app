@@ -32,7 +32,7 @@ export default {
           category: {
             id: 1,
             title: 'Sport',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -50,7 +50,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -68,7 +68,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -86,7 +86,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -104,7 +104,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -122,7 +122,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -140,7 +140,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -158,7 +158,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -176,7 +176,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
@@ -194,7 +194,7 @@ export default {
           category: {
             id: 2,
             title: 'Games',
-            iconPath: '/src/assets/quasar-logo-vertical.svg'
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
           },
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'

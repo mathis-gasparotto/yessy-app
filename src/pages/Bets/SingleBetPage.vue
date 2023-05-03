@@ -17,7 +17,7 @@
         <q-list class="single-bet__props">
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
-              <img class="single-bet__prop-icon" :src="bet.category.iconPath" />
+              <img class="single-bet__prop-icon" :src="bet.category.iconUrl" />
             </span>
             <p class="single-bet__prop-text">{{ bet.category.title }}</p>
           </q-item>
@@ -128,7 +128,7 @@ export default {
         category: {
           id: 1,
           title: 'Sport',
-          iconPath: '/src/assets/quasar-logo-vertical.svg'
+          iconUrl: '/src/assets/quasar-logo-vertical.svg'
         },
         customReward: 'Le gagnant obtiendra un skin',
         endAt: '2023-03-11T12:00:00',
