@@ -64,7 +64,7 @@
                 navigation-max-year-month="2023/01"
               >
                 <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Close" color="primary" flat />
+                  <q-btn v-close-popup label="Fermer" color="primary" flat />
                 </div>
               </q-date>
             </q-popup-proxy>

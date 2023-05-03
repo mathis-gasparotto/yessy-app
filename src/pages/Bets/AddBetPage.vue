@@ -25,12 +25,14 @@
 <script>
 import AddBetPrivacy from 'src/components/AddBet/AddBetPrivacy.vue'
 import AddBetCategory from 'src/components/AddBet/AddBetCategory.vue'
+import AddBetForm from 'src/components/AddBet/AddBetForm.vue'
 
 export default {
   name: 'AddBetPage',
   components: {
     AddBetPrivacy,
-    AddBetCategory
+    AddBetCategory,
+    AddBetForm
   },
   data() {
     return {

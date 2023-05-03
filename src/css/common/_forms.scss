@@ -6,3 +6,12 @@
     width: 75%;
   }
 }
+
+.global {
+  &-input, &-toggle, &-text {
+    width: 100%;
+  }
+  &-form {
+    width: 75%;
+  }
+}
