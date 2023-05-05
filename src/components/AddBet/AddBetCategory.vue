@@ -244,7 +244,7 @@ export default {
         position: relative;
         z-index: 1;
         display: flex;
-        justify-content: start;
+        justify-content: flex-start;
         align-items: center;
         flex-direction: column;
         height: 100%;

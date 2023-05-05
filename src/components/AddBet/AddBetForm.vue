@@ -29,13 +29,14 @@
           const date = new Date(val)
           const now = new Date()
           return (
-            date < now ||
+            now < date ||
             'Veuillez renseigner une date supérieure à maintenant'
           )
         }
       ]"
       label="Date de début (instantané si null)"
       class="q-mb-md global-input"
+      mask="datetime"
       hide-bottom-space
     >
       <template v-slot:append>
@@ -59,7 +60,6 @@
               </div>
             </q-date>
             <q-time
-              v-model="form.startAt"
               color="primary"
               @update:model-value="(value, details) => handleUpdateTime(value, details)"
               mask="YYYY-MM-DD HH:mm"
@@ -81,13 +81,13 @@
       lazy-rules
       :rules="[
         (val) =>
-          /^-?[\d]+\/[0-1]\d\/[0-3]\d$/.test(val) ||
+          /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) ||
           'Veullez renseigner une date valide',
         (val) => {
           const date = new Date(val)
           const now = new Date()
           return (
-            date < now ||
+            now < date ||
             'Veuillez renseigner une date supérieure à maintenant'
           )
         },
@@ -95,7 +95,7 @@
           const date = new Date(val)
           const min = new Date(form.startAt)
           return (
-            (min && date < min) ||
+            (min && min < date) ||
             'Veuillez renseigner une date supérieure à la date de début'
           )
         }
@@ -183,10 +183,14 @@ export default {
     handleUpdateDate (value, reason, details) {
       console.log(value, reason, details)
       if (reason === 'add-day') {
-        this.showTimeStartAt = true
+        setTimeout(() => {
+          this.showTimeStartAt = true
+        }, 1000)
       }
     },
     handleUpdateTime (value, details) {
+      const date = new Date(this.form.startAt)
+      date.setHours(details.hour)
       console.log(value, details)
       // this.showTimeStartAt = false
       // this.showCalendarStartAt = false
