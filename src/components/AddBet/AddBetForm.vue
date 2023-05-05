@@ -50,7 +50,7 @@
             <q-date
               v-model="form.startAt"
               navigation-min-year-month="2023/01"
-              @update:model-value="showTimeStartAt = true"
+              @update:model-value="(value, reason, details) => handleUpdateDate(value, reason, details)"
               v-if="!showTimeStartAt && showCalendarStartAt"
               mask="YYYY-MM-DD HH:mm"
             >
@@ -61,12 +61,12 @@
             <q-time
               v-model="form.startAt"
               color="primary"
-              @update:model-value="showTimeStartAt = false; showCalendarStartAt = false"
+              @update:model-value="(value, details) => handleUpdateTime(value, details)"
               mask="YYYY-MM-DD HH:mm"
               v-else
             >
               <div class="row items-center justify-end">
-                <q-btn label="Retour en arrière" color="primary" flat @click.prevent="showTimeStartAt = false" />
+                <q-btn label="Retour au choix de la date" color="primary" flat @click.prevent="showTimeStartAt = false" />
               </div>
             </q-time>
           </q-dialog>
@@ -179,6 +179,19 @@ export default {
       deep: true
     }
   },
+  methods: {
+    handleUpdateDate (value, reason, details) {
+      console.log(value, reason, details)
+      if (reason === 'add-day') {
+        this.showTimeStartAt = true
+      }
+    },
+    handleUpdateTime (value, details) {
+      console.log(value, details)
+      // this.showTimeStartAt = false
+      // this.showCalendarStartAt = false
+    }
+  }
 }
 </script>
 
