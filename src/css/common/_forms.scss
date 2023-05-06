@@ -8,8 +8,26 @@
 }
 
 .global {
-  &-input, &-toggle, &-text, &-select {
+  &-input, &-toggle, &-text, &-select, &-textarea {
     width: 100%;
+    &.q-field {
+      &--outlined {
+        .q-field__control {
+          &::before {
+            border-color: $secondary;
+          }
+        }
+      }
+    }
+  }
+  &-textarea {
+    &.q-field {
+      &--rounded {
+        .q-field__control {
+          border-radius: 15px;
+        }
+      }
+    }
   }
   &-form {
     width: 75%;

@@ -325,4 +325,7 @@ export default {
     }
   }
 }
+.page-content {
+  padding-top: 0px;
+}
 </style>
