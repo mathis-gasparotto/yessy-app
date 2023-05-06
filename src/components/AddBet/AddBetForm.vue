@@ -1,5 +1,8 @@
 <template>
-  <q-form class="add-bet-form__form flex flex-center column form" ref="addBetForm">
+  <q-form
+    class="add-bet-form__form flex flex-center column form"
+    ref="addBetForm"
+  >
     <q-input
       name="label"
       rounded
@@ -11,11 +14,81 @@
       v-model="form.label"
       lazy-rules
       :rules="[
-        (val) =>
-          val.length > 3 || 'Veullez renseigner au minimum 3 caractères'
+        (val) => val.length > 3 || 'Veullez renseigner au minimum 3 caractères'
       ]"
       hide-bottom-space
-    ></q-input>
+    >
+      <template v-slot:prepend>
+        <q-icon
+          name="edit"
+          color="secondary"
+        ></q-icon>
+      </template>
+    </q-input>
+    <q-select
+      rounded
+      outlined
+      v-model="form.reward"
+      :options="rewards"
+      label="Récompense*"
+      class="q-mb-md global-select"
+      lazy-rules
+      :rules="[
+        (val) => typeof val === 'object' || 'Veullez renseigner un type de récompense'
+      ]"
+      hide-bottom-space
+    >
+      <template v-slot:prepend>
+        <q-icon
+          name="fa fa-gift"
+          color="secondary"
+        ></q-icon>
+      </template>
+    </q-select>
+    <q-input
+      v-if="form.reward.value === 'tokens'"
+      name="odd"
+      rounded
+      outlined
+      label="Cote*"
+      class="q-mb-md global-input"
+      type="number"
+      v-model="form.odd"
+      lazy-rules
+      :rules="[
+        (val) => val > 1 || 'Veullez renseigner une cote supérieure à 1'
+      ]"
+      hide-bottom-space
+    >
+      <template v-slot:prepend>
+        <q-icon
+          name="fa fa-coins"
+          color="secondary"
+        ></q-icon>
+      </template>
+    </q-input>
+    <q-input
+      v-if="form.reward.value === 'other'"
+      name="customReward"
+      rounded
+      outlined
+      label="Récompense personnalisée*"
+      class="q-mb-md global-input"
+      type="text"
+      v-model="form.customReward"
+      lazy-rules
+      :rules="[
+        (val) => val.length > 0 || 'Veullez renseigner une récompense personnalisée'
+      ]"
+      hide-bottom-space
+    >
+      <template v-slot:prepend>
+        <q-icon
+          name="edit"
+          color="secondary"
+        ></q-icon>
+      </template>
+    </q-input>
     <q-input
       rounded
       outlined
@@ -29,8 +102,7 @@
           const date = new Date(val)
           const now = new Date()
           return (
-            now < date ||
-            'Veuillez renseigner une date supérieure à maintenant'
+            now < date || 'Veuillez renseigner une date supérieure à maintenant'
           )
         }
       ]"
@@ -39,8 +111,19 @@
       hide-bottom-space
       mask="datetime"
     >
+      <template v-slot:prepend>
+        <q-icon
+          name="calendar_month"
+          color="secondary"
+        ></q-icon>
+      </template>
       <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer" @click.prevent="showCalendarStartAt = true">
+        <q-icon
+          name="event"
+          class="cursor-pointer"
+          color="secondary"
+          @click.prevent="showCalendarStartAt = true"
+        >
           <q-dialog
             cover
             transition-show="scale"
@@ -52,7 +135,9 @@
               v-model="form.startAt"
               navigation-min-year-month="2023/01"
               mask="YYYY/MM/DD HH:mm"
-              @update:model-value="(value, reason, details) => handleUpdateDate(reason, 'startAt')"
+              @update:model-value="
+                (value, reason, details) => handleUpdateDate(reason, 'startAt')
+              "
               v-if="!showTimeStartAt && showCalendarStartAt"
             >
               <div class="row items-center justify-end">
@@ -66,7 +151,12 @@
               v-else
             >
               <div class="row items-center justify-end">
-                <q-btn label="Retour au choix de la date" color="primary" flat @click.prevent="showTimeStartAt = false" />
+                <q-btn
+                  label="Retour au choix de la date"
+                  color="primary"
+                  flat
+                  @click.prevent="showTimeStartAt = false"
+                />
               </div>
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Fermer" color="primary" flat />
@@ -90,8 +180,7 @@
           const date = new Date(val)
           const now = new Date()
           return (
-            now < date ||
-            'Veuillez renseigner une date supérieure à maintenant'
+            now < date || 'Veuillez renseigner une date supérieure à maintenant'
           )
         },
         (val) => {
@@ -107,8 +196,20 @@
       class="q-mb-md global-input"
       hide-bottom-space
     >
+      <template v-slot:prepend>
+        <q-icon
+          name="sports_score"
+          color="secondary"
+        >
+        </q-icon>
+      </template>
       <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer" @click.prevent="showCalendarEndAt = true">
+        <q-icon
+          name="event"
+          class="cursor-pointer"
+          color="secondary"
+          @click.prevent="showCalendarEndAt = true"
+        >
           <q-dialog
             cover
             transition-show="scale"
@@ -120,7 +221,9 @@
               v-model="form.endAt"
               navigation-min-year-month="2023/01"
               mask="YYYY/MM/DD HH:mm"
-              @update:model-value="(value, reason, details) => handleUpdateDate(reason, 'endAt')"
+              @update:model-value="
+                (value, reason, details) => handleUpdateDate(reason, 'endAt')
+              "
               v-if="!showTimeEndAt && showCalendarEndAt"
             >
               <div class="row items-center justify-end">
@@ -134,7 +237,12 @@
               v-else
             >
               <div class="row items-center justify-end">
-                <q-btn label="Retour au choix de la date" color="primary" flat @click.prevent="showTimeEndAt = false" />
+                <q-btn
+                  label="Retour au choix de la date"
+                  color="primary"
+                  flat
+                  @click.prevent="showTimeEndAt = false"
+                />
               </div>
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Fermer" color="primary" flat />
@@ -169,7 +277,10 @@ export default {
       form: {
         label: '',
         startAt: '',
-        endAt: ''
+        endAt: '',
+        reward: '',
+        odd: '',
+        customReward: '',
       },
       validate: false,
       showPassword: false,
@@ -177,24 +288,53 @@ export default {
       showCalendarStartAt: false,
       showCalendarEndAt: false,
       showTimeStartAt: false,
-      showTimeEndAt: false
+      showTimeEndAt: false,
+      rewards: [
+        {
+          label: 'Jetons',
+          value: 'tokens'
+        },
+        {
+          label: 'Autre',
+          value: 'other'
+        }
+      ],
+      prices: [
+        {
+          label: 'Jetons',
+          value: 'tokens'
+        },
+        {
+          label: 'Autre',
+          value: 'other'
+        }
+      ]
     }
   },
   watch: {
     form: {
       handler() {
-        if (
-          this.form.label &&
-          this.form.startAt &&
-          this.form.endAt
-        ) {
-          this.$refs.addBetForm.validate().then((success) => {
-            if (success) {
-              this.validate = true
-            } else {
-              this.validate = false
-            }
-          })
+        console.log(this.form)
+        if (this.form.label && this.form.startAt && this.form.endAt && this.form.reward) {
+          if (this.form.reward.value === 'other' && this.form.customReward) {
+            this.$refs.addBetForm.validate().then((success) => {
+              if (success) {
+                this.validate = true
+              } else {
+                this.validate = false
+              }
+            })
+          } else if (this.form.reward.value === 'tokens' && this.form.odd) {
+            this.$refs.addBetForm.validate().then((success) => {
+              if (success) {
+                this.validate = true
+              } else {
+                this.validate = false
+              }
+            })
+          } else {
+            this.validate = false
+          }
         } else {
           this.validate = false
         }
@@ -203,17 +343,28 @@ export default {
     }
   },
   methods: {
-    handleUpdateDate (reason, valueName) {
+    handleUpdateDate(reason, valueName) {
       if (reason === 'add-day' && valueName === 'startAt') {
         setTimeout(() => {
           this.showTimeStartAt = true
-        }, 500)
+        }, 400)
       }
       if (reason === 'add-day' && valueName === 'endAt') {
         setTimeout(() => {
           this.showTimeEndAt = true
-        }, 500)
+        }, 400)
       }
+    },
+    onsubmit() {
+      this.loading = true
+      this.$refs.addBetForm.validate().then((success) => {
+        if (success) {
+          console.log(this.form)
+        } else {
+          console.log('error')
+          this.loading = false
+        }
+      })
     }
   }
 }

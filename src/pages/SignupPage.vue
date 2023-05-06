@@ -109,6 +109,7 @@
           <q-icon
             :name="showPassword ? 'visibility' : 'visibility_off'"
             class="cursor-pointer"
+            color="secondary"
             @click="showPassword = !showPassword"
           />
         </template>
