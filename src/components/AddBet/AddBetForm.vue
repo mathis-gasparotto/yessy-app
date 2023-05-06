@@ -36,8 +36,8 @@
       ]"
       label="Date de début (instantané si null)"
       class="q-mb-md global-input"
-      mask="datetime"
       hide-bottom-space
+      mask="datetime"
     >
       <template v-slot:append>
         <q-icon name="event" class="cursor-pointer" @click.prevent="showCalendarStartAt = true">
@@ -51,9 +51,9 @@
             <q-date
               v-model="form.startAt"
               navigation-min-year-month="2023/01"
-              @update:model-value="(value, reason, details) => handleUpdateDate(value, reason, details)"
+              mask="YYYY/MM/DD HH:mm"
+              @update:model-value="(value, reason, details) => handleUpdateDate(reason, 'startAt')"
               v-if="!showTimeStartAt && showCalendarStartAt"
-              mask="YYYY-MM-DD HH:mm"
             >
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Fermer" color="primary" flat />
@@ -61,12 +61,15 @@
             </q-date>
             <q-time
               color="primary"
-              @update:model-value="(value, details) => handleUpdateTime(value, details)"
-              mask="YYYY-MM-DD HH:mm"
+              v-model="form.startAt"
+              mask="YYYY/MM/DD HH:mm"
               v-else
             >
               <div class="row items-center justify-end">
                 <q-btn label="Retour au choix de la date" color="primary" flat @click.prevent="showTimeStartAt = false" />
+              </div>
+              <div class="row items-center justify-end">
+                <q-btn v-close-popup label="Fermer" color="primary" flat />
               </div>
             </q-time>
           </q-dialog>
@@ -105,27 +108,45 @@
       hide-bottom-space
     >
       <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer">
-          <q-popup-proxy
+        <q-icon name="event" class="cursor-pointer" @click.prevent="showCalendarEndAt = true">
+          <q-dialog
             cover
             transition-show="scale"
             transition-hide="scale"
+            v-model="showCalendarEndAt"
+            @hide="showTimeEndAt = false"
           >
             <q-date
               v-model="form.endAt"
               navigation-min-year-month="2023/01"
+              mask="YYYY/MM/DD HH:mm"
+              @update:model-value="(value, reason, details) => handleUpdateDate(reason, 'endAt')"
+              v-if="!showTimeEndAt && showCalendarEndAt"
             >
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Fermer" color="primary" flat />
               </div>
             </q-date>
-          </q-popup-proxy>
+            <q-time
+              color="primary"
+              v-model="form.endAt"
+              mask="YYYY/MM/DD HH:mm"
+              v-else
+            >
+              <div class="row items-center justify-end">
+                <q-btn label="Retour au choix de la date" color="primary" flat @click.prevent="showTimeEndAt = false" />
+              </div>
+              <div class="row items-center justify-end">
+                <q-btn v-close-popup label="Fermer" color="primary" flat />
+              </div>
+            </q-time>
+          </q-dialog>
         </q-icon>
       </template>
     </q-input>
 
     <q-btn
-      label="Vamider le pari"
+      label="Valider le pari"
       type="submit"
       :class="`form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
       :disable="!validate"
@@ -139,6 +160,8 @@
 </template>
 
 <script>
+// import createFormat from '../../stores/formatting.js'
+
 export default {
   name: 'AddBetForm',
   data() {
@@ -180,20 +203,17 @@ export default {
     }
   },
   methods: {
-    handleUpdateDate (value, reason, details) {
-      console.log(value, reason, details)
-      if (reason === 'add-day') {
+    handleUpdateDate (reason, valueName) {
+      if (reason === 'add-day' && valueName === 'startAt') {
         setTimeout(() => {
           this.showTimeStartAt = true
-        }, 1000)
+        }, 500)
       }
-    },
-    handleUpdateTime (value, details) {
-      const date = new Date(this.form.startAt)
-      date.setHours(details.hour)
-      console.log(value, details)
-      // this.showTimeStartAt = false
-      // this.showCalendarStartAt = false
+      if (reason === 'add-day' && valueName === 'endAt') {
+        setTimeout(() => {
+          this.showTimeEndAt = true
+        }, 500)
+      }
     }
   }
 }
