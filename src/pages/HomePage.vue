@@ -24,6 +24,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page {
+  justify-content: start;
+}
 .home {
   &-cat-title {
     position: relative;

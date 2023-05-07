@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <q-page class="flex flex-center column public-bets">
+    <q-page class="flex flex-center column public-bets page">
       <div class="page-content">
         <BetList class="bet-list-component" />
         <div class="public-bets__add-bet-container fixed">
@@ -34,5 +34,8 @@ export default {
     bottom: 100px;
     right: 20px;
   }
+}
+.page {
+  justify-content: start;
 }
 </style>

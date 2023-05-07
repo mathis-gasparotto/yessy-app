@@ -10,6 +10,7 @@
 
 <script>
 import BetItem from './BetItem.vue'
+import { getSimpleBets } from 'src/boot/firebase'
 
 export default {
   name: 'BetList',
@@ -18,7 +19,7 @@ export default {
   },
   data() {
     return {
-      bets: [
+      /*bets: [
         {
           id: 1,
           title: 'Bet 1',
@@ -199,7 +200,31 @@ export default {
           rewardCustom: 'Le gagnant obtiendra un skin',
           endAt: '2023-03-11T12:00:00'
         }
-      ]
+      ]*/
+      bets: []
+    }
+  },
+  created () {
+    this.reloadData()
+  },
+  methods: {
+    reloadData () {
+      // this.$firebaseResources.getSimpleBets().then((response) => {
+      getSimpleBets().then((response) => {
+        this.bets = response
+        this.bets.forEach((bet) => {
+          bet.author = {
+            id: 1,
+            pseudo: 'John Doe',
+            avatarPath: '/src/assets/quasar-logo-vertical.svg'
+          }
+          bet.category = {
+            id: 1,
+            title: 'Sport',
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
+          }
+        })
+      })
     }
   }
 }
