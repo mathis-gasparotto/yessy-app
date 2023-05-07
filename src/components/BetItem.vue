@@ -6,7 +6,7 @@
 
     <div class="bet-card-section bet-card-section--text flex justify-center column">
       <q-item-label class="bet-card-pre-title">Pari en cours :</q-item-label>
-      <q-item-label class="bet-card-title">{{ item.title }}</q-item-label>
+      <q-item-label class="bet-card-title">{{ item.label }}</q-item-label>
     </div>
 
     <div class="bet-card-section bet-card-section--next flex flex-center">

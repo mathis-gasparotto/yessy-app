@@ -1,7 +1,7 @@
 <template>
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
-      <div class="page-content">
+      <!-- <div class="page-content">
         <div class="single-bet__title-container">
           <img
             class="single-bet__privacy"
@@ -85,7 +85,7 @@
           padding="xs"
           class="text-bold btn btn-secondary single-bet__join-btn"
         />
-        <!-- <q-btn
+        <q-btn
           label="Annuler le paris"
           type="button"
           text-color="secondary"
@@ -95,52 +95,78 @@
           :loading="loading"
           padding="xs"
           class="q-mb-md text-bold btn btn-secondary btn-bordered"
-        /> -->
-      </div>
+        />
+      </div> -->
     </q-page>
   </div>
 </template>
 
 <script>
+import { useQuasar } from 'quasar'
+import { getSimpleBet } from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
 
 export default {
   setup() {
     const route = useRoute()
-    console.log(route.params.id)
+    const quasar = useQuasar()
+
     return {
-      route
+      route,
+      quasar
     }
   },
   name: 'SingleBetPage',
   data() {
     return {
-      bet: {
-        id: 1,
-        title: 'Qui va remporter la coupe du monde 2026 ?',
-        description: 'Description 1',
-        privacy: 'public',
-        author: {
-          id: 1,
-          pseudo: 'John Doe',
-          avatarPath: '/src/assets/quasar-logo-vertical.svg'
-        },
-        category: {
-          id: 1,
-          title: 'Sport',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        customReward: 'Le gagnant obtiendra un skin',
-        endAt: '2023-03-11T12:00:00',
-        participants: 86
-      },
+      // bet: {
+      //   id: 1,
+      //   title: 'Qui va remporter la coupe du monde 2026 ?',
+      //   description: 'Description 1',
+      //   privacy: 'public',
+      //   author: {
+      //     id: 1,
+      //     pseudo: 'John Doe',
+      //     avatarPath: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   category: {
+      //     id: 1,
+      //     title: 'Sport',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   customReward: 'Le gagnant obtiendra un skin',
+      //   endAt: '2023-03-11T12:00:00',
+      //   participants: 86
+      // },
+      bet: {},
       joinLoading: false
     }
+  },
+  created() {
+    this.quasar.loading.show()
+    this.reloadData()
   },
   methods: {
     joinBet() {
       this.joinLoading = true
       console.log('join bet')
+    },
+    reloadData() {
+      getSimpleBet(this.route.params.id).then((res) => {
+        this.bet = res
+        this.bet.author = {
+          id: 1,
+          pseudo: 'John Doe',
+          avatarPath: '/src/assets/quasar-logo-vertical.svg'
+        }
+        this.bet.category = {
+          id: 1,
+          title: 'Sport',
+          iconUrl: '/src/assets/quasar-logo-vertical.svg'
+        }
+        this.quasar.loading.hide()
+        console.log(this.bet)
+      })
     }
   }
 }
