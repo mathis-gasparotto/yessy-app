@@ -1,5 +1,13 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, getDocs, doc } from 'firebase/firestore/lite'
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  addDoc,
+  deleteDoc
+} from 'firebase/firestore/lite'
 // Follow this pattern to import other Firebase services
 // import { } from 'firebase/<service>';
 
@@ -18,32 +26,33 @@ const db = getFirestore(app)
 
 // export default db
 
-// Get a list of simple bets from your database
-export async function getSimpleBets() {
-  const dataCol = collection(db, 'simple_bets')
-  const docSnap = await getDocs(dataCol)
-  const dataList = docSnap.docs.map((doc) => {
+/**********************************
+ ***  Bets
+ *********************************/
+export async function getBets() {
+  const ref = collection(db, 'simple_bets')
+  const snap = await getDocs(ref)
+  const list = snap.docs.map((doc) => {
     return {
       id: doc.id,
       ...doc.data()
     }
   })
-  return dataList
+  return list
 }
-
-export async function getSimpleBet(id) {
-  const docRef = doc(db, 'simple_bets', id)
-  const docSnap = await getDocs(docRef)
-  if (docSnap.exists()) {
-    const item = docSnap.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data()
-      }
-    })
-    return item
+export async function getBet(id) {
+  const ref = doc(db, 'simple_bets', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return snap.data()
   } else {
     throw new Error('No such data!')
   }
-
+}
+export async function addBet(payload) {
+  const ref = await addDoc(collection(db, 'simple_bets'), payload)
+  return ref.id
+}
+export async function deleteBet(id) {
+  await deleteDoc(doc(db, 'simple_bets', id))
 }

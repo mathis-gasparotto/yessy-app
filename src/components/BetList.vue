@@ -10,7 +10,7 @@
 
 <script>
 import BetItem from './BetItem.vue'
-import { getSimpleBets } from 'src/boot/firebase'
+import { getBets } from 'src/boot/firebase'
 
 export default {
   name: 'BetList',
@@ -209,8 +209,8 @@ export default {
   },
   methods: {
     reloadData () {
-      // this.$firebaseResources.getSimpleBets().then((response) => {
-      getSimpleBets().then((response) => {
+      // this.$firebaseResources.getBets().then((response) => {
+      getBets().then((response) => {
         this.bets = response
         this.bets.forEach((bet) => {
           bet.author = {
