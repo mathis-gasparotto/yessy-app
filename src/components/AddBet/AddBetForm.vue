@@ -15,7 +15,7 @@
         v-model="form.label"
         lazy-rules
         :rules="[
-          (val) => val.length > 3 || 'Veullez renseigner au minimum 3 caractères'
+          (val) => val.length > 5 || 'Veullez renseigner plus de 5 caractères'
         ]"
         hide-bottom-space
       >
@@ -32,7 +32,6 @@
         rounded
         outlined
         label="Description"
-        autofocus
         class="q-mb-md global-textarea"
         type="textarea"
         v-model="form.description"
@@ -74,13 +73,13 @@
       </q-select>
       <q-input
         v-if="form.reward.value === 'tokens'"
-        name="odd"
+        name="tokenRewardOdd"
         rounded
         outlined
         label="Cote"
         class="q-mb-md global-input"
         type="number"
-        v-model="form.odd"
+        v-model="form.tokenRewardOdd"
         lazy-rules
         :rules="[
           (val) => (form.reward.value === 'other' || val > 1) || 'Veullez renseigner une cote supérieure à 1'
@@ -118,46 +117,24 @@
           ></q-icon>
         </template>
       </q-input>
-      <q-select
+      <q-input
+        v-if="form.reward === rewards[1]"
+        name="customCost"
         rounded
         outlined
-        name="price"
-        v-model="form.price"
-        :options="prices"
         label="Mise en jeu"
-        class="q-mb-md global-select"
+        class="q-mb-md global-input"
+        type="text"
+        v-model="form.customCost"
         lazy-rules
         :rules="[
-          (val) => typeof val === 'object' || 'Veullez renseigner un type de mise en jeu'
+          (val) => (form.reward === rewards[0] || val.length > 0) || 'Veullez renseigner une mise en jeu'
         ]"
         hide-bottom-space
       >
         <template v-slot:prepend>
           <q-icon
             name="fa fa-hand-holding-dollar"
-            color="secondary"
-            size="xs"
-          ></q-icon>
-        </template>
-      </q-select>
-      <q-input
-        v-if="form.price.value === 'other'"
-        name="customPrice"
-        rounded
-        outlined
-        label="Mise en jeu personnalisée"
-        class="q-mb-md global-input"
-        type="text"
-        v-model="form.customPrice"
-        lazy-rules
-        :rules="[
-          (val) => (form.price.value === 'tokens' || val.length > 0) || 'Veullez renseigner une mise en jeu personnalisée'
-        ]"
-        hide-bottom-space
-      >
-        <template v-slot:prepend>
-          <q-icon
-            name="edit"
             color="secondary"
             size="xs"
           ></q-icon>
@@ -170,13 +147,13 @@
         lazy-rules
         :rules="[
           (val) =>
-            /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) ||
+            (/^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) || val.length === 0) ||
             'Veullez renseigner une date valide',
           (val) => {
             const date = new Date(val)
             const now = new Date()
             return (
-              now < date || 'Veuillez renseigner une date supérieure à maintenant'
+              (now < date || val.length === 0) || 'Veuillez renseigner une date supérieure à maintenant'
             )
           }
         ]"
@@ -374,10 +351,10 @@ export default {
         startAt: '',
         endAt: '',
         reward: '',
-        odd: '',
+        tokenRewardOdd: '',
         customReward: '',
-        price: '',
-        customPrice: '',
+        // cost: '',
+        customCost: '',
         description: ''
       },
       validate: false,
@@ -397,16 +374,16 @@ export default {
           value: 'other'
         }
       ],
-      prices: [
-        {
-          label: 'Jetons',
-          value: 'tokens'
-        },
-        {
-          label: 'Autre',
-          value: 'other'
-        }
-      ]
+      // costs: [
+      //   {
+      //     label: 'Jetons',
+      //     value: 'tokens'
+      //   },
+      //   {
+      //     label: 'Autre',
+      //     value: 'other'
+      //   }
+      // ]
     }
   },
   watch: {
@@ -434,7 +411,16 @@ export default {
       this.loading = true
       this.$refs.addBetForm.validate().then((success) => {
         if (success) {
-          console.log(this.form)
+          const payload = {
+            label: this.form.label,
+            startAt: this.form.startAt,
+            endAt: this.form.endAt,
+            tokenRewardOdd: this.form.tokenRewardOdd,
+            customReward: this.form.customReward,
+            customCost: this.form.customCost,
+            description: this.form.description
+          }
+          this.$emit('submitForm', payload)
         } else {
           console.log('error')
           this.loading = false
@@ -442,11 +428,9 @@ export default {
       })
     },
     validateForm() {
-      console.log('test')
       if (
-        this.form.label && this.form.startAt && this.form.endAt && this.form.reward.value && this.form.price.value && this.form.description
-        && ((this.form.reward.value === 'other' && this.form.customReward) || (this.form.reward.value === 'tokens' && this.form.odd))
-        && ((this.form.price.value === 'other' && this.form.customPrice) || (this.form.price.value === 'tokens'))
+        this.form.label && this.form.endAt && this.form.reward.value && this.form.description
+        && ((this.form.reward.value === 'other' && this.form.customReward && this.form.customCost) || (this.form.reward.value === 'tokens' && this.form.tokenRewardOdd))
       ) {
         this.$refs.addBetForm.validate().then((success) => {
           if (success) {

@@ -13,8 +13,8 @@ export default () => ({
   capitalizeAll(str) {
     return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() })
   },
-  dateTimeFormatToBDD(date) {
+  dateTimeFormatFromBDD(date) {
     let d = new Date(date)
-    return `${d.getFullYear()}/${(d.getMonth() + 1)}/${d.getDate()} ${d.getHours()}:${d.getMinutes()}`
+    return `${d.getFullYear()}/${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}/${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()} ${d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()}:${d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes()}`
   }
 })

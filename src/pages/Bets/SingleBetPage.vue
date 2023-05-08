@@ -1,25 +1,25 @@
 <template>
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
-      <!-- <div class="page-content">
+      <div class="page-content">
         <div class="single-bet__title-container">
           <img
             class="single-bet__privacy"
             src="~assets/quasar-logo-vertical.svg"
           />
           <div class="single-bet__title-text">
-            <h1 class="single-bet__title text-h6">{{ bet.title }}</h1>
+            <h1 class="single-bet__title text-h6">{{ bet.label }}</h1>
           </div>
         </div>
-        <p class="single-bet__subtitle">
+        <!-- <p class="single-bet__subtitle">
           <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.pseudo }}</span>
-        </p>
+        </p> -->
         <q-list class="single-bet__props">
           <q-item class="single-bet__prop">
-            <span class="single-bet__prop-icon-container">
+            <!-- <span class="single-bet__prop-icon-container">
               <img class="single-bet__prop-icon" :src="bet.category.iconUrl" />
             </span>
-            <p class="single-bet__prop-text">{{ bet.category.title }}</p>
+            <p class="single-bet__prop-text">{{ bet.category.label }}</p> -->
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
@@ -47,8 +47,17 @@
               />
             </span>
             <p class="single-bet__prop-text">
-              La quote est de {{ bet.tokenRewardOdd }}
+              La cote est de {{ bet.tokenRewardOdd }}
             </p>
+          </q-item>
+          <q-item class="single-bet__prop" v-if="bet.startAt">
+            <span class="single-bet__prop-icon-container">
+              <img
+                class="single-bet__prop-icon"
+                src="~assets/quasar-logo-vertical.svg"
+              />
+            </span>
+            <p class="single-bet__prop-text">{{ createFormat.dateTimeFormatFromBDD(bet.startAt) }}</p>
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
@@ -57,7 +66,7 @@
                 src="~assets/quasar-logo-vertical.svg"
               />
             </span>
-            <p class="single-bet__prop-text">{{ bet.endAt }}</p>
+            <p class="single-bet__prop-text">{{ createFormat.dateTimeFormatFromBDD(bet.endAt) }}</p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.customCost">
             <span class="single-bet__prop-icon-container">
@@ -86,25 +95,27 @@
           class="text-bold btn btn-secondary single-bet__join-btn"
         />
         <q-btn
-          label="Annuler le paris"
+          label="Supprimer le paris"
           type="button"
           text-color="secondary"
           color="white"
           rounded
-          @click.prevent="$router.push({ name: 'signup' })"
-          :loading="loading"
+          @click.prevent="handleDeleteBet()"
+          :loading="deleteLoading"
           padding="xs"
-          class="q-mb-md text-bold btn btn-secondary btn-bordered"
+          class="q-mb-md text-bold btn btn-secondary btn-bordered single-bet__delete-btn"
         />
-      </div> -->
+      </div>
     </q-page>
   </div>
 </template>
 
 <script>
 import { useQuasar } from 'quasar'
-import { getSimpleBet } from 'src/boot/firebase'
+import { getBet } from 'src/boot/firebase'
+import { deleteBet } from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
+import createFormat from '../../stores/formatting.js'
 
 export default {
   setup() {
@@ -121,7 +132,7 @@ export default {
     return {
       // bet: {
       //   id: 1,
-      //   title: 'Qui va remporter la coupe du monde 2026 ?',
+      //   label: 'Qui va remporter la coupe du monde 2026 ?',
       //   description: 'Description 1',
       //   privacy: 'public',
       //   author: {
@@ -131,7 +142,7 @@ export default {
       //   },
       //   category: {
       //     id: 1,
-      //     title: 'Sport',
+      //     label: 'Sport',
       //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
       //   },
       //   customReward: 'Le gagnant obtiendra un skin',
@@ -139,7 +150,9 @@ export default {
       //   participants: 86
       // },
       bet: {},
-      joinLoading: false
+      joinLoading: false,
+      deleteLoading: false,
+      createFormat: createFormat()
     }
   },
   created() {
@@ -152,20 +165,31 @@ export default {
       console.log('join bet')
     },
     reloadData() {
-      getSimpleBet(this.route.params.id).then((res) => {
-        this.bet = res
-        this.bet.author = {
-          id: 1,
-          pseudo: 'John Doe',
-          avatarPath: '/src/assets/quasar-logo-vertical.svg'
-        }
-        this.bet.category = {
-          id: 1,
-          title: 'Sport',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      getBet(this.route.params.id).then((res) => {
+        this.bet = {
+          ...res,
+          author: {
+            id: 1,
+            pseudo: 'John Doe',
+            avatarPath: '/src/assets/quasar-logo-vertical.svg'
+          },
+          category: {
+            id: 1,
+            title: 'Sport',
+            iconUrl: '/src/assets/quasar-logo-vertical.svg'
+          }
         }
         this.quasar.loading.hide()
-        console.log(this.bet)
+      })
+    },
+    handleDeleteBet() {
+      this.deleteLoading = true
+      deleteBet(this.route.params.id).then(() => {
+        this.deleteLoading = false
+        this.$router.push({ name: 'public-bets' })
+      }).catch((e) => {
+        console.error(e)
+        this.deleteLoading = false
       })
     }
   }
@@ -234,6 +258,11 @@ img {
   &__join-btn {
     width: 100%;
     font-size: 1.2rem;
+  }
+  &__delete-btn {
+    width: 100%;
+    font-size: 1.2rem;
+    margin-top: 20px;
   }
 }
 </style>

@@ -16,6 +16,7 @@
         <component :is="component"
           @choosePrivacy="(privacy) => choosePrivacy(privacy)"
           @chooseCategory="(categoryId) => chooseCategory(categoryId)"
+          @submitForm="(data) => submitForm(data)"
         />
       </div>
     </q-page>
@@ -26,8 +27,17 @@
 import AddBetPrivacy from 'src/components/AddBet/AddBetPrivacy.vue'
 import AddBetCategory from 'src/components/AddBet/AddBetCategory.vue'
 import AddBetForm from 'src/components/AddBet/AddBetForm.vue'
+import { useQuasar } from 'quasar'
+import { addBet } from 'src/boot/firebase'
 
 export default {
+  setup() {
+    const quasar = useQuasar()
+
+    return {
+      quasar
+    }
+  },
   name: 'AddBetPage',
   components: {
     AddBetPrivacy,
@@ -65,6 +75,26 @@ export default {
       this.categoryId = categoryId
       console.log(this.categoryId)
       this.component = 'AddBetForm'
+    },
+    submitForm(data) {
+      this.quasar.loading.show()
+      const payload = {
+        ...data,
+        privacy: this.privacy,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        startAt: new Date(data.startAt).getTime(),
+        endAt: new Date(data.endAt).getTime()
+      }
+      addBet(payload)
+        .then((res) => {
+          this.quasar.loading.hide()
+          this.$router.push({ name: 'single-bet', params: { id: res } })
+        })
+        .catch((error) => {
+          this.quasar.loading.hide()
+          console.log(error)
+        })
     }
   }
 }
