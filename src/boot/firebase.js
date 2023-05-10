@@ -8,7 +8,11 @@ import {
   addDoc,
   deleteDoc
 } from 'firebase/firestore/lite'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -27,35 +31,44 @@ const db = getFirestore(app)
 /**********************************
  ***  Auth
  *********************************/
-export async function signup(email, password) {
+export function signup(email, password) {
   const auth = getAuth(app)
-  createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+  return createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
       // Signed in
       return userCredential.user
-    }).catch((error) => {
+    })
+    .catch((error) => {
       // const errorCode = error.code
       const errorMessage = error.message
       throw new Error(errorMessage)
     })
 }
-export async function login(email, password) {
+export function login(email, password) {
   const auth = getAuth(app)
-  signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+  return signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      console.log('userucdsf', userCredential)
       // Signed in
       return userCredential.user
-    }).catch((error) => {
+    })
+    .catch((error) => {
       // const errorCode = error.code
+      console.log('error forebase boot', error)
       const errorMessage = error.message
       throw new Error(errorMessage)
     })
 }
-export async function logout() {
+export function logout() {
   const auth = getAuth(app)
-  auth.signOut().then(() => {
-    return true
-  }).catch((error) => {
-    throw new Error(error.message)
-  })
+  auth
+    .signOut()
+    .then(() => {
+      return true
+    })
+    .catch((error) => {
+      throw new Error(error.message)
+    })
 }
 
 /**********************************

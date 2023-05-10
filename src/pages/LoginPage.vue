@@ -62,9 +62,18 @@
 </template>
 
 <script>
+import { useQuasar } from 'quasar'
+import { login } from 'src/boot/firebase'
 // import { cp } from "fs";
 
 export default {
+  setup() {
+    const quasar = useQuasar()
+
+    return {
+      quasar
+    }
+  },
   name: 'LoginPage',
   data() {
     return {
@@ -100,8 +109,28 @@ export default {
       this.loading = true
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
-          console.log(`email: ${this.email}
-          password: ${this.password}`)
+          login(this.form.email, this.form.password).then((user) => {
+            this.loading = false
+            // this.$store.commit('setUser', user)
+            // this.$store.commit('setUserInfos', {
+            //   username: this.username,
+            //   birthday: this.birthday,
+            //   email: this.email,
+            //   referralCode: this.referralCode,
+            //   minAgeCheck: this.minAgeCheck,
+            //   newsletterCheck: this.newsletterCheck
+            // })
+            console.log('success', user)
+            this.$router.push({ name: 'home' })
+          }).catch((err) => {
+            this.loading = false
+            console.log('error', err)
+            this.quasar.notify({
+              message: err.message,
+              color: 'negative',
+              icon: 'report_problem'
+            })
+          })
         } else {
           console.log('error')
           this.loading = false
