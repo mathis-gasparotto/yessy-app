@@ -215,27 +215,19 @@ export default {
       this.loading = true
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
-          signup(this.email, this.password).then((user) => {
+          signup(this.form.email, this.form.password).then((user) => {
             this.loading = false
-            if (user) {
-              // this.$store.commit('setUser', user)
-              // this.$store.commit('setUserInfos', {
-              //   username: this.username,
-              //   birthday: this.birthday,
-              //   email: this.email,
-              //   referralCode: this.referralCode,
-              //   minAgeCheck: this.minAgeCheck,
-              //   newsletterCheck: this.newsletterCheck
-              // })
-              console.log('success', user)
-              this.$router.push({ name: 'home' })
-            } else {
-              this.quasar.notify({
-                message: 'Une erreur est survenue',
-                color: 'negative',
-                icon: 'report_problem'
-              })
-            }
+            // this.$store.commit('setUser', user)
+            // this.$store.commit('setUserInfos', {
+            //   username: this.username,
+            //   birthday: this.birthday,
+            //   email: this.email,
+            //   referralCode: this.referralCode,
+            //   minAgeCheck: this.minAgeCheck,
+            //   newsletterCheck: this.newsletterCheck
+            // })
+            console.log('success', user)
+            this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false
             console.log('error', err)
