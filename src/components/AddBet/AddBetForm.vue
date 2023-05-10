@@ -15,7 +15,7 @@
         v-model="form.label"
         lazy-rules
         :rules="[
-          (val) => val.length > 5 || 'Veullez renseigner plus de 5 caractères'
+          (val) => val.length > 5 || 'Veullez renseigner minimum 6 caractères'
         ]"
         hide-bottom-space
       >
