@@ -19,7 +19,7 @@
       text-color="secondary"
       color="white"
       rounded
-      @click.prevent="$router.push({ name: 'signup' })"
+      @click.prevent="$router.push({ name: 'login' })"
       :loading="loading"
       padding="xs 50px"
       size="22px"
@@ -30,7 +30,7 @@
       type="button"
       color="secondary"
       rounded
-      @click.prevent="$router.push({ name: 'login' })"
+      @click.prevent="$router.push({ name: 'signup' })"
       :loading="loading"
       padding="sm 50px"
       size="22px"
