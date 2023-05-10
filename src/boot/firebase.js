@@ -8,10 +8,8 @@ import {
   addDoc,
   deleteDoc
 } from 'firebase/firestore/lite'
-// Follow this pattern to import other Firebase services
-// import { } from 'firebase/<service>';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
-// TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -25,6 +23,40 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 // export default db
+
+/**********************************
+ ***  Auth
+ *********************************/
+export async function signup(email, password) {
+  const auth = getAuth(app)
+  createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+      // Signed in
+      return userCredential.user
+    }).catch((error) => {
+      // const errorCode = error.code
+      const errorMessage = error.message
+      throw new Error(errorMessage)
+    })
+}
+export async function login(email, password) {
+  const auth = getAuth(app)
+  signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+      // Signed in
+      return userCredential.user
+    }).catch((error) => {
+      // const errorCode = error.code
+      const errorMessage = error.message
+      throw new Error(errorMessage)
+    })
+}
+export async function logout() {
+  const auth = getAuth(app)
+  auth.signOut().then(() => {
+    return true
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
+}
 
 /**********************************
  ***  Bets

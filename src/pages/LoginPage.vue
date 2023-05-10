@@ -7,15 +7,18 @@
     ></q-img>
     <q-form class="flex flex-center column form login-form" ref="loginForm">
       <q-input
-        name="username"
+        name="email"
         rounded
         outlined
-        label="Nom d'utilisateur/adresse mail"
+        label="Adresse mail"
         autofocus
         class="q-mb-md login-input"
         type="text"
-        v-model="form.username"
-        :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
+        v-model="form.email"
+        :rules="[
+          (val, rules) =>
+            rules.email(val) || 'Veullez rensigner une addresse email valide'
+        ]"
         lazy-rules
         hide-bottom-space
       ></q-input>
@@ -66,7 +69,7 @@ export default {
   data() {
     return {
       form: {
-        username: '',
+        email: '',
         password: ''
       },
       loading: false,
@@ -76,7 +79,7 @@ export default {
   watch: {
     form: {
       handler() {
-        if (this.form.username && this.form.password) {
+        if (this.form.email && this.form.password) {
           // this.$refs.loginForm.validate().then((success) => {
           //   if (success) {
           //     this.validate = true
@@ -97,7 +100,7 @@ export default {
       this.loading = true
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
-          console.log(`username: ${this.username}
+          console.log(`email: ${this.email}
           password: ${this.password}`)
         } else {
           console.log('error')

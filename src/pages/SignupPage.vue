@@ -16,7 +16,7 @@
         lazy-rules
         :rules="[
           (val) =>
-            val.length > 3 || 'Veullez renseigner au minimum 3 caractères'
+            val.length > 3 || 'Veullez renseigner minimum 4 caractères'
         ]"
         hide-bottom-space
       ></q-input>
@@ -53,7 +53,7 @@
         hide-bottom-space
       >
         <template v-slot:append>
-          <q-icon name="event" class="cursor-pointer">
+          <q-icon name="event" class="cursor-pointer" color="secondary">
             <q-popup-proxy
               cover
               transition-show="scale"
@@ -128,10 +128,7 @@
       <p class="flex-end text-right login-text">*Champ obligatoire</p>
       <q-toggle v-model="form.minAgeCheck" class="q-mb-md login-toggle">
         <p>
-          Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les
-          <router-link :to="{ name: 'login' }" class="text-underline"
-            >conditions générales</router-link
-          >.
+          Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les <span class="text-underline">conditions générales</span>.
         </p>
       </q-toggle>
       <q-toggle
@@ -158,8 +155,17 @@
 
 <script>
 // import { cp } from "fs"
+import { useQuasar } from 'quasar'
+import { signup } from 'src/boot/firebase'
 
 export default {
+  setup() {
+    const quasar = useQuasar()
+
+    return {
+      quasar
+    }
+  },
   name: 'SignupPage',
   data() {
     return {
@@ -209,10 +215,37 @@ export default {
       this.loading = true
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
-          console.log(`username: ${this.username}
-          password: ${this.password}`)
+          signup(this.email, this.password).then((user) => {
+            this.loading = false
+            if (user) {
+              // this.$store.commit('setUser', user)
+              // this.$store.commit('setUserInfos', {
+              //   username: this.username,
+              //   birthday: this.birthday,
+              //   email: this.email,
+              //   referralCode: this.referralCode,
+              //   minAgeCheck: this.minAgeCheck,
+              //   newsletterCheck: this.newsletterCheck
+              // })
+              console.log('success', user)
+              this.$router.push({ name: 'home' })
+            } else {
+              this.quasar.notify({
+                message: 'Une erreur est survenue',
+                color: 'negative',
+                icon: 'report_problem'
+              })
+            }
+          }).catch((err) => {
+            this.loading = false
+            console.log('error', err)
+            this.quasar.notify({
+              message: err.message,
+              color: 'negative',
+              icon: 'report_problem'
+            })
+          })
         } else {
-          console.log('error')
           this.loading = false
         }
       })
