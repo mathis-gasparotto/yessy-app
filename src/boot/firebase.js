@@ -31,30 +31,35 @@ const db = getFirestore(app)
 /**********************************
  ***  Auth
  *********************************/
-export function signup(email, password) {
+export function signup(email, password, username, birthday, referralCode, newsletter) {
   const auth = getAuth(app)
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
-      return userCredential.user
+      const payload = {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+        username,
+        birthday,
+        newsletter
+      }
+      referralCode ? (payload.referralCode = referralCode) : null
+      return addUserData(payload).then(() => {
+        return payload
+      }).catch((error) => {
+        throw new Error(error.message)
+      })
     })
     .catch((error) => {
-      // const errorCode = error.code
-      const errorMessage = error.message
-      throw new Error(errorMessage)
+      throw new Error(error.message)
     })
 }
 export function login(email, password) {
   const auth = getAuth(app)
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log('userucdsf', userCredential)
-      // Signed in
       return userCredential.user
     })
     .catch((error) => {
-      // const errorCode = error.code
-      console.log('error forebase boot', error)
       const errorMessage = error.message
       throw new Error(errorMessage)
     })
@@ -69,6 +74,26 @@ export function logout() {
     .catch((error) => {
       throw new Error(error.message)
     })
+}
+
+/**********************************
+ ***  Users
+ *********************************/
+export async function getUserData(id) {
+  const ref = doc(db, 'users_data', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return snap.data()
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function addUserData(payload) {
+  const ref = await addDoc(collection(db, 'users_data'), payload)
+  return ref.id
+}
+export async function deleteUserData(id) {
+  await deleteDoc(doc(db, 'users_data', id))
 }
 
 /**********************************

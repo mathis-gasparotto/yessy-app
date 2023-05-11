@@ -217,15 +217,14 @@ export default {
         if (success) {
           signup(this.form.email, this.form.password).then((user) => {
             this.loading = false
-            // this.$store.commit('setUser', user)
-            // this.$store.commit('setUserInfos', {
-            //   username: this.username,
-            //   birthday: this.birthday,
-            //   email: this.email,
-            //   referralCode: this.referralCode,
-            //   minAgeCheck: this.minAgeCheck,
-            //   newsletterCheck: this.newsletterCheck
-            // })
+            this.$store.commit('setUser', {
+              uid: user.uid,
+              username: this.username,
+              birthday: this.birthday,
+              email: user.email,
+              referralCode: this.referralCode,
+              newsletter: this.newsletterCheck
+            })
             console.log('success', user)
             this.$router.push({ name: 'home' })
           }).catch((err) => {
