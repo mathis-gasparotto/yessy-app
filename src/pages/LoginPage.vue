@@ -117,7 +117,7 @@ export default {
           }).catch((err) => {
             this.loading = false
             Notify.create({
-              message: translate().translateSigninError(err.code),
+              message: translate().translateSigninError(err),
               color: 'negative',
               icon: 'report_problem',
               timeout: 5000

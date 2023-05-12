@@ -60,7 +60,10 @@ export async function signup(
       referralCode ? (payload.referralCode = referralCode) : null
       return addUserData(userCredential.user.uid, payload)
         .then((res) => {
-          return res
+          return {
+            ...res,
+            uid: userCredential.user.uid,
+          }
         })
         .catch((error) => {
           throw new Error(error.message)
@@ -95,7 +98,7 @@ export function login(email, password) {
 }
 export function logout() {
   const auth = getAuth(app)
-  auth
+  return auth
     .signOut()
     .then(() => {
       return true
