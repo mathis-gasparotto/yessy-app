@@ -6,6 +6,7 @@ import {
   createWebHashHistory
 } from 'vue-router'
 import routes from './routes'
+import { LocalStorage } from 'quasar'
 
 /*
  * If not building with SSR mode, you can
@@ -35,8 +36,7 @@ export default route(function () {
   })
 
   Router.beforeEach((to, from, next) => {
-    // if (!store.getters["auth/isAuthenticated"] && to.name !== "login" && to.name !== "signup") {
-    const isAuthenticated = false
+    const isAuthenticated = LocalStorage.has('user')
     if (
       !isAuthenticated &&
       to.name !== 'login' &&
