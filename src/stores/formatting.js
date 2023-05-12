@@ -17,6 +17,10 @@ export default () => ({
     let d = new Date(date)
     return `${d.getFullYear()}/${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}/${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()} ${d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()}:${d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes()}`
   },
+  dateFormatFromBDD(date) {
+    let d = new Date(date)
+    return `${d.getFullYear()}/${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}/${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()}`
+  },
   dateTimeFormatToBDD(date) {
     return new Date(date)
   }
