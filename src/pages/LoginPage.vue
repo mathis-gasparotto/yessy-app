@@ -62,19 +62,12 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar'
 import { login } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
+import { LocalStorage, Notify } from 'quasar'
 // import { cp } from "fs";
 
 export default {
-  setup() {
-    const quasar = useQuasar()
-
-    return {
-      quasar
-    }
-  },
   name: 'LoginPage',
   data() {
     return {
@@ -112,24 +105,23 @@ export default {
         if (success) {
           login(this.form.email, this.form.password).then((user) => {
             this.loading = false
-            this.$store.commit('SET_LOGGED_IN', true)
-            this.$store.commit('SET_USER', {
+            LocalStorage.set('user', {
+              uid: user.uid,
               username: user.username,
               birthday: user.birthday,
               email: user.email,
               referralCode: user.referralCode,
               newsletter: user.newsletterCheck
             })
-            console.log('success', this.$store.state.user)
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false
-            console.log(err.message)
-            this.quasar.notify({
-              message: translate().translateSigninError(err.message),
+            Notify.create({
+              message: translate().translateSigninError(err.code),
               color: 'negative',
-              icon: 'report_problem'
-            }, 5000)
+              icon: 'report_problem',
+              timeout: 5000
+            })
           })
         } else {
           console.log('error')

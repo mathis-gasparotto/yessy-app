@@ -105,7 +105,8 @@ module.exports = configure(function (/* ctx */) {
       plugins: [
         // 'firebaseResources'
         'Loading',
-        'Notify'
+        'Notify',
+        'LocalStorage'
       ]
     },
 

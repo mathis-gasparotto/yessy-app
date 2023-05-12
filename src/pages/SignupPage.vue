@@ -155,18 +155,11 @@
 
 <script>
 // import { cp } from "fs"
-import { useQuasar } from 'quasar'
 import { signup } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
+import { LocalStorage, Notify } from 'quasar'
 
 export default {
-  setup() {
-    const quasar = useQuasar()
-
-    return {
-      quasar
-    }
-  },
   name: 'SignupPage',
   data() {
     return {
@@ -218,23 +211,23 @@ export default {
         if (success) {
           signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then((user) => {
             this.loading = false
-            // this.$store.commit('setUser', {
-            //   uid: user.uid,
-            //   username: this.username,
-            //   birthday: this.birthday,
-            //   email: user.email,
-            //   referralCode: this.referralCode,
-            //   newsletter: this.newsletterCheck
-            // })
-            console.log('success', user)
+            LocalStorage.set('user', {
+              uid: user.uid,
+              username: user.username,
+              birthday: user.birthday,
+              email: user.email,
+              referralCode: user.referralCode,
+              newsletter: user.newsletterCheck
+            })
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false
-            this.quasar.notify({
-              message: translate().translateSignupError(err.message),
+            Notify.create({
+              message: translate().translateSignupError(err.cpde),
               color: 'negative',
-              icon: 'report_problem'
-            }, 5000)
+              icon: 'report_problem',
+              timeout: 5000
+            })
           })
         } else {
           this.loading = false
