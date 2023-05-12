@@ -149,7 +149,7 @@
         size="20px"
       />
     </q-form>
-    <!-- <p>Tu as déjà un compte ? <router-link to="/login">Connecte toi</router-link></p> -->
+    <p class="q-mt-lg">Tu as déjà un compte ? <router-link to="/login" class="text-underline text-bold">Connecte toi</router-link></p>
   </q-container>
 </template>
 
@@ -157,6 +157,7 @@
 // import { cp } from "fs"
 import { useQuasar } from 'quasar'
 import { signup } from 'src/boot/firebase'
+import translate from '../stores/translatting.js'
 
 export default {
   setup() {
@@ -217,24 +218,23 @@ export default {
         if (success) {
           signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then((user) => {
             this.loading = false
-            this.$store.commit('setUser', {
-              uid: user.uid,
-              username: this.username,
-              birthday: this.birthday,
-              email: user.email,
-              referralCode: this.referralCode,
-              newsletter: this.newsletterCheck
-            })
+            // this.$store.commit('setUser', {
+            //   uid: user.uid,
+            //   username: this.username,
+            //   birthday: this.birthday,
+            //   email: user.email,
+            //   referralCode: this.referralCode,
+            //   newsletter: this.newsletterCheck
+            // })
             console.log('success', user)
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false
-            console.log('error', err)
             this.quasar.notify({
-              message: err.message,
+              message: translate().translateSignupError(err.message),
               color: 'negative',
               icon: 'report_problem'
-            })
+            }, 5000)
           })
         } else {
           this.loading = false
