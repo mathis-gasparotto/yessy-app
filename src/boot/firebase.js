@@ -6,13 +6,17 @@ import {
   doc,
   getDoc,
   addDoc,
-  deleteDoc
+  deleteDoc,
+  setDoc,
+  query,
+  where
 } from 'firebase/firestore/lite'
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from 'firebase/auth'
+import createFormat from '../stores/formatting.js'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -31,22 +35,36 @@ const db = getFirestore(app)
 /**********************************
  ***  Auth
  *********************************/
-export function signup(email, password, username, birthday, referralCode, newsletter) {
+export async function signup(
+  email,
+  password,
+  username,
+  birthday,
+  referralCode,
+  newsletter
+) {
+  const q = query(collection(db, 'users_data'), where('username', '==', username))
+  const querySnapshot = await getDocs(q)
+  if (querySnapshot.size > 0) {
+    throw new Error('Nom d\'utilisateur déjà utilisé')
+  }
   const auth = getAuth(app)
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const payload = {
         email: userCredential.user.email,
         username,
-        birthday,
+        birthday: createFormat().dateTimeFormatToBDD(birthday),
         newsletter
       }
       referralCode ? (payload.referralCode = referralCode) : null
-      return addUserData(userCredential.user.uid, payload).then((res) => {
-        return res
-      }).catch((error) => {
-        throw new Error(error.message)
-      })
+      return addUserData(userCredential.user.uid, payload)
+        .then((res) => {
+          return res
+        })
+        .catch((error) => {
+          throw new Error(error.message)
+        })
     })
     .catch((error) => {
       throw new Error(error.message)
@@ -56,7 +74,19 @@ export function login(email, password) {
   const auth = getAuth(app)
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      return userCredential.user
+      return getUserData(userCredential.user.uid)
+        .then((res) => {
+          return {
+            ...res,
+            lastLoginAt: new Date(
+              parseInt(userCredential.user.metadata.lastLoginAt)
+            ),
+            birthday: new Date(res.birthday.seconds * 1000)
+          }
+        })
+        .catch((error) => {
+          throw new Error(error.message)
+        })
     })
     .catch((error) => {
       const errorMessage = error.message
@@ -78,8 +108,8 @@ export function logout() {
 /**********************************
  ***  Users
  *********************************/
-export async function getUserData(id) {
-  const ref = doc(db, 'users_data', id)
+export async function getUserData(uid) {
+  const ref = doc(db, 'users_data', uid)
   const snap = await getDoc(ref)
   if (snap.exists()) {
     return snap.data()
@@ -87,12 +117,14 @@ export async function getUserData(id) {
     throw new Error('No such data!')
   }
 }
-export async function addUserData(uid, payload) {
-  const ref = await addDoc(collection(db, 'users_data'), payload)
-  return ref.id
+export function addUserData(uid, payload) {
+  return setDoc(doc(db, 'users_data', uid), payload)
+  // return db.collection('users_data').doc(uid).set(payload)
+  // const ref = await addDoc(collection(db, 'users_data'), payload)
+  // return ref.id
 }
-export async function deleteUserData(id) {
-  await deleteDoc(doc(db, 'users_data', id))
+export function deleteUserData(id) {
+  return deleteDoc(doc(db, 'users_data', id))
 }
 
 /**********************************
@@ -122,6 +154,6 @@ export async function addBet(payload) {
   const ref = await addDoc(collection(db, 'simple_bets'), payload)
   return ref.id
 }
-export async function deleteBet(id) {
-  await deleteDoc(doc(db, 'simple_bets', id))
+export function deleteBet(id) {
+  return deleteDoc(doc(db, 'simple_bets', id))
 }

@@ -1,16 +1,21 @@
 // import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 // import { login } from 'src/boot/firebase'
+// import { createStore } from 'vuex'
 
 export default {
-  modules: {
+  namespaced: true,
+  state: () => ({
     user: {
       loggedIn: false,
       data: null
     }
-  },
+  }),
   getters: {
     user(state) {
-      return state.user
+      return state.user.data
+    },
+    isLoggedIn(state) {
+      return state.user.loggedIn
     }
   },
   mutations: {

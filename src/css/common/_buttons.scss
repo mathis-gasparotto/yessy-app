@@ -16,5 +16,8 @@
   &-disabled {
     background-color: $disabled;
     color: $white;
+    &.q-btn {
+      opacity: 1 !important;
+    }
   }
 }
