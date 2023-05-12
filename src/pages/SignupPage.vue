@@ -223,7 +223,7 @@ export default {
           }).catch((err) => {
             this.loading = false
             Notify.create({
-              message: translate().translateSignupError(err.cpde),
+              message: translate().translateSignupError(err),
               color: 'negative',
               icon: 'report_problem',
               timeout: 5000
