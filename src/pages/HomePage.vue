@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { LocalStorage, Notify } from 'quasar'
+import { Notify } from 'quasar'
 import BetList from 'src/components/BetList.vue'
 import { logout } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
@@ -27,7 +27,6 @@ export default {
   methods: {
     handleLogout() {
       logout().then(() => {
-        LocalStorage.remove('user')
         this.$router.push({ name: 'login' })
       }).catch((err) => {
         this.loading = false

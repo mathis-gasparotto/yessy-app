@@ -1,27 +1,27 @@
 export default () => ({
   translateSignupError(error) {
     if (error.message === 'Nom d\'utilisateur déjà utilisé') return error.message
-    switch (error.code) {
-      case 'auth/email-already-in-use':
+    switch (error.message) {
+      case 'Firebase: Error (auth/email-already-in-use).':
         return 'Cette adresse email est déjà utilisée'
-      case 'auth/invalid-email':
+      case 'Firebase: Error (auth/invalid-email).':
         return 'Email invalide'
       default:
         return 'Une erreur est survenue'
     }
   },
   translateSigninError(error) {
-    switch (error.code) {
-      case 'auth/wrong-password':
+    switch (error.message) {
+      case 'Firebase: Error (auth/wrong-password).':
         return 'Identifiants incorrects'
-      case 'auth/user-not-found':
+      case 'Firebase: Error (auth/user-not-found).':
         return 'Identifiants incorrects'
       default:
         return 'Une erreur est survenue'
     }
   },
   translateLogoutError(error) {
-    switch (error.code) {
+    switch (error.message) {
       default:
         return 'Une erreur est survenue'
     }

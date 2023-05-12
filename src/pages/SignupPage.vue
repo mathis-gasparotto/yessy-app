@@ -157,7 +157,7 @@
 // import { cp } from "fs"
 import { signup } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
-import { LocalStorage, Notify } from 'quasar'
+import { Notify } from 'quasar'
 
 export default {
   name: 'SignupPage',
@@ -209,16 +209,8 @@ export default {
       this.loading = true
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
-          signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then((user) => {
+          signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then(() => {
             this.loading = false
-            LocalStorage.set('user', {
-              uid: user.uid,
-              username: user.username,
-              birthday: user.birthday,
-              email: user.email,
-              referralCode: user.referralCode,
-              newsletter: user.newsletterCheck
-            })
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false
