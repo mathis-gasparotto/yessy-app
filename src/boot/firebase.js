@@ -36,15 +36,14 @@ export function signup(email, password, username, birthday, referralCode, newsle
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const payload = {
-        uid: userCredential.user.uid,
         email: userCredential.user.email,
         username,
         birthday,
         newsletter
       }
       referralCode ? (payload.referralCode = referralCode) : null
-      return addUserData(payload).then(() => {
-        return payload
+      return addUserData(userCredential.user.uid, payload).then((res) => {
+        return res
       }).catch((error) => {
         throw new Error(error.message)
       })
@@ -88,7 +87,7 @@ export async function getUserData(id) {
     throw new Error('No such data!')
   }
 }
-export async function addUserData(payload) {
+export async function addUserData(uid, payload) {
   const ref = await addDoc(collection(db, 'users_data'), payload)
   return ref.id
 }
