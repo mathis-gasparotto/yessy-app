@@ -64,7 +64,7 @@
 <script>
 import { login } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
-import { LocalStorage, Notify } from 'quasar'
+import { Notify } from 'quasar'
 // import { cp } from "fs";
 
 export default {
@@ -103,16 +103,8 @@ export default {
       this.loading = true
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
-          login(this.form.email, this.form.password).then((user) => {
+          login(this.form.email, this.form.password).then(() => {
             this.loading = false
-            LocalStorage.set('user', {
-              uid: user.uid,
-              username: user.username,
-              birthday: user.birthday,
-              email: user.email,
-              referralCode: user.referralCode,
-              newsletter: user.newsletterCheck
-            })
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false

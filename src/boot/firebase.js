@@ -17,6 +17,7 @@ import {
   signInWithEmailAndPassword
 } from 'firebase/auth'
 import createFormat from '../stores/formatting.js'
+import { LocalStorage } from 'quasar'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -60,10 +61,15 @@ export async function signup(
       referralCode ? (payload.referralCode = referralCode) : null
       return addUserData(userCredential.user.uid, payload)
         .then((res) => {
-          return {
+          LocalStorage.set('token', userCredential.user.refreshToken)
+          LocalStorage.set('user', {
             ...res,
-            uid: userCredential.user.uid,
-          }
+            lastLoginAt: new Date(
+              parseInt(userCredential.user.metadata.lastLoginAt)
+            ),
+            birthday: new Date(res.birthday.seconds * 1000),
+            uid: userCredential.user.uid
+          })
         })
         .catch((error) => {
           throw new Error(error.message)
@@ -77,15 +83,18 @@ export function login(email, password) {
   const auth = getAuth(app)
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+      console.log(userCredential)
       return getUserData(userCredential.user.uid)
         .then((res) => {
-          return {
+          LocalStorage.set('token', userCredential.user.refreshToken)
+          LocalStorage.set('user', {
             ...res,
             lastLoginAt: new Date(
               parseInt(userCredential.user.metadata.lastLoginAt)
             ),
-            birthday: new Date(res.birthday.seconds * 1000)
-          }
+            birthday: new Date(res.birthday.seconds * 1000),
+            uid: userCredential.user.uid
+          })
         })
         .catch((error) => {
           throw new Error(error.message)
@@ -101,7 +110,8 @@ export function logout() {
   return auth
     .signOut()
     .then(() => {
-      return true
+      LocalStorage.remove('token')
+      LocalStorage.remove('user')
     })
     .catch((error) => {
       throw new Error(error.message)
@@ -121,10 +131,11 @@ export async function getUserData(uid) {
   }
 }
 export function addUserData(uid, payload) {
-  return setDoc(doc(db, 'users_data', uid), payload)
-  // return db.collection('users_data').doc(uid).set(payload)
-  // const ref = await addDoc(collection(db, 'users_data'), payload)
-  // return ref.id
+  return setDoc(doc(db, 'users_data', uid), payload).then(() => {
+    return payload
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
 }
 export function deleteUserData(id) {
   return deleteDoc(doc(db, 'users_data', id))
