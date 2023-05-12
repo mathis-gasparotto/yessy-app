@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { Loading } from 'quasar'
 import BetItem from './BetItem.vue'
 import { getBets } from 'src/boot/firebase'
 
@@ -209,6 +210,7 @@ export default {
   },
   methods: {
     reloadData () {
+      Loading.show()
       // this.$firebaseResources.getBets().then((response) => {
       getBets().then((response) => {
         this.bets = response
@@ -224,6 +226,7 @@ export default {
             iconUrl: '/src/assets/quasar-logo-vertical.svg'
           }
         })
+        Loading.hide()
       })
     }
   }
