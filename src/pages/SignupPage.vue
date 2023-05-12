@@ -215,7 +215,7 @@ export default {
       this.loading = true
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
-          signup(this.form.email, this.form.password).then((user) => {
+          signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then((user) => {
             this.loading = false
             this.$store.commit('setUser', {
               uid: user.uid,
