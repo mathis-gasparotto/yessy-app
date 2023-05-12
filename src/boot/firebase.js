@@ -63,7 +63,7 @@ export async function signup(
         .then((res) => {
           LocalStorage.set('token', userCredential.user.refreshToken)
           LocalStorage.set('user', {
-            ...res,
+            ...payload,
             lastLoginAt: new Date(
               parseInt(userCredential.user.metadata.lastLoginAt)
             ),
@@ -165,7 +165,7 @@ export async function getBet(id) {
 }
 export function addBet(payload) {
   return addDoc(collection(db, 'simple_bets'), {
-    payload,
+    ...payload,
     authorId: LocalStorage.getItem('user').uid
   }).then((ref) => {
     return {

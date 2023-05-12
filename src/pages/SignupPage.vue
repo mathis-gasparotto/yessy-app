@@ -210,7 +210,6 @@ export default {
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
           signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then(() => {
-            this.loading = false
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false

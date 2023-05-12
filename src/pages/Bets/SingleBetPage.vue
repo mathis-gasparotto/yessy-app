@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar'
+import { Loading } from 'quasar'
 import { getBet } from 'src/boot/firebase'
 import { deleteBet } from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
@@ -120,11 +120,9 @@ import createFormat from '../../stores/formatting.js'
 export default {
   setup() {
     const route = useRoute()
-    const quasar = useQuasar()
 
     return {
-      route,
-      quasar
+      route
     }
   },
   name: 'SingleBetPage',
@@ -156,7 +154,7 @@ export default {
     }
   },
   created() {
-    this.quasar.loading.show()
+    Loading.show()
     this.reloadData()
   },
   methods: {
@@ -179,7 +177,10 @@ export default {
             iconUrl: '/src/assets/quasar-logo-vertical.svg'
           }
         }
-        this.quasar.loading.hide()
+        Loading.hide()
+      }).catch(() => {
+        Loading.hide()
+        this.$router.push({ name: 'public-bets' })
       })
     },
     handleDeleteBet() {

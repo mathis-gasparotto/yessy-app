@@ -104,7 +104,6 @@ export default {
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
           login(this.form.email, this.form.password).then(() => {
-            this.loading = false
             this.$router.push({ name: 'home' })
           }).catch((err) => {
             this.loading = false
