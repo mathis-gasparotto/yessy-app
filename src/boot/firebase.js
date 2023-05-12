@@ -83,7 +83,6 @@ export function login(email, password) {
   const auth = getAuth(app)
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log(userCredential)
       return getUserData(userCredential.user.uid)
         .then((res) => {
           LocalStorage.set('token', userCredential.user.refreshToken)
@@ -164,9 +163,19 @@ export async function getBet(id) {
     throw new Error('No such data!')
   }
 }
-export async function addBet(payload) {
-  const ref = await addDoc(collection(db, 'simple_bets'), payload)
-  return ref.id
+export function addBet(payload) {
+  return addDoc(collection(db, 'simple_bets'), {
+    payload,
+    authorId: LocalStorage.getItem('user').uid
+  }).then((ref) => {
+    return {
+      id: ref.id,
+      ...payload,
+      authorId: LocalStorage.getItem('user').uid
+    }
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
 }
 export function deleteBet(id) {
   return deleteDoc(doc(db, 'simple_bets', id))

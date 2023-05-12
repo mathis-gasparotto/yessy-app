@@ -2,13 +2,12 @@
   <div class="page-container">
     <q-page class="flex flex-center">
       <div class="page-content">
-        Account
         {{ user.uid }}
-        <img
-          alt="Quasar logo"
-          src="~assets/quasar-logo-vertical.svg"
-          style="width: 200px; height: 200px"
-        />
+        {{ user.email }}
+        {{ user.username }}
+        {{ format.dateFormatFromBDD(user.birthday) }}
+        {{ user.referralCode }}
+        {{ user.newsletter }}
       </div>
     </q-page>
   </div>
@@ -16,12 +15,14 @@
 
 <script>
 import { LocalStorage } from 'quasar'
+import createFormat from '../stores/formatting.js'
 
 export default {
   name: 'AccountPage',
   data() {
     return {
-      user: {}
+      user: {},
+      format: createFormat()
     }
   },
   created() {
