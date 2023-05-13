@@ -59,7 +59,7 @@ export async function signup(
         newsletter
       }
       referralCode ? (payload.referralCode = referralCode) : null
-      return addUserData(userCredential.user.uid, payload)
+      return addUser(userCredential.user.uid, payload)
         .then((res) => {
           LocalStorage.set('token', userCredential.user.refreshToken)
           LocalStorage.set('user', {
@@ -83,7 +83,7 @@ export function login(email, password) {
   const auth = getAuth(app)
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      return getUserData(userCredential.user.uid)
+      return getUser(userCredential.user.uid)
         .then((res) => {
           LocalStorage.set('token', userCredential.user.refreshToken)
           LocalStorage.set('user', {
@@ -120,16 +120,23 @@ export function logout() {
 /**********************************
  ***  Users
  *********************************/
-export async function getUserData(uid) {
-  const ref = doc(db, 'users_data', uid)
-  const snap = await getDoc(ref)
-  if (snap.exists()) {
-    return snap.data()
+export async function getUser(uid) {
+  const refUser = doc(db, 'users', uid)
+  const snapUser = await getDoc(refUser)
+  const refUserData = doc(db, 'users_data', uid)
+  const snapUserData = await getDoc(refUserData)
+  if (snapUserData.exists() && snapUser.exists()) {
+    return {
+      ...snapUserData.data(),
+      ...snapUser.data(),
+      uid,
+      birthday: createFormat().dateFormatFromBDD(snapUserData.data().birthday.seconds * 1000)
+    }
   } else {
     throw new Error('No such data!')
   }
 }
-export function addUserData(uid, payload) {
+export function addUser(uid, payload) {
   return setDoc(doc(db, 'users_data', uid), payload).then(() => {
     return payload
   }).catch((error) => {
@@ -179,4 +186,45 @@ export function addBet(payload) {
 }
 export function deleteBet(id) {
   return deleteDoc(doc(db, 'simple_bets', id))
+}
+
+/**********************************
+ ***  Avatars
+ *********************************/
+export async function getAvatars() {
+  const ref = collection(db, 'avatars')
+  const snap = await getDocs(ref)
+  const list = snap.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+  return list
+}
+export async function getAvatar(id) {
+  const ref = doc(db, 'avatars', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return snap.data()
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export function addAvatar(payload) {
+  return addDoc(collection(db, 'avatars'), {
+    ...payload,
+    authorId: LocalStorage.getItem('user').uid
+  }).then((ref) => {
+    return {
+      id: ref.id,
+      ...payload,
+      authorId: LocalStorage.getItem('user').uid
+    }
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
+}
+export function deleteAvatar(id) {
+  return deleteDoc(doc(db, 'avatars', id))
 }

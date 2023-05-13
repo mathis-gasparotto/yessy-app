@@ -15,8 +15,7 @@
         v-model="form.username"
         lazy-rules
         :rules="[
-          (val) =>
-            val.length > 3 || 'Veullez renseigner minimum 4 caractères'
+          (val) => val.length > 3 || 'Veullez renseigner minimum 4 caractères'
         ]"
         hide-bottom-space
       ></q-input>
@@ -115,6 +114,32 @@
         </template>
       </q-input>
       <q-input
+        name="confirmPassword"
+        rounded
+        outlined
+        label="Confirmation du mot de passe*"
+        class="q-mb-md login-input"
+        :type="showPassword ? 'text' : 'password'"
+        v-model="form.confirmPassword"
+        lazy-rules
+        hide-hint
+        :rules="[
+          (val) => val.length > 0 || 'Veullez remplir ce champ',
+          (val) =>
+            val === form.password || 'Les mots de passe ne correspondent pas'
+        ]"
+        hide-bottom-space
+      >
+        <template v-slot:append>
+          <q-icon
+            :name="showPassword ? 'visibility' : 'visibility_off'"
+            class="cursor-pointer"
+            color="secondary"
+            @click="showPassword = !showPassword"
+          />
+        </template>
+      </q-input>
+      <q-input
         name="referralCode"
         rounded
         outlined
@@ -128,7 +153,8 @@
       <p class="flex-end text-right login-text">*Champ obligatoire</p>
       <q-toggle v-model="form.minAgeCheck" class="q-mb-md login-toggle">
         <p>
-          Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les <span class="text-underline">conditions générales</span>.
+          Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les
+          <span class="text-underline">conditions générales</span>.
         </p>
       </q-toggle>
       <q-toggle
@@ -149,7 +175,12 @@
         size="20px"
       />
     </q-form>
-    <p class="q-mt-lg">Tu as déjà un compte ? <router-link to="/login" class="text-underline text-bold">Connecte toi</router-link></p>
+    <p class="q-mt-lg">
+      Tu as déjà un compte ?
+      <router-link to="/login" class="text-underline text-bold"
+        >Connecte toi</router-link
+      >
+    </p>
   </q-container>
 </template>
 
@@ -168,6 +199,7 @@ export default {
         birthday: '',
         email: '',
         password: '',
+        confirmPassword: '',
         referralCode: '',
         minAgeCheck: false,
         newsletterCheck: false
@@ -177,9 +209,6 @@ export default {
       showPassword: false
     }
   },
-  created() {
-    // this.$store.commit("setPageTitle", "Inscription")
-  },
   watch: {
     form: {
       handler() {
@@ -188,7 +217,8 @@ export default {
           this.form.username &&
           this.form.birthday &&
           this.form.email &&
-          this.form.password
+          this.form.password &&
+          this.form.confirmPassword
         ) {
           this.$refs.signupForm.validate().then((success) => {
             if (success) {
@@ -209,17 +239,26 @@ export default {
       this.loading = true
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
-          signup(this.form.email, this.form.password, this.form.username, this.form.birthday, this.form.referralCode, this.form.newsletterCheck).then(() => {
-            this.$router.push({ name: 'home' })
-          }).catch((err) => {
-            this.loading = false
-            Notify.create({
-              message: translate().translateSignupError(err),
-              color: 'negative',
-              icon: 'report_problem',
-              timeout: 5000
+          signup(
+            this.form.email,
+            this.form.password,
+            this.form.username,
+            this.form.birthday,
+            this.form.referralCode,
+            this.form.newsletterCheck
+          )
+            .then(() => {
+              this.$router.push({ name: 'home' })
             })
-          })
+            .catch((err) => {
+              this.loading = false
+              Notify.create({
+                message: translate().translateSignupError(err),
+                color: 'negative',
+                icon: 'report_problem',
+                timeout: 5000
+              })
+            })
         } else {
           this.loading = false
         }
