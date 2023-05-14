@@ -7,37 +7,18 @@
           <span class="underliner"></span>
         </div>
         <BetList class="bet-list-component" />
-        <q-btn @click="handleLogout()">Se déconnecter</q-btn>
       </div>
     </q-page>
   </div>
 </template>
 
 <script>
-import { Notify } from 'quasar'
 import BetList from 'src/components/BetList.vue'
-import { logout } from 'src/boot/firebase'
-import translate from '../stores/translatting.js'
 
 export default {
   name: 'HomePage',
   components: {
     BetList
-  },
-  methods: {
-    handleLogout() {
-      logout().then(() => {
-        this.$router.push({ name: 'login' })
-      }).catch((err) => {
-        this.loading = false
-        Notify.create({
-          message: translate().translateLogoutError(err),
-          color: 'negative',
-          icon: 'report_problem',
-          timeout: 5000
-        })
-      })
-    }
   }
 }
 </script>

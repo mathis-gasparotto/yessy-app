@@ -25,5 +25,17 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateDeleteUserError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue'
+    }
+  },
+  translateUpdatePasswordError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue'
+    }
   }
 })

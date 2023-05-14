@@ -3,7 +3,7 @@
     <p class="text-h6 q-py-md bg-primary text-center text-bold title">
       Inscription
     </p>
-    <q-form class="flex flex-center column form login-form" ref="signupForm">
+    <q-form class="flex flex-center column form login-form" ref="signupForm" @submit.prevent="onsubmit()">
       <q-input
         name="username"
         rounded
@@ -119,7 +119,7 @@
         outlined
         label="Confirmation du mot de passe*"
         class="q-mb-md login-input"
-        :type="showPassword ? 'text' : 'password'"
+        :type="showConfirmPassword ? 'text' : 'password'"
         v-model="form.confirmPassword"
         lazy-rules
         hide-hint
@@ -132,10 +132,10 @@
       >
         <template v-slot:append>
           <q-icon
-            :name="showPassword ? 'visibility' : 'visibility_off'"
+            :name="showConfirmPassword ? 'visibility' : 'visibility_off'"
             class="cursor-pointer"
             color="secondary"
-            @click="showPassword = !showPassword"
+            @click="showConfirmPassword = !showConfirmPassword"
           />
         </template>
       </q-input>
@@ -169,7 +169,6 @@
         :class="`form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
         :disable="!validate"
         rounded
-        @click.prevent="onsubmit()"
         :loading="loading"
         padding="sm 50px"
         size="20px"
@@ -206,7 +205,8 @@ export default {
       },
       loading: false,
       validate: false,
-      showPassword: false
+      showPassword: false,
+      showConfirmPassword: false
     }
   },
   watch: {
@@ -256,7 +256,13 @@ export default {
                 message: translate().translateSignupError(err),
                 color: 'negative',
                 icon: 'report_problem',
-                timeout: 5000
+                timeout: 5000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
               })
             })
         } else {
