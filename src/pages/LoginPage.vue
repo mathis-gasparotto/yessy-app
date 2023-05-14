@@ -5,7 +5,11 @@
       style="width: 200px; height: 200px"
       class="q-mb-xl"
     ></q-img>
-    <q-form class="flex flex-center column form login-form" ref="loginForm" @submit.prevent="onsubmit()">
+    <q-form
+      class="flex flex-center column form login-form"
+      ref="loginForm"
+      @submit.prevent="onsubmit()"
+    >
       <q-input
         name="email"
         rounded
@@ -28,12 +32,20 @@
         outlined
         label="Mot de passe"
         class="q-mb-md login-input"
-        type="password"
+        :type="showPassword ? 'text' : 'password'"
         v-model="form.password"
         :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
         lazy-rules
         hide-bottom-space
-      ></q-input>
+      >
+        <template v-slot:append>
+          <q-icon
+            :name="showPassword ? 'visibility' : 'visibility_off'"
+            class="cursor-pointer"
+            color="secondary"
+            @click="showPassword = !showPassword"
+          />
+        </template></q-input>
       <q-btn
         label="Se connecter"
         type="submit"
@@ -54,7 +66,10 @@
       <q-separator spaced size="2px" color="white" rounded />
       <q-card-section>
         <p class="q-my-xs text-center">
-          Tu n'as pas de compte ? <router-link :to="{ name: 'signup' }" class="text-bold">Inscris toi</router-link>
+          Tu n'as pas de compte ?
+          <router-link :to="{ name: 'signup' }" class="text-bold"
+            >Inscris toi</router-link
+          >
         </p>
       </q-card-section>
     </q-card>
@@ -75,6 +90,7 @@ export default {
         email: '',
         password: ''
       },
+      showPassword: false,
       loading: false,
       validate: false
     }
@@ -103,17 +119,25 @@ export default {
       this.loading = true
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
-          login(this.form.email, this.form.password).then(() => {
-            this.$router.push({ name: 'home' })
-          }).catch((err) => {
-            this.loading = false
-            Notify.create({
-              message: translate().translateSigninError(err),
-              color: 'negative',
-              icon: 'report_problem',
-              timeout: 5000
+          login(this.form.email, this.form.password)
+            .then(() => {
+              this.$router.push({ name: 'home' })
             })
-          })
+            .catch((err) => {
+              this.loading = false
+              Notify.create({
+                message: translate().translateSigninError(err),
+                color: 'negative',
+                icon: 'report_problem',
+                timeout: 5000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
+              })
+            })
         } else {
           console.log('error')
           this.loading = false

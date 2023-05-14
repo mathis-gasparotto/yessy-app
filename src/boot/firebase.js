@@ -68,6 +68,8 @@ export async function signup(
               parseInt(userCredential.user.metadata.lastLoginAt)
             ),
             birthday: new Date(res.birthday.seconds * 1000),
+            createdAt: new Date(res.createdAt.seconds * 1000),
+            updatedAt: new Date(res.updatedAt.seconds * 1000),
             uid: userCredential.user.uid
           })
         })
@@ -92,6 +94,8 @@ export function login(email, password) {
               parseInt(userCredential.user.metadata.lastLoginAt)
             ),
             birthday: new Date(res.birthday.seconds * 1000),
+            createdAt: new Date(res.createdAt.seconds * 1000),
+            updatedAt: new Date(res.updatedAt.seconds * 1000),
             uid: userCredential.user.uid
           })
         })
@@ -130,14 +134,49 @@ export async function getUser(uid) {
       ...snapUserData.data(),
       ...snapUser.data(),
       uid,
-      birthday: createFormat().dateFormatFromBDD(snapUserData.data().birthday.seconds * 1000)
+      birthday: new Date(snapUserData.data().birthday.seconds * 1000),
+      createdAt: new Date(snapUserData.data().createdAt.seconds * 1000),
+      updatedAt: new Date(snapUserData.data().updatedAt.seconds * 1000)
     }
   } else {
     throw new Error('No such data!')
   }
 }
 export function addUser(uid, payload) {
+  payload = {
+    ...payload,
+    private: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
   return setDoc(doc(db, 'users_data', uid), payload).then(() => {
+    return payload
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
+}
+export function updateUser(uid, payload) {
+  payload = {
+    ...payload,
+    updatedAt: new Date()
+  }
+  return setDoc(doc(db, 'users_data', uid), payload, { merge: true }).then(() => {
+    return payload
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
+}
+export async function updateUserName(uid, username) {
+  const q = query(collection(db, 'users_data'), where('username', '==', username))
+  const querySnapshot = await getDocs(q)
+  if (querySnapshot.size > 0) {
+    throw new Error('Nom d\'utilisateur déjà utilisé')
+  }
+  const payload = {
+    username,
+    updatedAt: new Date()
+  }
+  return setDoc(doc(db, 'users_data', uid), payload, { merge: true }).then(() => {
     return payload
   }).catch((error) => {
     throw new Error(error.message)
