@@ -44,13 +44,13 @@
               <q-btn
                 icon="save"
                 type="submit"
-                class="form-btn btn btn-secondary account-submit"
+                class="form-btn btn btn-primary account-submit"
                 padding="md"
                 />
                 <q-btn
                 icon="close"
                 type="button"
-                class="form-btn btn btn-primary account-submit"
+                class="form-btn btn btn-secondary account-submit"
                 padding="md"
                 @click="forms.email.show = false; forms.email.value = ''"
               />
