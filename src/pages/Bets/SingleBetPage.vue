@@ -1,7 +1,7 @@
 <template>
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
-      <div class="page-content">
+      <div class="page-content" v-if="bet">
         <div class="single-bet__title-container">
           <img
             class="single-bet__privacy"
@@ -57,7 +57,7 @@
                 src="~assets/quasar-logo-vertical.svg"
               />
             </span>
-            <p class="single-bet__prop-text">{{ createFormat.dateTimeFormatFromBDD(bet.startAt) }}</p>
+            <p class="single-bet__prop-text">{{ createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000) }}</p>
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
@@ -66,7 +66,7 @@
                 src="~assets/quasar-logo-vertical.svg"
               />
             </span>
-            <p class="single-bet__prop-text">{{ createFormat.dateTimeFormatFromBDD(bet.endAt) }}</p>
+            <p class="single-bet__prop-text">{{ createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}</p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.customCost">
             <span class="single-bet__prop-icon-container">
@@ -147,7 +147,7 @@ export default {
       //   endAt: '2023-03-11T12:00:00',
       //   participants: 86
       // },
-      bet: {},
+      bet: null,
       joinLoading: false,
       deleteLoading: false,
       createFormat: createFormat()
@@ -177,6 +177,7 @@ export default {
             iconUrl: '/src/assets/quasar-logo-vertical.svg'
           }
         }
+        console.log(this.bet)
         Loading.hide()
       }).catch(() => {
         Loading.hide()

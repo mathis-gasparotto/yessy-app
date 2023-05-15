@@ -23,7 +23,7 @@ export default () => ({
   },
   dateTimeToDisplay(date) {
     let d = new Date(date)
-    return `${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()}/${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}/${d.getFullYear()} à ${d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()}:${d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes()}`
+    return `${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()}/${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}/${d.getFullYear()} à ${d.getHours() >= 10 ? d.getHours() : '0' + d.getHours()}h${d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes()}`
   },
   dateToDisplay(date) {
     let d = new Date(date)

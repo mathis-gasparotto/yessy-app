@@ -1,5 +1,5 @@
 <template>
-  <q-container class="flex flex-center column bg-primary login-page page">
+  <q-container class="bg-primary login-page page">
     <q-img
       src="~assets/quasar-logo-vertical.svg"
       style="width: 200px; height: 200px"
@@ -34,7 +34,7 @@
         class="q-mb-md login-input"
         :type="showPassword ? 'text' : 'password'"
         v-model="form.password"
-        :rules="[(val) => val.length > 0 || 'Veullez remplir ce champ']"
+        :rules="[(val) => val.trim().length > 0 || 'Veullez remplir ce champ']"
         lazy-rules
         hide-bottom-space
       >

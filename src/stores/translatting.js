@@ -49,5 +49,11 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateUpdateUserEmailError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue'
+    }
   }
 })

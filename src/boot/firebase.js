@@ -28,7 +28,7 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID
 }
 
-const app = initializeApp(firebaseConfig)
+export const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 // export default db
@@ -53,12 +53,13 @@ export async function signup(
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const payload = {
-        email: userCredential.user.email,
-        username,
+        email: userCredential.user.email.trim(),
+        username: username.trim(),
+        password: password.trim(),
         birthday: createFormat().dateTimeFormatToBDD(birthday),
         newsletter
       }
-      referralCode ? (payload.referralCode = referralCode) : null
+      referralCode ? (payload.referralCode = referralCode.trim()) : null
       return addUser(userCredential.user.uid, payload)
         .then((res) => {
           LocalStorage.set('token', userCredential.user.refreshToken)
@@ -167,13 +168,13 @@ export function updateUser(uid, payload) {
   })
 }
 export async function updateUserName(uid, username) {
-  const q = query(collection(db, 'users_data'), where('username', '==', username))
+  const q = query(collection(db, 'users_data'), where('username', '==', username.trim()))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
     throw new Error('Nom d\'utilisateur déjà utilisé')
   }
   const payload = {
-    username,
+    username : username.trim(),
     updatedAt: new Date()
   }
   return setDoc(doc(db, 'users_data', uid), payload, { merge: true }).then(() => {
@@ -245,25 +246,28 @@ export async function getAvatar(id) {
   const ref = doc(db, 'avatars', id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
-    return snap.data()
+    return {
+      id: snap.id,
+      ...snap.data()
+    }
   } else {
     throw new Error('No such data!')
   }
 }
-export function addAvatar(payload) {
-  return addDoc(collection(db, 'avatars'), {
-    ...payload,
-    authorId: LocalStorage.getItem('user').uid
-  }).then((ref) => {
-    return {
-      id: ref.id,
-      ...payload,
-      authorId: LocalStorage.getItem('user').uid
-    }
-  }).catch((error) => {
-    throw new Error(error.message)
-  })
-}
-export function deleteAvatar(id) {
-  return deleteDoc(doc(db, 'avatars', id))
-}
+// export function addAvatar(payload) {
+//   return addDoc(collection(db, 'avatars'), {
+//     ...payload,
+//     authorId: LocalStorage.getItem('user').uid
+//   }).then((ref) => {
+//     return {
+//       id: ref.id,
+//       ...payload,
+//       authorId: LocalStorage.getItem('user').uid
+//     }
+//   }).catch((error) => {
+//     throw new Error(error.message)
+//   })
+// }
+// export function deleteAvatar(id) {
+//   return deleteDoc(doc(db, 'avatars', id))
+// }
