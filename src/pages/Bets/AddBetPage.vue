@@ -68,12 +68,10 @@ export default {
   methods: {
     choosePrivacy(privacy) {
       this.privacy = privacy
-      console.log(this.privacy)
       this.component = 'AddBetCategory'
     },
     chooseCategory(categoryId) {
       this.categoryId = categoryId
-      console.log(this.categoryId)
       this.component = 'AddBetForm'
     },
     submitForm(data) {

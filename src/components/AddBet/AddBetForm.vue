@@ -15,7 +15,7 @@
         v-model="form.label"
         lazy-rules
         :rules="[
-          (val) => val.length > 5 || 'Veullez renseigner minimum 6 caractères'
+          (val) => val.trim().length > 5 || 'Veullez renseigner minimum 6 caractères'
         ]"
         hide-bottom-space
       >
@@ -37,7 +37,7 @@
         v-model="form.description"
         lazy-rules
         :rules="[
-          (val) => val.length > 0 || 'Veullez renseigner une description'
+          (val) => val.trim().length > 0 || 'Veullez renseigner une description'
         ]"
         hide-bottom-space
       >
@@ -105,7 +105,7 @@
         v-model="form.customReward"
         lazy-rules
         :rules="[
-          (val) => (form.reward.value === 'tokens' || val.length > 0) || 'Veullez renseigner une récompense personnalisée'
+          (val) => (form.reward.value === 'tokens' || val.trim().length > 0) || 'Veullez renseigner une récompense personnalisée'
         ]"
         hide-bottom-space
       >
@@ -128,7 +128,7 @@
         v-model="form.customCost"
         lazy-rules
         :rules="[
-          (val) => (form.reward === rewards[0] || val.length > 0) || 'Veullez renseigner une mise en jeu'
+          (val) => (form.reward === rewards[0] || val.trim().length > 0) || 'Veullez renseigner une mise en jeu'
         ]"
         hide-bottom-space
       >

@@ -55,8 +55,8 @@ a {
 .page {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: start;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .page-content {

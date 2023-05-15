@@ -15,7 +15,7 @@
         v-model="form.username"
         lazy-rules
         :rules="[
-          (val) => val.length > 3 || 'Veullez renseigner minimum 4 caractères'
+          (val) => val.trim().length > 3 || 'Veullez renseigner minimum 4 caractères'
         ]"
         hide-bottom-space
       ></q-input>
@@ -97,7 +97,7 @@
         hint="8 caractères minimum, une majuscule, une minuscule, un chiffre et un caractère spécial"
         hide-hint
         :rules="[
-          (val) => val.length > 0 || 'Veullez remplir ce champ',
+          (val) => val.trim().length > 0 || 'Veullez remplir ce champ',
           (val) =>
             /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/g.test(val) ||
             'Veullez renseigner un mot de passe contetant un caractère spécial, une majuscule, une minuscule et un chiffre, et d\'au moins 8 caractères'
@@ -122,11 +122,10 @@
         :type="showConfirmPassword ? 'text' : 'password'"
         v-model="form.confirmPassword"
         lazy-rules
-        hide-hint
         :rules="[
-          (val) => val.length > 0 || 'Veullez remplir ce champ',
+          (val) => val.trim().length > 0 || 'Veullez remplir ce champ',
           (val) =>
-            val === form.password || 'Les mots de passe ne correspondent pas'
+            val === form.password || 'Veuillez confirmer votre mot de passe'
         ]"
         hide-bottom-space
       >
