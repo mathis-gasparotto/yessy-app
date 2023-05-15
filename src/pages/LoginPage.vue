@@ -122,6 +122,19 @@ export default {
           login(this.form.email, this.form.password)
             .then(() => {
               this.$router.push({ name: 'home' })
+              Notify.create({
+                message: 'Vous êtes désormais connecté',
+                color: 'positive',
+                icon: 'check_circle',
+                position: 'top',
+                timeout: 5000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
+              })
             })
             .catch((err) => {
               this.loading = false
