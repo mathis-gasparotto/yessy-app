@@ -434,20 +434,22 @@
 </template>
 
 <script>
-import { Loading, LocalStorage, Notify } from 'quasar'
+import { Loading, Notify } from 'quasar'
 import createFormat from '../stores/formatting.js'
 import {
   // getAvatar,
   getUser,
   logout,
   updateUser,
-  deleteUserData
+  deleteUserData,
+auth
 } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
 import {
-  AuthCredential,
+  // AuthCredential,
   getAuth,
-  reauthenticateWithCredential,
+  signInWithEmailAndPassword,
+  // reauthenticateWithCredential,
   // signInWithCustomToken,
   updateEmail,
   updatePassword
@@ -489,6 +491,7 @@ export default {
   },
   created() {
     this.reloadData()
+    console.log(auth.currentUser)
   },
   methods: {
     async reloadData() {
@@ -512,9 +515,9 @@ export default {
       //   })
       //   throw new Error(err)
       // })
-      await getUser(LocalStorage.getItem('user').uid)
+      await getUser(auth.currentUser.uid)
         .then((user) => {
-          LocalStorage.set('user', user)
+          // LocalStorage.set('user', user)
           this.user = user
         })
         .catch(() => {
@@ -592,7 +595,22 @@ export default {
     },
     async handleDeleteAccount() {
       this.deleteLoading = true
-      await deleteUserData(this.user.uid).catch((err) => {
+      await deleteUserData().then(() => {
+        this.$router.push({ name: 'welcome' })
+        Notify.create({
+          message: 'Votre compte a bien été supprimé',
+          color: 'positive',
+          icon: 'check_circle',
+          position: 'top',
+          timeout: 5000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
+      }).catch((err) => {
         this.deleteLoading = false
         Notify.create({
           message: translate().translateDeleteUserError(err),
@@ -677,9 +695,9 @@ export default {
         })
         throw new Error('Une erreur est survenue')
       })
-      getUser(LocalStorage.getItem('user').uid)
+      getUser(auth.currentUser.uid)
         .then((user) => {
-          LocalStorage.set('user', user)
+          // LocalStorage.set('user', user)
           this.user = {
             ...user,
             avatar: this.user.avatar
@@ -716,11 +734,9 @@ export default {
         })
     },
     async handleUpdatePassword(oldPass, newPass) {
-      // TODO: check old password
       Loading.show()
-      const user = await getAuth().currentUser
-      const cred = AuthCredential.fromEmailAndPassword(user.email, oldPass)
-      await reauthenticateWithCredential(user, cred).catch((err) => {
+      const user = auth.currentUser
+      await signInWithEmailAndPassword(auth, user.email, oldPass).catch((err) => {
         Loading.hide()
         Notify.create({
           message: translate().translateUpdatePasswordError(err),
@@ -736,7 +752,7 @@ export default {
         })
         throw new Error(err)
       })
-      newPass = newPass.trim()
+      await auth.currentUser.reload()
       updatePassword(user, newPass)
         .then(() => {
           Loading.hide()

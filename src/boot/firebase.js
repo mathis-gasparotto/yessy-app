@@ -14,10 +14,13 @@ import {
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+  updateCurrentUser
 } from 'firebase/auth'
 import createFormat from '../stores/formatting.js'
-import { LocalStorage } from 'quasar'
+// import { LocalStorage } from 'quasar'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -30,6 +33,7 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
+export const auth = getAuth(app)
 
 // export default db
 
@@ -49,74 +53,81 @@ export async function signup(
   if (querySnapshot.size > 0) {
     throw new Error('Nom d\'utilisateur déjà utilisé')
   }
-  const auth = getAuth(app)
-  return createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const payload = {
-        email: userCredential.user.email.trim(),
-        username: username.trim(),
-        password: password.trim(),
-        birthday: createFormat().dateTimeFormatToBDD(birthday),
-        newsletter
-      }
-      referralCode ? (payload.referralCode = referralCode.trim()) : null
-      return addUser(userCredential.user.uid, payload)
-        .then((res) => {
-          LocalStorage.set('token', userCredential.user.refreshToken)
-          LocalStorage.set('user', {
-            ...payload,
-            lastLoginAt: new Date(
-              parseInt(userCredential.user.metadata.lastLoginAt)
-            ),
-            birthday: new Date(res.birthday.seconds * 1000),
-            createdAt: new Date(res.createdAt.seconds * 1000),
-            updatedAt: new Date(res.updatedAt.seconds * 1000),
-            uid: userCredential.user.uid
-          })
+  return setPersistence(auth, browserLocalPersistence).then(() => {
+      return createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const payload = {
+            email: userCredential.user.email.trim(),
+            username: username.trim(),
+            password: password.trim(),
+            birthday: createFormat().dateTimeFormatToBDD(birthday),
+            newsletter
+          }
+          referralCode ? (payload.referralCode = referralCode.trim()) : null
+          return addUser(userCredential.user.uid, payload)
+            // .then((res) => {
+            //   LocalStorage.set('token', userCredential.user.refreshToken)
+            //   LocalStorage.set('user', {
+            //     ...payload,
+            //     lastLoginAt: new Date(
+            //       parseInt(userCredential.user.metadata.lastLoginAt)
+            //     ),
+            //     birthday: new Date(res.birthday.seconds * 1000),
+            //     createdAt: new Date(res.createdAt.seconds * 1000),
+            //     updatedAt: new Date(res.updatedAt.seconds * 1000),
+            //     uid: userCredential.user.uid
+            //   })
+            // })
+            .catch((error) => {
+              throw new Error(error.message)
+            })
         })
         .catch((error) => {
+          console.log(error.message)
           throw new Error(error.message)
         })
-    })
-    .catch((error) => {
+    }).catch((error) => {
       throw new Error(error.message)
     })
 }
 export function login(email, password) {
-  const auth = getAuth(app)
-  return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      return getUser(userCredential.user.uid)
-        .then((res) => {
-          LocalStorage.set('token', userCredential.user.refreshToken)
-          LocalStorage.set('user', {
-            ...res,
-            lastLoginAt: new Date(
-              parseInt(userCredential.user.metadata.lastLoginAt)
-            ),
-            birthday: new Date(res.birthday.seconds * 1000),
-            createdAt: new Date(res.createdAt.seconds * 1000),
-            updatedAt: new Date(res.updatedAt.seconds * 1000),
-            uid: userCredential.user.uid
-          })
+  return setPersistence(auth, browserLocalPersistence).then(() => {
+      return signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          return getUser(userCredential.user.uid)
+            // .then((res) => {
+            //   LocalStorage.set('token', userCredential.user.refreshToken)
+            //   LocalStorage.set('user', {
+            //     ...res,
+            //     lastLoginAt: new Date(
+            //       parseInt(userCredential.user.metadata.lastLoginAt)
+            //     ),
+            //     birthday: new Date(res.birthday.seconds * 1000),
+            //     createdAt: new Date(res.createdAt.seconds * 1000),
+            //     updatedAt: new Date(res.updatedAt.seconds * 1000),
+            //     uid: userCredential.user.uid
+            //   })
+            // })
+            .catch((error) => {
+              throw new Error(error.message)
+            })
         })
         .catch((error) => {
           throw new Error(error.message)
         })
-    })
-    .catch((error) => {
-      const errorMessage = error.message
-      throw new Error(errorMessage)
+    }).catch((error) => {
+      console.log(error)
+      throw new Error(error.message)
     })
 }
 export function logout() {
   const auth = getAuth(app)
   return auth
     .signOut()
-    .then(() => {
-      LocalStorage.remove('token')
-      LocalStorage.remove('user')
-    })
+    // .then(() => {
+    //   LocalStorage.remove('token')
+    //   LocalStorage.remove('user')
+    // })
     .catch((error) => {
       throw new Error(error.message)
     })
@@ -183,8 +194,9 @@ export async function updateUserName(uid, username) {
     throw new Error(error.message)
   })
 }
-export function deleteUserData(id) {
-  return deleteDoc(doc(db, 'users_data', id))
+export async function deleteUserData() {
+  await updateCurrentUser(auth, {disabled: true})
+  return deleteDoc(doc(db, 'users_data', auth.currentUser.uid))
 }
 
 /**********************************
@@ -213,12 +225,14 @@ export async function getBet(id) {
 export function addBet(payload) {
   return addDoc(collection(db, 'simple_bets'), {
     ...payload,
-    authorId: LocalStorage.getItem('user').uid
+    authorId: auth.currentUser.uid
+    // authorId: LocalStorage.getItem('user').uid
   }).then((ref) => {
     return {
       id: ref.id,
       ...payload,
-      authorId: LocalStorage.getItem('user').uid
+      authorId: auth.currentUser.uid
+      // authorId: LocalStorage.getItem('user').uid
     }
   }).catch((error) => {
     throw new Error(error.message)
