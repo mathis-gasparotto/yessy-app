@@ -119,8 +119,7 @@ export default {
       this.loading = true
       this.$refs.loginForm.validate().then((success) => {
         if (success) {
-          login(this.form.email, this.form.password)
-            .then(() => {
+          login(this.form.email, this.form.password).then(() => {
               this.$router.push({ name: 'home' })
               Notify.create({
                 message: 'Vous êtes désormais connecté',
@@ -135,8 +134,7 @@ export default {
                   }
                 ]
               })
-            })
-            .catch((err) => {
+            }).catch((err) => {
               this.loading = false
               Notify.create({
                 message: translate().translateSigninError(err),

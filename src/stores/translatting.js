@@ -12,10 +12,12 @@ export default () => ({
   },
   translateSigninError(error) {
     switch (error.message) {
-      case 'Firebase: Error (auth/wrong-password).':
+      case 'INVALID_PASSWORD':
         return 'Identifiants incorrects'
-      case 'Firebase: Error (auth/user-not-found).':
+      case 'EMAIL_NOT_FOUND':
         return 'Identifiants incorrects'
+      case 'Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests).':
+        return 'Vous avez effectué trop de tentative, veuillez attendre un moment avant de réessayer'
       default:
         return 'Une erreur est survenue'
     }
@@ -34,6 +36,8 @@ export default () => ({
   },
   translateUpdatePasswordError(error) {
     switch (error.message) {
+      case 'Firebase: Error (auth/wrong-password).':
+        return 'Ancien mot de passe incorrect'
       default:
         return 'Une erreur est survenue'
     }
