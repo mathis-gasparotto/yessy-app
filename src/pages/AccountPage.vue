@@ -12,9 +12,10 @@
             v-if="forms.username.show"
             @submit.prevent="
               () => {
-                handleUpdateAccount({ username: forms.username.value.trim() })
-                forms.username.show = false
-                forms.username.value = ''
+                handleUpdateAccount({ username: forms.username.value.trim() }).then(() => {
+                  forms.username.show = false
+                  forms.username.value = ''
+                })
               }
             "
           >
@@ -90,9 +91,10 @@
                 () => {
                   handleUpdateAccount({
                     birthday: format.dateTimeFormatToBDD(forms.birthday.value)
+                  }).then(() => {
+                    forms.birthday.show = false
+                    forms.birthday.value = ''
                   })
-                  forms.birthday.show = false
-                  forms.birthday.value = ''
                 }
               "
             >
@@ -196,9 +198,10 @@
               v-if="forms.email.show"
               @submit.prevent="
                 () => {
-                  handleUpdateAccount({ email: forms.email.value.trim() })
-                  forms.email.show = false
-                  forms.email.value = ''
+                  handleUpdateAccount({ email: forms.email.value.trim() }).then(() => {
+                    forms.email.show = false
+                    forms.email.value = ''
+                  })
                 }
               "
             >
@@ -244,23 +247,22 @@
               <q-icon name="edit" color="secondary" @click="forms.password.show = true"></q-icon>
             </div>
             <q-form
-              class="flex flex-center column form account-form"
+              class="flex flex-center column form account-form account-password-form"
               ref="updateEmailForm"
               v-if="forms.password.show"
               @submit.prevent="
                 () => {
-                  handleUpdateAccount({
-                    password: forms.password.value.trim()
+                  handleUpdatePassword(forms.password.current.trim(), forms.password.new.trim()).then(() => {
+                    forms.password = {
+                      show: false,
+                      current: '',
+                      new: '',
+                      confirm: '',
+                      showCurrentPassword: false,
+                      showNewPassword: false,
+                      showConfirmPassword: false
+                    }
                   })
-                  forms.password = {
-                    show: false,
-                    current: '',
-                    new: '',
-                    confirm: '',
-                    showCurrentPassword: false,
-                    showNewPassword: false,
-                    showConfirmPassword: false
-                  }
                 }
               "
             >
@@ -716,7 +718,7 @@ export default {
     async handleUpdatePassword(oldPass, newPass) {
       // TODO: check old password
       Loading.show()
-      const user = getAuth().currentUser
+      const user = await getAuth().currentUser
       const cred = AuthCredential.fromEmailAndPassword(user.email, oldPass)
       await reauthenticateWithCredential(user, cred).catch((err) => {
         Loading.hide()

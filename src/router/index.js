@@ -36,7 +36,7 @@ export default route(function () {
   })
 
   Router.beforeEach((to, from, next) => {
-    const isAuthenticated = LocalStorage.has('user')
+    const isAuthenticated = LocalStorage.has('user') && LocalStorage.has('token')
     if (
       !isAuthenticated &&
       to.name !== 'login' &&

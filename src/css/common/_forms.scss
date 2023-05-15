@@ -59,6 +59,15 @@
   &-submit {
     height: 56px;
   }
+  &-password {
+    &-form {
+      .account {
+        &-input, &-toggle, &-text, &-select, &-textarea {
+          width: 100%;
+        }
+      }
+    }
+  }
   &-form {
     width: 100%;
   }

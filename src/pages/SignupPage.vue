@@ -248,6 +248,19 @@ export default {
           )
             .then(() => {
               this.$router.push({ name: 'home' })
+              Notify.create({
+                message: 'Vous avez bien été inscrit',
+                color: 'positive',
+                icon: 'check_circle',
+                position: 'top',
+                timeout: 5000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
+              })
             })
             .catch((err) => {
               this.loading = false
