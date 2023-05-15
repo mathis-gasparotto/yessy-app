@@ -52,6 +52,13 @@ a {
   }
 }
 
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
+
 .page-content {
   width: 85%;
   margin: 0 auto;

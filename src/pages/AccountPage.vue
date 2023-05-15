@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <q-page class="flex flex-center page">
+    <q-page class="page">
       <div class="page-content" v-if="user.avatar">
         <div class="account__avatar-container q-mb-md">
           <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
@@ -15,11 +15,74 @@
           <div class="account_detail">
             <div class="account_detail__label text-h6 flex items-center">
               <p class="q-mb-0 text-bold q-mr-xs">Date de naissance</p>
-              <q-icon name="edit" color="secondary"></q-icon>
+              <q-icon name="edit" color="secondary" @click="forms.birthday.show = true; forms.birthday.value = format.dateToDisplay(user.birthday)"></q-icon>
             </div>
-            <p class="account_detail__value">
-              {{ format.dateToDisplay(user.birthday) }}
-            </p>
+            <q-form class="flex flex-center row form account-form" ref="updateBirthdayForm" v-if="forms.birthday.show" @submit.prevent="handleUpdateAccount({birthday: format.dateTimeFormatToBDD(forms.birthday.value)}); forms.birthday.show = false; forms.birthday.value = ''">
+              <q-input
+                outlined
+                v-model="forms.birthday.value"
+                autofocus
+                lazy-rules
+                :rules="[
+                  (val) =>
+                    /^-?[0-3]\d\/[0-1]\d\/\d\d\d\d$/.test(val) ||
+                    'Veullez renseigner une date valide',
+                  (val) => {
+                    const date = new Date(val)
+                    const min = new Date()
+                    min.setFullYear(min.getFullYear() - 16)
+                    return (
+                      date < min ||
+                      'Cette application est réservée aux personnes de plus de 16 ans'
+                    )
+                  },
+                  (val) => {
+                    const date = new Date(val)
+                    const max = new Date()
+                    max.setFullYear(max.getFullYear() - 100)
+                    return (
+                      date >= max || 'Veuillez renseigner votre vrai date de naissance'
+                    )
+                  }
+                ]"
+                class="account-input"
+                hide-bottom-space
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer" color="secondary">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="forms.birthday.value"
+                        navigation-max-year-month="2023/01"
+                        mask="DD/MM/YYYY"
+                      >
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup label="Fermer" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+              <q-btn
+                icon="save"
+                type="submit"
+                class="form-btn btn btn-primary account-submit"
+                padding="md"
+                />
+              <q-btn
+                icon="close"
+                type="button"
+                class="form-btn btn btn-secondary account-submit"
+                padding="md"
+                @click="forms.birthday.show = false; forms.birthday.value = ''"
+              />
+            </q-form>
+            <p class="account_detail__value" v-else>{{ format.dateToDisplay(user.birthday) }}</p>
           </div>
           <div class="account_detail">
             <div class="account_detail__label text-h6 flex items-center">
@@ -47,7 +110,7 @@
                 class="form-btn btn btn-primary account-submit"
                 padding="md"
                 />
-                <q-btn
+              <q-btn
                 icon="close"
                 type="button"
                 class="form-btn btn btn-secondary account-submit"
@@ -76,12 +139,13 @@
             size="60px"
             dense
             @update:model-value="handleUpdateAccount({ private: user.private })"
-          />
-          <q-toggle
+            />
+            <q-toggle
             v-model="user.newsletter"
             label="Recevoir la newsletter"
             color="primary"
             class="q-mb-md"
+            @update:model-value="handleUpdateAccount({ newsletter: user.newsletter })"
           />
         </div>
         <div class="account__btns-container">
@@ -274,25 +338,10 @@ export default {
     async handleUpdateAccount(payload) {
       Loading.show()
       await updateUser(this.user.uid, payload)
-        .then(() => {
-          Notify.create({
-            message: 'Votre compte a bien été mis à jour',
-            color: 'positive',
-            icon: 'check_circle',
-            timeout: 5000,
-            position: 'top',
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-        })
-        .catch(() => {
+        .catch((err) => {
           Loading.hide()
           Notify.create({
-            message: 'Une erreur est survenue',
+            message: translate().translateUpdateUserError(err),
             color: 'negative',
             icon: 'report_problem',
             timeout: 5000,
@@ -313,10 +362,23 @@ export default {
             ...user
           }
           Loading.hide()
-        })
-        .catch(() => {
           Notify.create({
-            message: 'Une erreur est survenue',
+            message: 'Votre compte a bien été mis à jour',
+            color: 'positive',
+            icon: 'check_circle',
+            timeout: 5000,
+            position: 'top',
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+        .catch((err) => {
+          Notify.create({
+            message: translate().translateGetUserError(err),
             color: 'negative',
             icon: 'report_problem',
             timeout: 5000,
@@ -391,7 +453,6 @@ export default {
   }
 }
 .page {
-  align-items: start;
   padding-top: 20px;
 }
 </style>
