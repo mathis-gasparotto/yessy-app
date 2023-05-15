@@ -37,5 +37,17 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateUpdateUserError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue'
+    }
+  },
+  translateGetUserError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue'
+    }
   }
 })
