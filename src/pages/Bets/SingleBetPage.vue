@@ -2,6 +2,7 @@
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
       <div class="page-content" v-if="bet">
+        <q-img :src="bet.author.avatar.imgUrl" class="single-bet__author-avatar q-mb-md"></q-img>
         <div class="single-bet__title-container">
           <img
             class="single-bet__privacy"
@@ -11,15 +12,15 @@
             <h1 class="single-bet__title text-h6">{{ bet.label }}</h1>
           </div>
         </div>
-        <!-- <p class="single-bet__subtitle">
-          <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.pseudo }}</span>
-        </p> -->
+        <p class="single-bet__subtitle">
+          <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.username }}</span>
+        </p>
         <q-list class="single-bet__props">
           <q-item class="single-bet__prop">
-            <!-- <span class="single-bet__prop-icon-container">
+            <span class="single-bet__prop-icon-container">
               <img class="single-bet__prop-icon" :src="bet.category.iconUrl" />
             </span>
-            <p class="single-bet__prop-text">{{ bet.category.label }}</p> -->
+            <p class="single-bet__prop-text">{{ bet.category.label }}</p>
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
@@ -104,6 +105,7 @@
           :loading="deleteLoading"
           padding="xs"
           class="q-mb-md text-bold btn btn-secondary btn-bordered single-bet__delete-btn"
+          v-if="isAuthor()"
         />
       </div>
     </q-page>
@@ -112,10 +114,11 @@
 
 <script>
 import { Loading } from 'quasar'
-import { getBet } from 'src/boot/firebase'
+import { auth, getBet } from 'src/boot/firebase'
 import { deleteBet } from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
 import createFormat from '../../stores/formatting.js'
+import { getParticipationCount } from 'src/boot/firebase'
 
 export default {
   setup() {
@@ -166,17 +169,20 @@ export default {
       getBet(this.route.params.id).then((res) => {
         this.bet = {
           ...res,
-          author: {
-            id: 1,
-            pseudo: 'John Doe',
-            avatarPath: '/src/assets/quasar-logo-vertical.svg'
-          },
-          category: {
-            id: 1,
-            title: 'Sport',
-            iconUrl: '/src/assets/quasar-logo-vertical.svg'
-          }
+          // author: {
+          //   id: 1,
+          //   pseudo: 'John Doe',
+          //   avatarPath: '/src/assets/quasar-logo-vertical.svg'
+          // },
+          // category: {
+          //   id: 1,
+          //   title: 'Sport',
+          //   iconUrl: '/src/assets/quasar-logo-vertical.svg'
+          // }
         }
+        getParticipationCount(this.route.params.id).then((res) => {
+          this.bet.participants = res
+        })
         console.log(this.bet)
         Loading.hide()
       }).catch(() => {
@@ -193,6 +199,9 @@ export default {
         console.error(e)
         this.deleteLoading = false
       })
+    },
+    isAuthor() {
+      return auth.currentUser.uid === this.bet.author.uid
     }
   }
 }
@@ -203,7 +212,21 @@ img {
   width: 50px;
   height: 50px;
 }
+.page {
+  &-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+}
 .single-bet {
+  &__author {
+    &-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+  }
   &__title {
     &-container {
       display: flex;

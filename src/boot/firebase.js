@@ -9,8 +9,10 @@ import {
   deleteDoc,
   setDoc,
   query,
-  where
+  where,
+  updateDoc
 } from 'firebase/firestore/lite'
+import { getCountFromServer } from 'firebase/firestore'
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -48,7 +50,7 @@ export async function signup(
   referralCode,
   newsletter
 ) {
-  const q = query(collection(db, 'users_data'), where('username', '==', username))
+  const q = query(collection(db, 'users'), where('username', '==', username.trim()))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
     throw new Error('Nom d\'utilisateur déjà utilisé')
@@ -58,13 +60,12 @@ export async function signup(
         .then((userCredential) => {
           const payload = {
             email: userCredential.user.email.trim(),
-            username: username.trim(),
             password: password.trim(),
             birthday: createFormat().dateTimeFormatToBDD(birthday),
             newsletter
           }
           referralCode ? (payload.referralCode = referralCode.trim()) : null
-          return addUser(userCredential.user.uid, payload)
+          return addUser(userCredential.user.uid, payload, username.trim())
             // .then((res) => {
             //   LocalStorage.set('token', userCredential.user.refreshToken)
             //   LocalStorage.set('user', {
@@ -83,7 +84,6 @@ export async function signup(
             })
         })
         .catch((error) => {
-          console.log(error.message)
           throw new Error(error.message)
         })
     }).catch((error) => {
@@ -116,7 +116,6 @@ export function login(email, password) {
           throw new Error(error.message)
         })
     }).catch((error) => {
-      console.log(error)
       throw new Error(error.message)
     })
 }
@@ -142,27 +141,42 @@ export async function getUser(uid) {
   const refUserData = doc(db, 'users_data', uid)
   const snapUserData = await getDoc(refUserData)
   if (snapUserData.exists() && snapUser.exists()) {
+    const avatar = await getAvatar(snapUser.data().avatar.id).then((res) => {
+      return res
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
     return {
       ...snapUserData.data(),
       ...snapUser.data(),
       uid,
       birthday: new Date(snapUserData.data().birthday.seconds * 1000),
       createdAt: new Date(snapUserData.data().createdAt.seconds * 1000),
-      updatedAt: new Date(snapUserData.data().updatedAt.seconds * 1000)
+      updatedAt: new Date(snapUserData.data().updatedAt.seconds * 1000),
+      avatar
     }
   } else {
     throw new Error('No such data!')
   }
 }
-export function addUser(uid, payload) {
+export function addUser(uid, payload, username) {
   payload = {
     ...payload,
     private: false,
     createdAt: new Date(),
     updatedAt: new Date()
   }
+  const toReturn = {
+    ...payload,
+    uid,
+    username
+  }
   return setDoc(doc(db, 'users_data', uid), payload).then(() => {
-    return payload
+    return setDoc(doc(db, 'users', uid), {username, avatar: doc(db, 'avatars', process.env.DEFAULT_AVATAR_ID)}).then(() => {
+      return toReturn
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
   }).catch((error) => {
     throw new Error(error.message)
   })
@@ -179,7 +193,7 @@ export function updateUser(uid, payload) {
   })
 }
 export async function updateUserName(uid, username) {
-  const q = query(collection(db, 'users_data'), where('username', '==', username.trim()))
+  const q = query(collection(db, 'users'), where('username', '==', username.trim()))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
     throw new Error('Nom d\'utilisateur déjà utilisé')
@@ -188,7 +202,7 @@ export async function updateUserName(uid, username) {
     username : username.trim(),
     updatedAt: new Date()
   }
-  return setDoc(doc(db, 'users_data', uid), payload, { merge: true }).then(() => {
+  return updateDoc(doc(db, 'users', uid), payload).then(() => {
     return payload
   }).catch((error) => {
     throw new Error(error.message)
@@ -203,13 +217,27 @@ export async function deleteUserData() {
  ***  Bets
  *********************************/
 export async function getBets() {
-  const ref = collection(db, 'simple_bets')
+  const ref = query(collection(db, 'simple_bets'), where('privacy', '==', 'public'))
   const snap = await getDocs(ref)
-  const list = snap.docs.map((doc) => {
+  const list = await snap.docs.map((doc) => {
     return {
       id: doc.id,
       ...doc.data()
     }
+  })
+  list.forEach(async (bet) => {
+    const author = await getUser(bet.author.id).then((res) => {
+      return res
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
+    bet.author = author
+    const category = await getBetCategory(bet.category.id).then((res) => {
+      return res
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
+    bet.category = category
   })
   return list
 }
@@ -217,7 +245,22 @@ export async function getBet(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
-    return snap.data()
+    const author = await getUser(snap.data().author.id).then((res) => {
+      return res
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
+    const category = await getBetCategory(snap.data().category.id).then((res) => {
+      return res
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
+    return {
+      id: snap.id,
+      ...snap.data(),
+      author,
+      category
+    }
   } else {
     throw new Error('No such data!')
   }
@@ -225,13 +268,13 @@ export async function getBet(id) {
 export function addBet(payload) {
   return addDoc(collection(db, 'simple_bets'), {
     ...payload,
-    authorId: auth.currentUser.uid
+    author: doc(db, 'users', auth.currentUser.uid)
     // authorId: LocalStorage.getItem('user').uid
   }).then((ref) => {
     return {
       id: ref.id,
       ...payload,
-      authorId: auth.currentUser.uid
+      author: doc(db, 'users', auth.currentUser.uid)
       // authorId: LocalStorage.getItem('user').uid
     }
   }).catch((error) => {
@@ -268,20 +311,67 @@ export async function getAvatar(id) {
     throw new Error('No such data!')
   }
 }
-// export function addAvatar(payload) {
-//   return addDoc(collection(db, 'avatars'), {
-//     ...payload,
-//     authorId: LocalStorage.getItem('user').uid
-//   }).then((ref) => {
-//     return {
-//       id: ref.id,
-//       ...payload,
-//       authorId: LocalStorage.getItem('user').uid
-//     }
-//   }).catch((error) => {
-//     throw new Error(error.message)
-//   })
-// }
-// export function deleteAvatar(id) {
-//   return deleteDoc(doc(db, 'avatars', id))
-// }
+
+/**********************************
+ ***  Bet Categories
+ *********************************/
+export async function getBetCategories() {
+  const ref = collection(db, 'bet_categories')
+  const snap = await getDocs(ref)
+  const list = snap.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+  return list
+}
+export async function getBetCategory(id) {
+  const ref = doc(db, 'bet_categories', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return {
+      id: snap.id,
+      ...snap.data()
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
+
+/**********************************
+ ***  Participations
+ *********************************/
+ export async function getMyParticipations() {
+  const ref = query(collection(db, 'participations'), where('user.id', '==', auth.currentUser.uid))
+  const snap = await getDocs(ref)
+  const list = snap.docs.map(async (doc) => {
+    let bet = await getBet(doc.data().bet.id).then((res) => {
+      return res
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
+    return {
+      id: doc.id,
+      ...doc.data(),
+      bet
+    }
+  })
+  return list
+}
+export async function getParticipationCount(betId) {
+  const ref = query(collection(db, 'participations'), where('bet.id', '==', betId))
+  const snap = await getCountFromServer(ref)
+  return snap.data().count
+}
+export function addParticipation(userId, betId) {
+  return addDoc(collection(db, 'participations'), {
+    user: doc(db, 'users', userId),
+    bet: doc(db, 'simple_bets', betId)
+  }).catch((error) => {
+    throw new Error(error.message)
+  })
+}
+export function deleteParticipation(id) {
+  return deleteDoc(doc(db, 'participations', id))
+}

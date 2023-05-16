@@ -116,4 +116,7 @@ export default {
     height: 65vh;
   }
 }
+.page {
+  justify-content: space-between;
+}
 </style>
