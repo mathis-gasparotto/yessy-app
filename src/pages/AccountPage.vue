@@ -437,12 +437,11 @@
 import { Loading, Notify } from 'quasar'
 import createFormat from '../stores/formatting.js'
 import {
-  // getAvatar,
   getUser,
   logout,
   updateUser,
   deleteUserData,
-auth
+  auth
 } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
 import {
@@ -454,7 +453,6 @@ import {
   updateEmail,
   updatePassword
 } from 'firebase/auth'
-import { getAvatar } from 'src/boot/firebase'
 
 export default {
   name: 'AccountPage',
@@ -491,7 +489,6 @@ export default {
   },
   created() {
     this.reloadData()
-    console.log(auth.currentUser)
   },
   methods: {
     async reloadData() {
@@ -515,10 +512,12 @@ export default {
       //   })
       //   throw new Error(err)
       // })
-      await getUser(auth.currentUser.uid)
+      getUser(auth.currentUser.uid)
         .then((user) => {
           // LocalStorage.set('user', user)
           this.user = user
+          console.log(this.user)
+          Loading.hide()
         })
         .catch(() => {
           Notify.create({
@@ -536,27 +535,6 @@ export default {
           Loading.hide()
           this.$router.push({ name: 'home' })
           throw new Error('Une erreur est survenue')
-        })
-      getAvatar(this.user.avatar.id)
-        .then((avatar) => {
-          this.user.avatar = avatar
-          Loading.hide()
-        })
-        .catch(() => {
-          Notify.create({
-            message: 'Une erreur est survenue',
-            color: 'negative',
-            icon: 'report_problem',
-            timeout: 5000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-          Loading.hide()
-          this.$router.push({ name: 'home' })
         })
     },
     handleLogout() {

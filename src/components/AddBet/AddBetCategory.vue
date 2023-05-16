@@ -11,217 +11,246 @@
 </template>
 
 <script>
+import { getBetCategories } from 'src/boot/firebase'
 import createFormat from '../../stores/formatting.js'
+import { Loading, Notify } from 'quasar'
 
 export default {
   name: 'AddBetCategory',
   data() {
     return {
       createFormat: createFormat,
-      betCatgories: [
-        {
-          id: 1,
-          label: 'Actualités',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 2,
-          label: 'Football',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 3,
-          label: 'TV',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 4,
-          label: 'Basketball',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 5,
-          label: 'Jeux vidéos',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 6,
-          label: 'Course',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 7,
-          label: 'Musique',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 8,
-          label: 'Tennis',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 9,
-          label: 'Films',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 10,
-          label: 'Autres',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 11,
-          label: 'Actualités',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 12,
-          label: 'Football',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 13,
-          label: 'Basketball',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 14,
-          label: 'TV',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 15,
-          label: 'Jeux vidéos',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 16,
-          label: 'Course',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 17,
-          label: 'Musique',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 18,
-          label: 'Tennis',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 19,
-          label: 'Films',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 20,
-          label: 'Autres',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 21,
-          label: 'Actualités',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 22,
-          label: 'Football',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 23,
-          label: 'Basketball',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 24,
-          label: 'TV',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 25,
-          label: 'Jeux vidéos',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 26,
-          label: 'Course',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 27,
-          label: 'Musique',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 28,
-          label: 'Tennis',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 29,
-          label: 'Films',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 30,
-          label: 'Autres',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 31,
-          label: 'Actualités',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 32,
-          label: 'Football',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 33,
-          label: 'Basketball',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 34,
-          label: 'TV',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 35,
-          label: 'Jeux vidéos',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 36,
-          label: 'Course',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 37,
-          label: 'Musique',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 38,
-          label: 'Tennis',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 39,
-          label: 'Films',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-        {
-          id: 40,
-          label: 'Autres',
-          iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        },
-      ]
+      // betCatgories: [
+      //   {
+      //     id: 1,
+      //     label: 'Actualités',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 2,
+      //     label: 'Football',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 3,
+      //     label: 'TV',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 4,
+      //     label: 'Basketball',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 5,
+      //     label: 'Jeux vidéos',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 6,
+      //     label: 'Course',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 7,
+      //     label: 'Musique',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 8,
+      //     label: 'Tennis',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 9,
+      //     label: 'Films',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 10,
+      //     label: 'Autres',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 11,
+      //     label: 'Actualités',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 12,
+      //     label: 'Football',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 13,
+      //     label: 'Basketball',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 14,
+      //     label: 'TV',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 15,
+      //     label: 'Jeux vidéos',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 16,
+      //     label: 'Course',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 17,
+      //     label: 'Musique',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 18,
+      //     label: 'Tennis',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 19,
+      //     label: 'Films',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 20,
+      //     label: 'Autres',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 21,
+      //     label: 'Actualités',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 22,
+      //     label: 'Football',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 23,
+      //     label: 'Basketball',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 24,
+      //     label: 'TV',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 25,
+      //     label: 'Jeux vidéos',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 26,
+      //     label: 'Course',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 27,
+      //     label: 'Musique',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 28,
+      //     label: 'Tennis',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 29,
+      //     label: 'Films',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 30,
+      //     label: 'Autres',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 31,
+      //     label: 'Actualités',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 32,
+      //     label: 'Football',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 33,
+      //     label: 'Basketball',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 34,
+      //     label: 'TV',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 35,
+      //     label: 'Jeux vidéos',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 36,
+      //     label: 'Course',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 37,
+      //     label: 'Musique',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 38,
+      //     label: 'Tennis',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 39,
+      //     label: 'Films',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      //   {
+      //     id: 40,
+      //     label: 'Autres',
+      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
+      //   },
+      // ]
+      betCatgories: []
     }
   },
+  created() {
+    this.reloadData()
+  },
+  methods: {
+    reloadData() {
+      Loading.show()
+      getBetCategories().then((response) => {
+        this.betCatgories = response
+        Loading.hide()
+      }).catch(() => {
+        Notify.create({
+          message: 'Une erreur est survenue lors du chargement des catégories de paris',
+          color: 'negative',
+          icon: 'report_problem',
+          timeout: 5000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
+        this.$router.push({ name: 'home' })
+      })
+    }
+  }
 }
 </script>
 
