@@ -364,9 +364,9 @@ export async function getParticipationCount(betId) {
   const snap = await getCountFromServer(ref)
   return snap.data().count
 }
-export function addParticipation(userId, betId) {
+export function participate(betId) {
   return addDoc(collection(db, 'participations'), {
-    user: doc(db, 'users', userId),
+    user: doc(db, 'users', auth.currentUser.uid),
     bet: doc(db, 'simple_bets', betId)
   }).catch((error) => {
     throw new Error(error.message)

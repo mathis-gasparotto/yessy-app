@@ -8,6 +8,7 @@ import {
 import routes from './routes'
 // import { LocalStorage } from 'quasar'
 import { auth } from 'src/boot/firebase'
+import { LocalStorage } from 'quasar'
 
 /*
  * If not building with SSR mode, you can
@@ -45,6 +46,12 @@ export default route(function () {
       }
     }
     const isAuthenticated = auth.currentUser
+    if (!isAuthenticated && LocalStorage.has('user')) {
+      LocalStorage.remove('user')
+    }
+    if (!isAuthenticated && LocalStorage.has('token')) {
+      LocalStorage.remove('token')
+    }
     if (
       !isAuthenticated &&
       to.name !== 'login' &&
