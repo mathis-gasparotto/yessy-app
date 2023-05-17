@@ -167,7 +167,7 @@ export default {
           console.log(this.user)
           Loading.hide()
         })
-        .catch(() => {
+        .catch((e) => {
           Notify.create({
             message: 'Une erreur est survenue',
             color: 'negative',
@@ -182,7 +182,7 @@ export default {
           })
           Loading.hide()
           this.$router.push({ name: 'home' })
-          throw new Error('Une erreur est survenue')
+          throw new Error(e.message)
         })
     },
     handleLogout() {
@@ -236,7 +236,7 @@ export default {
               }
             ]
           })
-          throw new Error('Une erreur est survenue')
+          throw new Error(err.message)
         })
       }
       await updateUser(this.user.uid, payload).catch((err) => {
@@ -253,7 +253,7 @@ export default {
             }
           ]
         })
-        throw new Error('Une erreur est survenue')
+        throw new Error(err.message)
       })
       getUser(auth.currentUser.uid)
         .then((user) => {

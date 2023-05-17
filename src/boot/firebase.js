@@ -138,22 +138,43 @@ export function logout() {
 export async function getUser(uid) {
   const refUser = doc(db, 'users', uid)
   const snapUser = await getDoc(refUser)
-  const refUserData = doc(db, 'users_data', uid)
-  const snapUserData = await getDoc(refUserData)
-  if (snapUserData.exists() && snapUser.exists()) {
-    const avatar = await getAvatar(snapUser.data().avatar.id).then((res) => {
-      return res
-    }).catch((error) => {
-      throw new Error(error.message)
-    })
-    return {
-      ...snapUserData.data(),
-      ...snapUser.data(),
-      uid,
-      birthday: new Date(snapUserData.data().birthday.seconds * 1000),
-      createdAt: new Date(snapUserData.data().createdAt.seconds * 1000),
-      updatedAt: new Date(snapUserData.data().updatedAt.seconds * 1000),
-      avatar
+  if (snapUser.exists()) {
+    const snapUserData = await getDoc(doc(db, 'users_data', snapUser.id))
+    if (snapUserData.exists()) {
+      const avatar = await getDoc(snapUser.data().avatar)
+      return {
+        ...snapUserData.data(),
+        ...snapUser.data(),
+        uid: snapUser.id,
+        birthday: new Date(snapUserData.data().birthday.seconds * 1000),
+        createdAt: new Date(snapUserData.data().createdAt.seconds * 1000),
+        updatedAt: new Date(snapUserData.data().updatedAt.seconds * 1000),
+        avatar: avatar.data()
+      }
+    } else {
+      throw new Error('No such data!')
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function getUserWithDoc(ref) {
+  const snapUser = await getDoc(ref)
+  if (snapUser.exists()) {
+    const snapUserData = await getDoc(doc(db, 'users_data', snapUser.id))
+    if (snapUserData.exists()) {
+      const avatar = await getDoc(snapUser.data().avatar)
+      return {
+        ...snapUserData.data(),
+        ...snapUser.data(),
+        uid: snapUser.id,
+        birthday: new Date(snapUserData.data().birthday.seconds * 1000),
+        createdAt: new Date(snapUserData.data().createdAt.seconds * 1000),
+        updatedAt: new Date(snapUserData.data().updatedAt.seconds * 1000),
+        avatar: avatar.data()
+      }
+    } else {
+      throw new Error('No such data!')
     }
   } else {
     throw new Error('No such data!')
@@ -186,7 +207,7 @@ export function updateUser(uid, payload) {
     ...payload,
     updatedAt: new Date()
   }
-  return setDoc(doc(db, 'users_data', uid), payload, { merge: true }).then(() => {
+  return updateDoc(doc(db, 'users_data', uid), payload).then(() => {
     return payload
   }).catch((error) => {
     throw new Error(error.message)
@@ -245,16 +266,23 @@ export async function getBet(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
-    const author = await getUser(snap.data().author.id).then((res) => {
-      return res
-    }).catch((error) => {
-      throw new Error(error.message)
-    })
-    const category = await getBetCategory(snap.data().category.id).then((res) => {
-      return res
-    }).catch((error) => {
-      throw new Error(error.message)
-    })
+    const author = await getUserWithDoc(snap.data().author)
+    const category = await getBetCategoryWithDoc(snap.data().category)
+    return {
+      id: snap.id,
+      ...snap.data(),
+      author,
+      category
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function getBetWithDoc(ref) {
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    const author = await getUserWithDoc(snap.data().author)
+    const category = await getBetCategoryWithDoc(snap.data().category)
     return {
       id: snap.id,
       ...snap.data(),
@@ -323,6 +351,17 @@ export async function getAvatar(id) {
     throw new Error('No such data!')
   }
 }
+export async function getAvatarWithDoc(ref) {
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return {
+      id: snap.id,
+      ...snap.data()
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
 
 /**********************************
  ***  Bet Categories
@@ -350,26 +389,33 @@ export async function getBetCategory(id) {
     throw new Error('No such data!')
   }
 }
+export async function getBetCategoryWithDoc(ref) {
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return {
+      id: snap.id,
+      ...snap.data()
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
 
 /**********************************
  ***  Participations
  *********************************/
- export async function getMyParticipations() {
+ export function getMyParticipations() {
   const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
-  const snap = await getDocs(ref)
-  console.log(snap.docs.data())
-  const list = await snap.docs.map(async (doc) => {
-    let bet = await getBet(doc.data().bet.id).then((res) => {
-      return res
-    }).catch((error) => {
-      throw new Error(error.message)
+  return getDocs(ref).then((snap) => {
+    return snap.docs.map((doc) => {
+      return getBetWithDoc(doc.data().bet).then((res) => {
+        return {
+          participationId: doc.id,
+          ...res
+        }
+      })
     })
-    return {
-      participationId: doc.id,
-      ...bet
-    }
   })
-  return list
 }
 export async function getParticipationCount(betId) {
   const ref = query(collection(db, 'participations'), where('bet.id', '==', betId))
