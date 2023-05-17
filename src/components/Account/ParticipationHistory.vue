@@ -4,7 +4,7 @@
       <h2 class="text-h6">Historique des paris</h2>
     </div>
     <div class="history__list" v-if="bets">
-      <BetList :bets="bets" :loadingBetsProp="loadingBets" />
+      <!-- <BetList :bets="bets" :loadingBetsProp="loadingBets" /> -->
     </div>
   </div>
 </template>
@@ -12,13 +12,13 @@
 <script>
 import { Loading, Notify } from 'quasar'
 import { getMyParticipations } from 'src/boot/firebase'
-import BetList from '../BetList.vue'
+// import BetList from '../BetList.vue'
 
 export default {
   name: 'ParticipationHistory',
-  components: {
-    BetList
-  },
+  // components: {
+  //   BetList
+  // },
   data() {
     return {
       bets: null,
