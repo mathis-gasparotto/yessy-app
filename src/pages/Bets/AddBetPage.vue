@@ -27,8 +27,9 @@
 import AddBetPrivacy from 'src/components/AddBet/AddBetPrivacy.vue'
 import AddBetCategory from 'src/components/AddBet/AddBetCategory.vue'
 import AddBetForm from 'src/components/AddBet/AddBetForm.vue'
-import { useQuasar } from 'quasar'
+import { Notify, useQuasar } from 'quasar'
 import { addBet } from 'src/boot/firebase'
+import translate from '../../stores/translatting.js'
 
 export default {
   setup() {
@@ -72,7 +73,6 @@ export default {
     },
     chooseCategory(categoryId) {
       this.categoryId = categoryId
-      console.log(this.categoryId)
       this.component = 'AddBetForm'
     },
     submitForm(data) {
@@ -82,17 +82,28 @@ export default {
         privacy: this.privacy,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        startAt: new Date(data.startAt).getTime(),
-        endAt: new Date(data.endAt).getTime()
+        startAt: data.startAt ? new Date(data.startAt) : null,
+        endAt: new Date(data.endAt)
       }
-      addBet(payload)
+      addBet(payload, this.categoryId)
         .then((res) => {
           this.quasar.loading.hide()
           this.$router.push({ name: 'single-bet', params: { id: res } })
         })
-        .catch((error) => {
+        .catch((err) => {
           this.quasar.loading.hide()
-          console.log(error)
+          Notify.create({
+            message: translate().translateAddBetError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 5000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
         })
     }
   }

@@ -265,15 +265,17 @@ export async function getBet(id) {
     throw new Error('No such data!')
   }
 }
-export function addBet(payload) {
+export function addBet(payload, categoryId) {
   return addDoc(collection(db, 'simple_bets'), {
     ...payload,
+    category: doc(db, 'bet_categories', categoryId),
     author: doc(db, 'users', auth.currentUser.uid)
     // authorId: LocalStorage.getItem('user').uid
   }).then((ref) => {
     return {
       id: ref.id,
       ...payload,
+      category: doc(db, 'bet_categories', categoryId),
       author: doc(db, 'users', auth.currentUser.uid)
       // authorId: LocalStorage.getItem('user').uid
     }
@@ -281,8 +283,18 @@ export function addBet(payload) {
     throw new Error(error.message)
   })
 }
-export function deleteBet(id) {
-  return deleteDoc(doc(db, 'simple_bets', id))
+export async function deleteBet(id) {
+  const ref = doc(db, 'simple_bets', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    if (snap.data().author.id === auth.currentUser.uid) {
+      return deleteDoc(doc(db, 'simple_bets', id))
+    } else {
+      throw new Error('Vous ne pouvez pas supprimer ce pari')
+    }
+  } else {
+    throw new Error('No such data!')
+  }
 }
 
 /**********************************
@@ -364,13 +376,20 @@ export async function getParticipationCount(betId) {
   const snap = await getCountFromServer(ref)
   return snap.data().count
 }
-export function participate(betId) {
-  return addDoc(collection(db, 'participations'), {
-    user: doc(db, 'users', auth.currentUser.uid),
-    bet: doc(db, 'simple_bets', betId)
-  }).catch((error) => {
-    throw new Error(error.message)
-  })
+export async function participate(betId) {
+  const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)), where('bet', '==', doc(db, 'simple_bets', betId)))
+  // const count = console.log(await getCountFromServer(ref))
+  const snap = await getDocs(ref)
+  if (snap.docs.length > 0) {
+    throw new Error('Vous participez déjà à ce pari')
+  } else {
+    return addDoc(collection(db, 'participations'), {
+      user: doc(db, 'users', auth.currentUser.uid),
+      bet: doc(db, 'simple_bets', betId)
+    }).catch((error) => {
+      throw new Error(error.message)
+    })
+  }
 }
 export function deleteParticipation(id) {
   return deleteDoc(doc(db, 'participations', id))

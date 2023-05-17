@@ -59,5 +59,27 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateDeleteBetError(error) {
+    switch (error.message) {
+      case 'Vous ne pouvez pas supprimer ce pari':
+        return error.message
+      default:
+        return 'Une erreur est survenue'
+    }
+  },
+  translateAddBetError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue'
+    }
+  },
+  translateAddParticipationError(error) {
+    switch (error.message) {
+      case 'Vous participez déjà à ce pari':
+        return error.message
+      default:
+        return 'Une erreur est survenue'
+    }
   }
 })

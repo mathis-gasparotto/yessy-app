@@ -28,6 +28,50 @@
         </template>
       </q-input>
       <q-input
+        name="choiceA"
+        rounded
+        outlined
+        label="Premier choix"
+        class="q-mb-md global-input"
+        type="text"
+        v-model="form.choiceA"
+        lazy-rules
+        :rules="[
+          (val) => val.trim().length > 2 || 'Veullez renseigner minimum 3 caractères'
+        ]"
+        hide-bottom-space
+      >
+        <template v-slot:prepend>
+          <q-icon
+            name="fa fa-dice-four"
+            color="secondary"
+            size="xs"
+          ></q-icon>
+        </template>
+      </q-input>
+      <q-input
+        name="choiceB"
+        rounded
+        outlined
+        label="Second choix"
+        class="q-mb-md global-input"
+        type="text"
+        v-model="form.choiceB"
+        lazy-rules
+        :rules="[
+          (val) => val.trim().length > 2 || 'Veullez renseigner minimum 3 caractères'
+        ]"
+        hide-bottom-space
+      >
+        <template v-slot:prepend>
+          <q-icon
+            name="fa fa-dice-five"
+            color="secondary"
+            size="xs"
+          ></q-icon>
+        </template>
+      </q-input>
+      <q-input
         name="description"
         rounded
         outlined
@@ -355,7 +399,9 @@ export default {
         customReward: '',
         // cost: '',
         customCost: '',
-        description: ''
+        description: '',
+        choiceA: '',
+        choiceB: ''
       },
       validate: false,
       showPassword: false,
@@ -412,13 +458,15 @@ export default {
       this.$refs.addBetForm.validate().then((success) => {
         if (success) {
           const payload = {
-            label: this.form.label,
+            label: this.form.label.trim(),
             startAt: this.form.startAt,
             endAt: this.form.endAt,
             tokenRewardOdd: this.form.tokenRewardOdd,
-            customReward: this.form.customReward,
-            customCost: this.form.customCost,
-            description: this.form.description
+            customReward: this.form.customReward.trim(),
+            customCost: this.form.customCost.trim(),
+            description: this.form.description.trim(),
+            choiceA: this.form.choiceA.trim(),
+            choiceB: this.form.choiceB.trim()
           }
           this.$emit('submitForm', payload)
         } else {
@@ -429,7 +477,7 @@ export default {
     },
     validateForm() {
       if (
-        this.form.label && this.form.endAt && this.form.reward.value && this.form.description
+        this.form.label && this.form.endAt && this.form.reward.value && this.form.description && this.form.choiceA && this.form.choiceB
         && ((this.form.reward.value === 'other' && this.form.customReward && this.form.customCost) || (this.form.reward.value === 'tokens' && this.form.tokenRewardOdd))
       ) {
         this.$refs.addBetForm.validate().then((success) => {

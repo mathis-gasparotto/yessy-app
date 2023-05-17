@@ -113,12 +113,13 @@
 </template>
 
 <script>
-import { Loading } from 'quasar'
-import { auth, getBet } from 'src/boot/firebase'
+import { Loading, Notify } from 'quasar'
+import { auth, getBet, participate } from 'src/boot/firebase'
 import { deleteBet } from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
 import createFormat from '../../stores/formatting.js'
 import { getParticipationCount } from 'src/boot/firebase'
+import translate from '../../stores/translatting.js'
 
 export default {
   setup() {
@@ -163,7 +164,39 @@ export default {
   methods: {
     joinBet() {
       this.joinLoading = true
-      console.log('join bet')
+      participate(this.route.params.id)
+        .then(() => {
+          this.joinLoading = false
+          Notify.create({
+            message: 'Vous avez rejoint le paris',
+            color: 'positive',
+            icon: 'check_circle',
+            timeout: 5000,
+            position: 'top',
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          this.reloadData()
+        })
+        .catch((err) => {
+          this.joinLoading = false
+          Notify.create({
+            message: translate().translateAddParticipationError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 5000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
     },
     reloadData() {
       getBet(this.route.params.id).then((res) => {
@@ -195,9 +228,20 @@ export default {
       deleteBet(this.route.params.id).then(() => {
         this.deleteLoading = false
         this.$router.push({ name: 'public-bets' })
-      }).catch((e) => {
-        console.error(e)
+      }).catch((err) => {
         this.deleteLoading = false
+        Notify.create({
+          message: translate().translateDeleteBetError(err),
+          color: 'negative',
+          icon: 'report_problem',
+          timeout: 5000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
       })
     },
     isAuthor() {
