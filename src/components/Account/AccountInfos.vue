@@ -1,5 +1,5 @@
 <template>
-  <div class="account__details">
+  <div class="account__details" v-if="user">
     <div class="account_detail">
       <div class="account_detail__label text-h6 flex items-center">
         <p class="q-mb-0 text-bold q-mr-xs">Date de naissance</p>
@@ -386,7 +386,7 @@ export default {
   name: 'AccountInfos',
   data() {
     return {
-      user: {},
+      user: null,
       format: createFormat(),
       logoutLoading: false,
       deleteLoading: false,
