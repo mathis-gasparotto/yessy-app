@@ -40,7 +40,7 @@ export default {
           Loading.hide()
           this.loadingBets = false
         })
-        .catch(() => {
+        .catch((e) => {
           Notify.create({
             message: 'Une erreur est survenue',
             color: 'negative',
@@ -55,7 +55,8 @@ export default {
           })
           Loading.hide()
           this.$router.push({ name: 'home' })
-          throw new Error('Une erreur est survenue')
+          console.log(e)
+          throw new Error(e.message)
         })
     }
   }
