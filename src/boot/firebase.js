@@ -355,7 +355,7 @@ export async function getBetCategory(id) {
  ***  Participations
  *********************************/
  export async function getMyParticipations() {
-  const ref = query(collection(db, 'participations'), where('user.id', '==', auth.currentUser.uid))
+  const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
   const snap = await getDocs(ref)
   const list = snap.docs.map(async (doc) => {
     let bet = await getBet(doc.data().bet.id).then((res) => {
@@ -364,9 +364,8 @@ export async function getBetCategory(id) {
       throw new Error(error.message)
     })
     return {
-      id: doc.id,
-      ...doc.data(),
-      bet
+      participationId: doc.id,
+      ...bet
     }
   })
   return list
