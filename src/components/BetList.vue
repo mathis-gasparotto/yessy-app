@@ -1,7 +1,7 @@
 <template>
-  <q-list separator class="bet-list" v-if="!loadingBets">
+  <q-list separator class="bet-list" v-if="!loadingBets || loadingBetsProp === false">
     <BetItem
-      v-for="bet in bets"
+      v-for="bet in betList"
       :key="bet.id"
       :item="bet"
     />
@@ -17,6 +17,16 @@ export default {
   name: 'BetList',
   components: {
     BetItem
+  },
+  props: {
+    bets: {
+      type: Array,
+      required: false
+    },
+    loadingBetsProp: {
+      type: Boolean,
+      required: false
+    }
   },
   data() {
     return {
@@ -202,21 +212,27 @@ export default {
       //     endAt: '2023-03-11T12:00:00'
       //   }
       // ]
-      bets: null,
+      betList: null,
       loadingBets: true
     }
   },
   created () {
+    if (this.bets) {
+      console.log('oui')
+      this.betList = this.bets
+      console.log(this.betList)
+      return
+    }
     this.reloadData()
   },
   methods: {
     reloadData () {
       Loading.show()
       getBets().then((response) => {
-        this.bets = response
+        this.betList = response
         console.log(response)
         this.loadingBets = false
-        // this.bets.forEach((bet) => {
+        // this.betList.forEach((bet) => {
         //   bet.author = {
         //     id: 1,
         //     pseudo: 'John Doe',

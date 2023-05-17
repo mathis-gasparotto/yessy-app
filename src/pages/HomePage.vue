@@ -4,7 +4,6 @@
       <div class="page-content">
         <div class="home-cat-title">
           <h2 class="text-h6">Chauffe toi sur ces paris</h2>
-          <span class="underliner"></span>
         </div>
         <BetList class="bet-list-component" />
       </div>
@@ -30,7 +29,6 @@ export default {
 .home {
   &-cat-title {
     position: relative;
-    width: 70%;
     margin: auto;
     text-align: center;
     h2 {
@@ -38,15 +36,16 @@ export default {
       z-index: 1;
       font-weight: bold;
       display: inline;
-    }
-    .underliner {
-      position: absolute;
-      top: 20px;
-      left: -10px;
-      width: 110%;
-      background-color: $secondary;
-      height: 12px;
-      display: inline-block;
+      &::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        bottom: -5px;
+        left: -10px;
+        width: calc(100% + 20px);
+        height: 12px;
+        background-color: $secondary;
+      }
     }
   }
 }
