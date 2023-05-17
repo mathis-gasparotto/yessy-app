@@ -72,6 +72,7 @@ export default {
     },
     chooseCategory(categoryId) {
       this.categoryId = categoryId
+      console.log(this.categoryId)
       this.component = 'AddBetForm'
     },
     submitForm(data) {

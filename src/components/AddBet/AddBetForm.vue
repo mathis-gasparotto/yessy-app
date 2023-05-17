@@ -147,7 +147,7 @@
         lazy-rules
         :rules="[
           (val) =>
-            (/^-?[0-3]\d\/[0-1]\d\/\d\d\d\d\s\d\d:[0-5][0-9]$/.test(val) || val.length === 0) ||
+            (/^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) || val.length === 0) ||
             'Veullez renseigner une date valide',
           (val) => {
             const date = new Date(val)
@@ -187,7 +187,7 @@
               <q-date
                 v-model="form.startAt"
                 navigation-min-year-month="2023/01"
-                mask="DD/MM/YYYY HH:mm"
+                mask="YYYY/MM/DD HH:mm"
                 @update:model-value="
                   (value, reason, details) => handleUpdateDate(reason, 'startAt')
                 "
@@ -208,7 +208,7 @@
               <q-time
                 color="primary"
                 v-model="form.startAt"
-                mask="DD/MM/YYYY HH:mm"
+                mask="YYYY/MM/DD HH:mm"
                 v-else
               >
                 <div class="row items-center justify-end">
@@ -235,7 +235,7 @@
         lazy-rules
         :rules="[
           (val) =>
-            /^-?[0-3]\d\/[0-1]\d\/\d\d\d\d\s\d\d:[0-5][0-9]$/.test(val) ||
+            /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) ||
             'Veullez renseigner une date valide',
           (val) => {
             const date = new Date(val)
@@ -283,7 +283,7 @@
               <q-date
                 v-model="form.endAt"
                 navigation-min-year-month="2023/01"
-                mask="DD/MM/YYYY HH:mm"
+                mask="YYYY/MM/DD HH:mm"
                 @update:model-value="
                   (value, reason, details) => handleUpdateDate(reason, 'endAt')
                 "
@@ -304,7 +304,7 @@
               <q-time
                 color="primary"
                 v-model="form.endAt"
-                mask="DD/MM/YYYY HH:mm"
+                mask="YYYY/MM/DD HH:mm"
                 v-else
               >
                 <div class="row items-center justify-end">
