@@ -239,7 +239,7 @@ export default {
           message: 'Une erreur est survenue lors du chargement des catégories de paris',
           color: 'negative',
           icon: 'report_problem',
-          timeout: 5000,
+          timeout: 3000,
           actions: [
             {
               icon: 'close',

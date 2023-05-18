@@ -3,13 +3,14 @@
     <q-page class="flex flex-center column public-bets page">
       <div class="page-content">
         <BetList class="bet-list-component" />
-        <div class="public-bets__add-bet-container fixed">
+        <div class="public-bets__add-bet-container fixed" @click="() => $router.push({ name: 'add-bets' })">
           <q-btn
-            class="public-bets__add-bet"
-            color="primary"
+            class="public-bets__add-bet-btn q-mt-md q-ml-md"
+            color="secondary"
             icon="add"
             round
-            @click="() => $router.push({ name: 'add-bets' })"
+            size="25px"
+            padding="0"
           />
         </div>
       </div>
@@ -30,9 +31,22 @@ export default {
 
 <style lang="scss" scoped>
 .public-bets {
-  .public-bets__add-bet-container {
-    bottom: 100px;
-    right: 20px;
+  &__add-bet {
+    &-container {
+      bottom: 10px;
+      right: -50px;
+      background-color: $secondary;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+    }
+    &-btn {
+      color: #fff;
+      background-color: none !important;
+      &::before {
+        box-shadow: none !important;
+      }
+    }
   }
 }
 .page {

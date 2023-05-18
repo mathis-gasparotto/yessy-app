@@ -310,7 +310,7 @@
       <p class="account_detail__value" v-else>************</p>
     </div>
   </div>
-  <div class="account__toggles-container flex column">
+  <div class="account__toggles-container flex column" v-if="user">
     <q-toggle
       v-model="user.private"
       :label="`Compte ${user.private ? 'privé' : 'public'}`"
@@ -321,7 +321,7 @@
       size="60px"
       dense
       @update:model-value="
-        handleUpdateAccount({ private: user.private.trim() })
+        handleUpdateAccount({ private: user.private })
       "
     />
     <q-toggle
@@ -330,7 +330,7 @@
       color="primary"
       class="q-mb-md"
       @update:model-value="
-        handleUpdateAccount({ newsletter: user.newsletter.trim() })
+        handleUpdateAccount({ newsletter: user.newsletter })
       "
     />
   </div>
@@ -362,7 +362,7 @@
 </template>
 
 <script>
-import { Loading, Notify } from 'quasar'
+import { Dialog, Loading, Notify } from 'quasar'
 import createFormat from '../../stores/formatting.js'
 import {
   getUser,
@@ -384,6 +384,12 @@ import {
 
 export default {
   name: 'AccountInfos',
+  props: {
+    userData: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       user: null,
@@ -408,59 +414,13 @@ export default {
           showNewPassword: false,
           showConfirmPassword: false
         }
-      }
+      },
     }
   },
   created() {
-    this.reloadData()
+    this.user = this.userData
   },
   methods: {
-    async reloadData() {
-      Loading.show()
-      // await signInWithCustomToken(getAuth(), LocalStorage.getItem('token')).catch((err) => {
-      //   Loading.hide()
-      //   this.$router.push({ name: 'welcome' })
-      //   LocalStorage.remove('token')
-      //   LocalStorage.remove('user')
-      //   Notify.create({
-      //     message: 'Veuillez vous reconnecter',
-      //     color: 'negative',
-      //     icon: 'report_problem',
-      //     timeout: 5000,
-      //     actions: [
-      //       {
-      //         icon: 'close',
-      //         color: 'white'
-      //       }
-      //     ]
-      //   })
-      //   throw new Error(err)
-      // })
-      getUser(auth.currentUser.uid)
-        .then((user) => {
-          // LocalStorage.set('user', user)
-          this.user = user
-          console.log(this.user)
-          Loading.hide()
-        })
-        .catch(() => {
-          Notify.create({
-            message: 'Une erreur est survenue',
-            color: 'negative',
-            icon: 'report_problem',
-            timeout: 5000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-          Loading.hide()
-          this.$router.push({ name: 'home' })
-          throw new Error('Une erreur est survenue')
-        })
-    },
     handleLogout() {
       this.logoutLoading = true
       logout()
@@ -470,7 +430,7 @@ export default {
             message: 'Vous avez bien été déconnecté',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -485,7 +445,7 @@ export default {
             message: translate().translateLogoutError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -496,69 +456,88 @@ export default {
         })
     },
     async handleDeleteAccount() {
-      this.deleteLoading = true
-      await deleteUserData().then(() => {
-        this.$router.push({ name: 'welcome' })
-        Notify.create({
-          message: 'Votre compte a bien été supprimé',
-          color: 'positive',
-          icon: 'check_circle',
-          position: 'top',
-          timeout: 5000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
-        })
-      }).catch((err) => {
-        this.deleteLoading = false
-        Notify.create({
-          message: translate().translateDeleteUserError(err),
+      Dialog.create({
+        title: 'Supprimer le compte',
+        message: 'Êtes-vous sûr de vouloir supprimer votre compte ?',
+        persistent: true,
+        ok: {
+          label: 'Supprimer',
           color: 'negative',
-          icon: 'report_problem',
-          timeout: 5000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
-        })
-        throw new Error('Une erreur est survenue')
+          unelevated: true
+        },
+        cancel: {
+          label: 'Annuler',
+          color: 'primary',
+          unelevated: true
+        }
       })
-      logout()
-        .then(() => {
-          this.$router.push({ name: 'welcome' })
-          Notify.create({
-            message: 'Votre compte a bien été supprimé',
-            color: 'positive',
-            icon: 'check_circle',
-            timeout: 5000,
-            position: 'top',
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
+        .onOk(async () => {
+          this.deleteLoading = true
+          await deleteUserData().then(() => {
+            this.$router.push({ name: 'welcome' })
+            Notify.create({
+              message: 'Votre compte a bien été supprimé',
+              color: 'positive',
+              icon: 'check_circle',
+              position: 'top',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+          }).catch((err) => {
+            this.deleteLoading = false
+            Notify.create({
+              message: translate().translateDeleteUserError(err),
+              color: 'negative',
+              icon: 'report_problem',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+            throw new Error('Une erreur est survenue')
           })
+          // logout()
+          //   .then(() => {
+          //     this.$router.push({ name: 'welcome' })
+          //     Notify.create({
+          //       message: 'Vous avez bien été déconnecté',
+          //       color: 'positive',
+          //       icon: 'check_circle',
+          //       timeout: 3000,
+          //       actions: [
+          //         {
+          //           icon: 'close',
+          //           color: 'white'
+          //         }
+          //       ]
+          //     })
+          //   })
+          //   .catch((err) => {
+          //     this.deleteLoading = false
+          //     Notify.create({
+          //       message: translate().translateLogoutError(err),
+          //       color: 'negative',
+          //       icon: 'report_problem',
+          //       timeout: 3000,
+          //       actions: [
+          //         {
+          //           icon: 'close',
+          //           color: 'white'
+          //         }
+          //       ]
+          //     })
+          //   })
         })
-        .catch((err) => {
-          this.deleteLoading = false
-          Notify.create({
-            message: translate().translateLogoutError(err),
-            color: 'negative',
-            icon: 'report_problem',
-            timeout: 5000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
+        .onCancel(() => {
+          // console.log('Cancel')
         })
     },
     async handleUpdateAccount(payload) {
@@ -570,7 +549,7 @@ export default {
             message: translate().translateUpdateUserEmailError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -587,7 +566,7 @@ export default {
           message: translate().translateUpdateUserError(err),
           color: 'negative',
           icon: 'report_problem',
-          timeout: 5000,
+          timeout: 3000,
           actions: [
             {
               icon: 'close',
@@ -609,7 +588,7 @@ export default {
             message: 'Votre compte a bien été mis à jour',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 5000,
+            timeout: 3000,
             position: 'top',
             actions: [
               {
@@ -624,7 +603,7 @@ export default {
             message: translate().translateGetUserError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -644,7 +623,7 @@ export default {
           message: translate().translateUpdatePasswordError(err),
           color: 'negative',
           icon: 'report_problem',
-          timeout: 5000,
+          timeout: 3000,
           actions: [
             {
               icon: 'close',
@@ -662,7 +641,7 @@ export default {
             message: 'Votre mot de passe a bien été mis à jour',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 5000,
+            timeout: 3000,
             position: 'top',
             actions: [
               {
@@ -678,7 +657,7 @@ export default {
             message: translate().translateUpdatePasswordError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',

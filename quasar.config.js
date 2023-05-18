@@ -106,7 +106,8 @@ module.exports = configure(function (/* ctx */) {
         // 'firebaseResources'
         'Loading',
         'Notify',
-        'LocalStorage'
+        'LocalStorage',
+        'Dialog'
       ]
     },
 

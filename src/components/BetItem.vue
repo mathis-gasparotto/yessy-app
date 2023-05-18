@@ -5,7 +5,7 @@
     </div>
 
     <div class="bet-card-section bet-card-section--text flex justify-center column">
-      <q-item-label class="bet-card-pre-title">Pari en cours :</q-item-label>
+      <q-item-label class="bet-card-pre-title">{{ cardLabel }}</q-item-label>
       <q-item-label class="bet-card-title">{{ item.label }}</q-item-label>
     </div>
 
@@ -20,6 +20,20 @@ export default {
   name: 'BetItem',
   props: {
     item: Object
+  },
+  computed: {
+    cardLabel () {
+      const now = new Date()
+      const end = new Date(this.item.endAt.seconds * 1000)
+      const start = new Date(this.item.startAt.seconds * 1000)
+      if (now < start) {
+        return 'Paris à venir :'
+      } else if (now < end) {
+        return 'Paris en cours :'
+      } else {
+        return 'Paris terminés :'
+      }
+    }
   }
 }
 </script>

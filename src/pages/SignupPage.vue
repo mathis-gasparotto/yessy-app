@@ -253,7 +253,7 @@ export default {
                 color: 'positive',
                 icon: 'check_circle',
                 position: 'top',
-                timeout: 5000,
+                timeout: 3000,
                 actions: [
                   {
                     icon: 'close',
@@ -268,7 +268,7 @@ export default {
                 message: translate().translateSignupError(err),
                 color: 'negative',
                 icon: 'report_problem',
-                timeout: 5000,
+                timeout: 3000,
                 actions: [
                   {
                     icon: 'close',

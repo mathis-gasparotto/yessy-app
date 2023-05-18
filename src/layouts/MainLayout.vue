@@ -12,8 +12,8 @@
       <router-view />
     </q-page-container>
 
-    <q-footer>
-      <q-tabs align="center" class="bg-dark" indicator-color="transparent" active-color="secondary" >
+    <q-footer class="nav-bar-container">
+      <q-tabs align="center" class="bg-dark nav-bar" indicator-color="transparent" active-color="secondary" >
         <q-route-tab :to="{ name: 'home' }" icon="home" label="Accueil" />
         <q-route-tab :to="{ name: 'public-bets' }" icon="fa fa-trophy" label="Paris" />
         <!-- <q-route-tab :to="{name: 'friends'}" label="Amis" /> -->
@@ -31,5 +31,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.nav-bar {
+  border-radius: 20px 20px 0 0;
+  &-container {
+    background-color: transparent;
+  }
+}
 </style>

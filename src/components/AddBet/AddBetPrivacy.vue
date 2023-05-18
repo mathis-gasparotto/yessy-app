@@ -8,6 +8,7 @@
       <h2 class="add-bet-privacy__choice-text text-h4 text-bold">Pari Privé</h2>
       <q-icon class="add-bet-privacy__choice-icon" name="lock" color="white" size="100px"></q-icon>
     </div>
+    <div class="nav-bar-bg bg-primary"></div>
   </div>
 </template>
 
@@ -43,5 +44,8 @@ export default {
       }
     }
   }
+}
+.nav-bar-container {
+  background-color: $primary;
 }
 </style>
