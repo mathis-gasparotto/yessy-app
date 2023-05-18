@@ -2,7 +2,10 @@
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
       <div class="page-content" v-if="bet">
-        <q-img :src="bet.author.avatar.imgUrl" class="single-bet__author-avatar q-mb-md"></q-img>
+        <q-img
+          :src="bet.author.avatar.imgUrl"
+          class="single-bet__author-avatar q-mb-md"
+        ></q-img>
         <div class="single-bet__title-container">
           <img
             class="single-bet__privacy"
@@ -13,7 +16,8 @@
           </div>
         </div>
         <p class="single-bet__subtitle">
-          <span class="single-bet__created-by">créé par</span> <span class="single-bet__author">{{ bet.author.username }}</span>
+          <span class="single-bet__created-by">créé par&nbsp;</span>
+          <span class="single-bet__author text-bold">{{ bet.author.username }}</span>
         </p>
         <q-list class="single-bet__props">
           <q-item class="single-bet__prop">
@@ -58,7 +62,9 @@
                 src="~assets/quasar-logo-vertical.svg"
               />
             </span>
-            <p class="single-bet__prop-text">{{ createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000) }}</p>
+            <p class="single-bet__prop-text">
+              {{ createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000) }}
+            </p>
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
@@ -67,7 +73,9 @@
                 src="~assets/quasar-logo-vertical.svg"
               />
             </span>
-            <p class="single-bet__prop-text">{{ createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}</p>
+            <p class="single-bet__prop-text">
+              {{ createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}
+            </p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.customCost">
             <span class="single-bet__prop-icon-container">
@@ -83,9 +91,10 @@
           <span class="single-bet__participants-count">{{
             bet.participants
           }}</span>
-          participants
+          participant{{ bet.participants > 1 ? 's' : ''}}
         </div>
         <q-btn
+          v-if="iParticipate === false"
           label="Rejoindre le paris"
           type="button"
           color="secondary"
@@ -93,8 +102,19 @@
           @click.prevent="joinBet()"
           :loading="joinLoading"
           padding="xs"
-          class="text-bold btn btn-secondary single-bet__join-btn"
+          class="text-bold btn btn-secondary single-bet__leave-btn"
         />
+        <!-- <q-btn
+          v-else
+          label="Quitter le paris"
+          type="button"
+          color="secondary"
+          rounded
+          @click.prevent="leaveBet()"
+          :loading="leaveLoading"
+          padding="xs"
+          class="text-bold btn btn-secondary single-bet__join-btn"
+        /> -->
         <q-btn
           label="Supprimer le paris"
           type="button"
@@ -105,7 +125,7 @@
           :loading="deleteLoading"
           padding="xs"
           class="q-mb-md text-bold btn btn-secondary btn-bordered single-bet__delete-btn"
-          v-if="isAuthor()"
+          v-if="isAuthor"
         />
       </div>
     </q-page>
@@ -114,12 +134,11 @@
 
 <script>
 import { Loading, Notify } from 'quasar'
-import { auth, getBet, participate } from 'src/boot/firebase'
-import { deleteBet } from 'src/boot/firebase'
+import { auth, getBet, participate, iParticipate, deleteBet, getParticipationCount } from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
 import createFormat from '../../stores/formatting.js'
-import { getParticipationCount } from 'src/boot/firebase'
 import translate from '../../stores/translatting.js'
+// import { deleteParticipation } from 'src/boot/firebase'
 
 export default {
   setup() {
@@ -154,12 +173,19 @@ export default {
       bet: null,
       joinLoading: false,
       deleteLoading: false,
-      createFormat: createFormat()
+      createFormat: createFormat(),
+      iParticipate: null,
+      // leaveLoading: false
     }
   },
   created() {
     Loading.show()
     this.reloadData()
+  },
+  computed: {
+    isAuthor() {
+      return this.bet && this.bet.author.uid === auth.currentUser.uid
+    }
   },
   methods: {
     joinBet() {
@@ -171,7 +197,7 @@ export default {
             message: 'Vous avez rejoint le paris',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 5000,
+            timeout: 3000,
             position: 'top',
             actions: [
               {
@@ -188,7 +214,7 @@ export default {
             message: translate().translateAddParticipationError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -199,54 +225,94 @@ export default {
         })
     },
     reloadData() {
-      getBet(this.route.params.id).then((res) => {
-        this.bet = {
-          ...res,
-          // author: {
-          //   id: 1,
-          //   pseudo: 'John Doe',
-          //   avatarPath: '/src/assets/quasar-logo-vertical.svg'
-          // },
-          // category: {
-          //   id: 1,
-          //   title: 'Sport',
-          //   iconUrl: '/src/assets/quasar-logo-vertical.svg'
-          // }
-        }
-        getParticipationCount(this.route.params.id).then((res) => {
-          this.bet.participants = res
-        })
-        console.log(this.bet)
-        Loading.hide()
-      }).catch(() => {
-        Loading.hide()
-        this.$router.push({ name: 'public-bets' })
+      iParticipate(this.route.params.id).then((res) => {
+        this.iParticipate = res
       })
+      getBet(this.route.params.id)
+        .then((res) => {
+          this.bet = {
+            ...res
+            // author: {
+            //   id: 1,
+            //   pseudo: 'John Doe',
+            //   avatarPath: '/src/assets/quasar-logo-vertical.svg'
+            // },
+            // category: {
+            //   id: 1,
+            //   title: 'Sport',
+            //   iconUrl: '/src/assets/quasar-logo-vertical.svg'
+            // }
+          }
+          getParticipationCount(this.route.params.id).then((res) => {
+            this.bet.participants = res
+          })
+          Loading.hide()
+        })
+        .catch(() => {
+          Loading.hide()
+          this.$router.push({ name: 'public-bets' })
+        })
     },
     handleDeleteBet() {
       this.deleteLoading = true
-      deleteBet(this.route.params.id).then(() => {
-        this.deleteLoading = false
-        this.$router.push({ name: 'public-bets' })
-      }).catch((err) => {
-        this.deleteLoading = false
-        Notify.create({
-          message: translate().translateDeleteBetError(err),
-          color: 'negative',
-          icon: 'report_problem',
-          timeout: 5000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
+      deleteBet(this.route.params.id)
+        .then(() => {
+          this.deleteLoading = false
+          this.$router.push({ name: 'public-bets' })
         })
-      })
+        .catch((err) => {
+          this.deleteLoading = false
+          console.log(err)
+          Notify.create({
+            message: translate().translateDeleteBetError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
     },
-    isAuthor() {
-      return auth.currentUser.uid === this.bet.author.uid
-    }
+    // leaveBet() {
+    //   this.leaveLoading = true
+    //   deleteParticipation(this.route.params.id)
+    //     .then(() => {
+    //       this.leaveLoading = false
+    //       Notify.create({
+    //         message: 'Vous avez quitté le paris',
+    //         color: 'positive',
+    //         icon: 'check_circle',
+    //         timeout: 3000,
+    //         position: 'top',
+    //         actions: [
+    //           {
+    //             icon: 'close',
+    //             color: 'white'
+    //           }
+    //         ]
+    //       })
+    //       this.reloadData()
+    //     })
+    //     .catch((err) => {
+    //       this.leaveLoading = false
+    //       Notify.create({
+    //         message: translate().translateDeleteParticipationError(err),
+    //         color: 'negative',
+    //         icon: 'report_problem',
+    //         timeout: 3000,
+    //         actions: [
+    //           {
+    //             icon: 'close',
+    //             color: 'white'
+    //           }
+    //         ]
+    //       })
+    //     })
+    // }
   }
 }
 </script>
@@ -324,13 +390,11 @@ img {
       font-size: 1.7rem;
     }
   }
-  &__join-btn {
+  &__join-btn, &__leave-btn, &__delete-btn {
     width: 100%;
     font-size: 1.2rem;
   }
   &__delete-btn {
-    width: 100%;
-    font-size: 1.2rem;
     margin-top: 20px;
   }
 }

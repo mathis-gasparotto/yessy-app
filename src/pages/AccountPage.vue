@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <q-page class="page">
-      <div v-if="user.avatar">
+      <div v-if="!loadingUser">
         <div class="page-content">
           <div class="account__avatar-container q-mb-md">
             <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
@@ -71,11 +71,13 @@
           </div>
         </div>
         <div class="account__choices flex justify-between q-my-lg">
-          <q-btn :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'ParticipationHistory'" icon="fa fa-coins" size="1.5rem"></q-btn>
+          <q-btn :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'ParticipationHistory'" icon="fa fa-trophy" size="1.5rem"></q-btn>
+          <!-- <q-btn :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'ParticipationHistory'" icon="fa fa-coins" size="1.5rem"></q-btn> -->
           <q-btn :class="`account__choice-btn ${this.choice === 'AccountInfos' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'AccountInfos'" icon="settings" size="1.5rem"></q-btn>
         </div>
         <div class="page-content">
-          <component :is="choice" />
+          <AccountInfos :userData="user" v-if="!loadingUser && this.choice === 'AccountInfos'" />
+          <ParticipationHistory v-if="this.choice === 'ParticipationHistory'" />
           <div class="logout-btn-container" v-if="this.choice !== 'AccountInfos'">
             <q-btn
               label="Déconnexion"
@@ -132,7 +134,8 @@ export default {
           value: ''
         }
       },
-      choice: 'ParticipationHistory'
+      choice: 'ParticipationHistory',
+      loadingUser: true
     }
   },
   created() {
@@ -150,7 +153,7 @@ export default {
       //     message: 'Veuillez vous reconnecter',
       //     color: 'negative',
       //     icon: 'report_problem',
-      //     timeout: 5000,
+      //     timeout: 3000,
       //     actions: [
       //       {
       //         icon: 'close',
@@ -164,7 +167,7 @@ export default {
         .then((user) => {
           // LocalStorage.set('user', user)
           this.user = user
-          console.log(this.user)
+          this.loadingUser = false
           Loading.hide()
         })
         .catch((e) => {
@@ -172,7 +175,7 @@ export default {
             message: 'Une erreur est survenue',
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -194,7 +197,7 @@ export default {
             message: 'Vous avez bien été déconnecté',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -209,7 +212,7 @@ export default {
             message: translate().translateLogoutError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -228,7 +231,7 @@ export default {
             message: translate().translateUpdateUserEmailError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -245,7 +248,7 @@ export default {
           message: translate().translateUpdateUserError(err),
           color: 'negative',
           icon: 'report_problem',
-          timeout: 5000,
+          timeout: 3000,
           actions: [
             {
               icon: 'close',
@@ -267,7 +270,7 @@ export default {
             message: 'Votre compte a bien été mis à jour',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 5000,
+            timeout: 3000,
             position: 'top',
             actions: [
               {
@@ -282,7 +285,7 @@ export default {
             message: translate().translateGetUserError(err),
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',

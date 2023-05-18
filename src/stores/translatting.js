@@ -81,5 +81,13 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateDeleteParticipationError(error) {
+    switch (error.message) {
+      case 'Vous participez déjà à ce pari':
+        return error.message
+      default:
+        return 'Une erreur est survenue'
+    }
   }
 })

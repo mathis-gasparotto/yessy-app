@@ -1,24 +1,28 @@
 <template>
-  <div class="history">
+  <LoadingSpinner v-if="loadingBets" />
+  <div class="history q-pb-xl" v-else>
     <div class="history__title">
       <h2 class="text-h6">Historique des paris</h2>
     </div>
-    <div class="history__list" v-if="bets">
-      <!-- <BetList :bets="bets" :loadingBetsProp="loadingBets" /> -->
+    <div class="history__list" >
+      <BetList :bets="bets" v-if="bets && bets.length > 0"/>
+      <p class="text-center q-mt-lg" v-else-if="bets.length === 0">Vous n'avez pas encore participé à un pari</p>
     </div>
   </div>
 </template>
 
 <script>
-import { Loading, Notify } from 'quasar'
+import { Notify } from 'quasar'
 import { getMyParticipations } from 'src/boot/firebase'
-// import BetList from '../BetList.vue'
+import BetList from '../BetList.vue'
+import LoadingSpinner from '../LoadingSpinner.vue'
 
 export default {
   name: 'ParticipationHistory',
-  // components: {
-  //   BetList
-  // },
+  components: {
+    BetList,
+    LoadingSpinner
+  },
   data() {
     return {
       bets: null,
@@ -30,14 +34,11 @@ export default {
   },
   methods: {
     reloadData() {
-      Loading.show()
       this.loadingBets = true
       getMyParticipations()
         .then((bets) => {
           // LocalStorage.set('user', user)
           this.bets = bets
-          console.log(this.bets)
-          Loading.hide()
           this.loadingBets = false
         })
         .catch((e) => {
@@ -45,7 +46,7 @@ export default {
             message: 'Une erreur est survenue',
             color: 'negative',
             icon: 'report_problem',
-            timeout: 5000,
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -53,10 +54,7 @@ export default {
               }
             ]
           })
-          Loading.hide()
           this.$router.push({ name: 'home' })
-          console.log(e)
-          throw new Error(e.message)
         })
     }
   }

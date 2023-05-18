@@ -1,237 +1,57 @@
 <template>
-  <q-list separator class="bet-list" v-if="!loadingBets || loadingBetsProp === false">
+  <div class="q-mt-xl flex flex-center" v-if="loadingBets">
+    <LoadingSpinner />
+  </div>
+  <q-list separator class="bet-list" v-else-if="betList.length > 0">
     <BetItem
       v-for="bet in betList"
       :key="bet.id"
       :item="bet"
     />
   </q-list>
+  <p class="text-center q-mt-xl" v-else>Aucun paris n'est diponible pour le moment</p>
 </template>
 
 <script>
-import { Loading } from 'quasar'
+import { Notify } from 'quasar'
 import BetItem from './BetItem.vue'
-import { getBets } from 'src/boot/firebase'
+import { getBets, logout } from 'src/boot/firebase'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
   name: 'BetList',
   components: {
-    BetItem
+    BetItem,
+    LoadingSpinner
   },
   props: {
     bets: {
       type: Array,
       required: false
     },
-    loadingBetsProp: {
-      type: Boolean,
-      required: false
-    }
   },
   data() {
     return {
-      // bets: [
-      //   {
-      //     id: 1,
-      //     title: 'Bet 1',
-      //     description: 'Description 1',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 1,
-      //       title: 'Sport',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 2,
-      //     title: 'Bet 2',
-      //     description: 'Description 2',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 3,
-      //     title: 'Bet 3',
-      //     description: 'Description 3',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 4,
-      //     title: 'Bet 4',
-      //     description: 'Description 4',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 5,
-      //     title: 'Bet 5',
-      //     description: 'Description 5',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 6,
-      //     title: 'Bet 6',
-      //     description: 'Description 6',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 7,
-      //     title: 'Bet 7',
-      //     description: 'Description 7',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 8,
-      //     title: 'Bet 8',
-      //     description: 'Description 8',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 9,
-      //     title: 'Bet 9',
-      //     description: 'Description 9',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   },
-      //   {
-      //     id: 10,
-      //     title: 'Bet 10',
-      //     description: 'Description 10',
-      //     privacy: 'public',
-      //     author: {
-      //       id: 1,
-      //       pseudo: 'John Doe',
-      //       avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     category: {
-      //       id: 2,
-      //       title: 'Games',
-      //       iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //     },
-      //     rewardCustom: 'Le gagnant obtiendra un skin',
-      //     endAt: '2023-03-11T12:00:00'
-      //   }
-      // ]
-      betList: null,
+      betList: [],
       loadingBets: true
     }
   },
   created () {
     if (this.bets) {
-      console.log('oui')
       this.betList = this.bets
-      console.log(this.betList)
+      this.loadingBets = false
       return
     }
     this.reloadData()
   },
   methods: {
     reloadData () {
-      Loading.show()
-      getBets().then((response) => {
+      this.loadingBets = true
+      getBets('future').then((response) => {
         this.betList = response
-        console.log(response)
-        this.loadingBets = false
+        setTimeout(() => {
+          this.loadingBets = false
+        }, 1000)
         // this.betList.forEach((bet) => {
         //   bet.author = {
         //     id: 1,
@@ -244,7 +64,20 @@ export default {
         //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
         //   }
         // })
-        Loading.hide()
+      }).catch((e) => {
+        console.error(e)
+        Notify.create({
+          message: 'Une erreur est survenue',
+          color: 'negative',
+          icon: 'report_problem',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
       })
     }
   }
