@@ -49,9 +49,10 @@ export default {
       this.loadingBets = true
       getBets('future').then((response) => {
         this.betList = response
+        console.log(this.betList)
         setTimeout(() => {
           this.loadingBets = false
-        }, 1000)
+        }, 500)
         // this.betList.forEach((bet) => {
         //   bet.author = {
         //     id: 1,
