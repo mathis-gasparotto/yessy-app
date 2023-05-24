@@ -194,21 +194,32 @@ export async function getUserWithDoc(ref) {
 export function addUser(uid, payload, username) {
   payload = {
     ...payload,
-    private: false,
     createdAt: new Date(),
     updatedAt: new Date()
   }
   const toReturn = {
     ...payload,
+    private: false,
+    winMultiplier: 1,
     uid,
     username
   }
-  return setDoc(doc(db, 'users_data', uid), payload)
+  return setDoc(doc(db, 'users_data', uid), {
+    birthday: payload.birthday,
+    createdAt: payload.createdAt,
+    updatedAt: payload.updatedAt
+  })
     .then(() => {
       return setDoc(doc(db, 'users', uid), {
         username,
         avatar: doc(db, 'avatars', process.env.DEFAULT_AVATAR_ID),
-        disabled: false
+        referralCode: payload.referralCode,
+        newsletter: payload.newsletter,
+        disabled: false,
+        private: false,
+        winMultiplier: 1,
+        createdAt: payload.createdAt,
+        updatedAt: payload.updatedAt
       })
         .then(() => {
           return toReturn
@@ -221,12 +232,21 @@ export function addUser(uid, payload, username) {
       throw new Error(error.message)
     })
 }
-export function updateUser(uid, payload) {
+export function updateUserData(uid, payload) {
   payload = {
     ...payload,
     updatedAt: new Date()
   }
   return updateDoc(doc(db, 'users_data', uid), payload)
+    .then(() => {
+      return payload
+    })
+    .catch((error) => {
+      throw new Error(error.message)
+    })
+}
+export function updateUser(uid, payload) {
+  return updateDoc(doc(db, 'users', uid), payload)
     .then(() => {
       return payload
     })

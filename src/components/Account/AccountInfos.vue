@@ -368,6 +368,7 @@ import {
   getUser,
   logout,
   updateUser,
+  updateUserData,
   deleteUserData,
   auth
 } from 'src/boot/firebase'
@@ -542,8 +543,59 @@ export default {
     },
     async handleUpdateAccount(payload) {
       Loading.show()
-      if (payload.email) {
-        await updateEmail(getAuth().currentUser, payload.email).catch((err) => {
+      if (typeof payload.private !== 'undefined') {
+        await updateUser(auth.currentUser.uid, {private: payload.private}).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error('Une erreur est survenue')
+        })
+      } else if (typeof payload.referralCode !== 'undefined') {
+        await updateUser(auth.currentUser.uid, {referralCode: payload.referralCode}).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error('Une erreur est survenue')
+        })
+      } else if (typeof payload.newsletter !== 'undefined') {
+        await updateUser(auth.currentUser.uid, {newsletter: payload.newsletter}).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error('Une erreur est survenue')
+        })
+      } else if (typeof payload.email !== 'undefined') {
+        await updateEmail(auth.currentUser, payload.email).catch((err) => {
           Loading.hide()
           Notify.create({
             message: translate().translateUpdateUserEmailError(err),
@@ -559,23 +611,41 @@ export default {
           })
           throw new Error('Une erreur est survenue')
         })
-      }
-      await updateUser(this.user.uid, payload).catch((err) => {
-        Loading.hide()
-        Notify.create({
-          message: translate().translateUpdateUserError(err),
-          color: 'negative',
-          icon: 'report_problem',
-          timeout: 3000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
+        await updateUserData(this.user.uid, payload).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error('Une erreur est survenue')
         })
-        throw new Error('Une erreur est survenue')
-      })
+      } else {
+        await updateUserData(this.user.uid, payload).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error('Une erreur est survenue')
+        })
+
+      }
       getUser(auth.currentUser.uid)
         .then((user) => {
           // LocalStorage.set('user', user)
