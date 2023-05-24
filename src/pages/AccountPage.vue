@@ -103,8 +103,9 @@ import createFormat from '../stores/formatting.js'
 import {
   getUser,
   logout,
-  updateUser,
-  auth
+  updateUserData,
+  auth,
+updateUserName
 } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
 import {
@@ -224,7 +225,7 @@ export default {
     },
     async handleUpdateAccount(payload) {
       Loading.show()
-      if (payload.email) {
+      if (typeof payload.email !== 'undefined') {
         await updateEmail(getAuth().currentUser, payload.email).catch((err) => {
           Loading.hide()
           Notify.create({
@@ -241,23 +242,57 @@ export default {
           })
           throw new Error(err.message)
         })
-      }
-      await updateUser(this.user.uid, payload).catch((err) => {
-        Loading.hide()
-        Notify.create({
-          message: translate().translateUpdateUserError(err),
-          color: 'negative',
-          icon: 'report_problem',
-          timeout: 3000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
+        await updateUserData(this.user.uid, payload).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error(err.message)
         })
-        throw new Error(err.message)
-      })
+      } else if (typeof payload.username !== 'undefined') {
+        await updateUserName(this.user.uid, payload.username).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error(err.message)
+        })
+      } else {
+        await updateUserData(this.user.uid, payload.username).catch((err) => {
+          Loading.hide()
+          Notify.create({
+            message: translate().translateUpdateUserError(err),
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          throw new Error(err.message)
+        })
+      }
       getUser(auth.currentUser.uid)
         .then((user) => {
           // LocalStorage.set('user', user)
