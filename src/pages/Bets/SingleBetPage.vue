@@ -2,22 +2,38 @@
   <div class="page-container bg-2 single-bet">
     <q-page class="page flex flex-center column">
       <div class="page-content" v-if="bet">
+        <div class="single-bet__top-container">
+          <q-icon
+            class="single-bet__top-icon"
+            name="fa fa-trophy"
+            size="xl"
+            color="white"
+          ></q-icon>
+        </div>
         <q-img
-          :src="bet.author.avatar.imgUrl"
+          :src="bet.author.avatar.imgUrl || defaultAvatarUrl"
           class="single-bet__author-avatar q-mb-md"
         ></q-img>
         <div class="single-bet__title-container">
-          <img
-            class="single-bet__privacy"
-            src="~assets/quasar-logo-vertical.svg"
-          />
+          <q-icon
+            :class="`single-bet__privacy single-bet__privacy--${bet.privacy}`"
+            :name="`lock${bet.privacy === 'public' ? '_open' : ''}`"
+            color="white"
+          ></q-icon>
           <div class="single-bet__title-text">
             <h1 class="single-bet__title text-h6">{{ bet.label }}</h1>
           </div>
         </div>
         <p class="single-bet__subtitle">
           <span class="single-bet__created-by">créé par&nbsp;</span>
-          <span class="single-bet__author text-bold">{{ bet.author.username }}</span>
+          <span
+            :class="`single-bet__author ${
+              bet.author.username === 'Utilisateur supprimé'
+                ? 'text-italic'
+                : ''
+            }`"
+            >{{ bet.author.username }}</span
+          >
         </p>
         <q-list class="single-bet__props">
           <q-item class="single-bet__prop">
@@ -28,27 +44,33 @@
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
-              <img
+              <q-icon
                 class="single-bet__prop-icon"
-                src="~assets/quasar-logo-vertical.svg"
+                name="info_outline"
+                size="md"
+                color="secondary"
               />
             </span>
             <p class="single-bet__prop-text">{{ bet.description }}</p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.customReward">
             <span class="single-bet__prop-icon-container">
-              <img
+              <q-icon
                 class="single-bet__prop-icon"
-                src="~assets/quasar-logo-vertical.svg"
+                name="fa fa-gift"
+                size="md"
+                color="secondary"
               />
             </span>
             <p class="single-bet__prop-text">{{ bet.customReward }}</p>
           </q-item>
           <q-item class="single-bet__prop" v-else-if="bet.tokenRewardOdd">
             <span class="single-bet__prop-icon-container">
-              <img
+              <q-icon
                 class="single-bet__prop-icon"
-                src="~assets/quasar-logo-vertical.svg"
+                name="fa fa-gift"
+                size="md"
+                color="secondary"
               />
             </span>
             <p class="single-bet__prop-text">
@@ -57,9 +79,11 @@
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.startAt">
             <span class="single-bet__prop-icon-container">
-              <img
+              <q-icon
                 class="single-bet__prop-icon"
-                src="~assets/quasar-logo-vertical.svg"
+                name="calendar_month"
+                size="md"
+                color="secondary"
               />
             </span>
             <p class="single-bet__prop-text">
@@ -68,9 +92,11 @@
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container">
-              <img
+              <q-icon
                 class="single-bet__prop-icon"
-                src="~assets/quasar-logo-vertical.svg"
+                name="calendar_month"
+                size="md"
+                color="secondary"
               />
             </span>
             <p class="single-bet__prop-text">
@@ -79,19 +105,47 @@
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.customCost">
             <span class="single-bet__prop-icon-container">
-              <img
+              <q-icon
                 class="single-bet__prop-icon"
-                src="~assets/quasar-logo-vertical.svg"
+                name="fa fa-hand-holding-dollar"
+                size="md"
+                color="secondary"
               />
             </span>
             <p class="single-bet__prop-text">{{ bet.customCost }}</p>
           </q-item>
         </q-list>
-        <div class="single-bet__participants">
-          <span class="single-bet__participants-count">{{
-            bet.participants
-          }}</span>
-          participant{{ bet.participants > 1 ? 's' : ''}}
+        <div class="single-bet__participants flex items-center justify-evenly">
+          <span class="single-bet__participants-text">
+            <span class="single-bet__participants-count">{{
+              bet.participants
+            }}</span>
+            participant{{ bet.participants > 1 ? 's' : '' }}
+          </span>
+          <span
+            class="single-bet__participants-avatars"
+            v-if="bet.participants > 0"
+          >
+            <q-img
+              v-if="bet.participants > 0"
+              src="~assets/example-avatar-1.png"
+              class="single-bet__participant-avatar"
+              style="z-index: 3"
+            ></q-img>
+            <q-img
+              v-if="bet.participants > 1"
+              src="~assets/example-avatar-2.png"
+              class="single-bet__participant-avatar"
+              style="z-index: 2"
+            ></q-img>
+            <q-img
+              v-if="bet.participants > 2"
+              src="~assets/example-avatar-3.png"
+              class="single-bet__participant-avatar"
+              style="z-index: 1"
+            ></q-img>
+            <div class="single-bet__participants-surplus-count" v-if="bet.participants > 3">+{{ bet.participants - 3 }}</div>
+          </span>
         </div>
         <q-btn
           v-if="iParticipate === false"
@@ -134,7 +188,14 @@
 
 <script>
 import { Loading, Notify } from 'quasar'
-import { auth, getBet, participate, iParticipate, deleteBet, getParticipationCount } from 'src/boot/firebase'
+import {
+  auth,
+  getBet,
+  participate,
+  iParticipate,
+  deleteBet,
+  getParticipationCount
+} from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
 import createFormat from '../../stores/formatting.js'
 import translate from '../../stores/translatting.js'
@@ -175,6 +236,7 @@ export default {
       deleteLoading: false,
       createFormat: createFormat(),
       iParticipate: null,
+      defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL
       // leaveLoading: false
     }
   },
@@ -230,19 +292,7 @@ export default {
       })
       getBet(this.route.params.id)
         .then((res) => {
-          this.bet = {
-            ...res
-            // author: {
-            //   id: 1,
-            //   pseudo: 'John Doe',
-            //   avatarPath: '/src/assets/quasar-logo-vertical.svg'
-            // },
-            // category: {
-            //   id: 1,
-            //   title: 'Sport',
-            //   iconUrl: '/src/assets/quasar-logo-vertical.svg'
-            // }
-          }
+          this.bet = res
           getParticipationCount(this.route.params.id).then((res) => {
             this.bet.participants = res
           })
@@ -276,7 +326,7 @@ export default {
             ]
           })
         })
-    },
+    }
     // leaveBet() {
     //   this.leaveLoading = true
     //   deleteParticipation(this.route.params.id)
@@ -330,11 +380,27 @@ img {
   }
 }
 .single-bet {
+  &__top {
+    &-container {
+      margin-top: -15px;
+      width: 100%;
+      height: 120px;
+      background: url('/src/assets/single-bet-top.png') no-repeat top
+        center/contain;
+      text-align: center;
+    }
+    &-icon {
+      margin: auto;
+      margin-top: 30px;
+    }
+  }
   &__author {
+    font-weight: 700;
     &-avatar {
       width: 50px;
       height: 50px;
       border-radius: 50%;
+      margin-top: -30px;
     }
   }
   &__title {
@@ -345,8 +411,11 @@ img {
     }
     margin: 0;
     line-height: 1em;
-    font-weight: 900;
+    font-weight: 700;
     color: $primary;
+    &-text {
+      margin: auto 0;
+    }
   }
   &__subtitle {
     margin: auto;
@@ -356,17 +425,22 @@ img {
     color: $primary;
   }
   &__privacy {
-    width: 25px;
-    height: 25px;
-    padding: 5px;
-    fill: white;
-    stroke: white;
-    background-color: $secondary;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
     border: 2px solid white;
     border-radius: 5px;
+    &--public {
+      background-color: $secondary;
+    }
+    &--private {
+      background-color: $primary;
+    }
   }
   &__prop {
     &-icon {
+      stroke: $secondary;
+      fill: $secondary;
       &-container {
         margin-right: 10px;
       }
@@ -375,22 +449,49 @@ img {
       width: 100%;
     }
   }
-  &__participants {
-    margin: 20px 0;
-    color: white;
-    background-color: $primary;
-    padding: 8px;
-    width: 100%;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: 200;
-    &-count {
-      font-weight: 300;
-      font-size: 1.7rem;
+  &__participant {
+    &s {
+      &-text {
+        text-align: center;
+        font-size: 1.2em;
+        font-weight: 200;
+        padding: 5px 0;
+      }
+      margin: 20px 0;
+      color: white;
+      background-color: $primary;
+      padding: 8px;
+      width: 100%;
+      border-radius: 10px;
+      &-count {
+        font-weight: 300;
+        font-size: 1.7rem;
+      }
+      &-avatars {
+        display: flex;
+        justify-content: center;
+      }
+      &-surplus-count {
+        font-weight: 400;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $secondary;
+        border-radius: 50%;
+      }
+    }
+    &-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: -7px;
     }
   }
-  &__join-btn, &__leave-btn, &__delete-btn {
+  &__join-btn,
+  &__leave-btn,
+  &__delete-btn {
     width: 100%;
     font-size: 1.2rem;
   }

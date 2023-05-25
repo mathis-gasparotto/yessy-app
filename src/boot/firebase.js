@@ -504,15 +504,20 @@ export async function getMyParticipations() {
     where('user', '==', doc(db, 'users', auth.currentUser.uid))
   )
   const snap = await getDocs(ref)
-  const list = snap.docs.map((doc) => {
+  let list = snap.docs.map((doc) => {
     return getBetWithDoc(doc.data().bet).then((res) => {
       return {
         participationId: doc.id,
         ...res
       }
+    }).catch(() => {
+      return {deletedBet: true}
     })
   })
-  return Promise.all(list)
+  list = await Promise.all(list)
+  return list.filter((item) => {
+    return !item.deletedBet && !item.disabled
+  })
 }
 export async function getParticipationCount(betId, betCollectionName = 'simple_bets') {
   const ref = query(
