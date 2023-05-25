@@ -123,3 +123,9 @@ a {
   height: 72px;
   z-index: -1;
 }
+
+.text {
+  &-small {
+    font-size: 12px;
+  }
+}
