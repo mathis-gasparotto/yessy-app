@@ -76,7 +76,7 @@ $height: 100px;
       border-radius: 500000px;
     }
     &-pre-title {
-      font-weight: 800;
+      font-weight: 700;
       color: $secondary;
       font-size: 1.1rem;
     }

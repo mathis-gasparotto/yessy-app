@@ -35,6 +35,9 @@ export default {
   border-radius: 20px 20px 0 0;
   &-container {
     background-color: transparent;
+    .q-tab {
+      flex: 1 1 auto;
+    }
   }
 }
 </style>

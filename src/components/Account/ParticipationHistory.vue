@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      bets: null,
+      bets: [],
       loadingBets: true
     }
   },
@@ -38,23 +38,26 @@ export default {
       getMyParticipations()
         .then((bets) => {
           // LocalStorage.set('user', user)
+          console.log(bets)
           this.bets = bets
           this.loadingBets = false
         })
         .catch((e) => {
-          Notify.create({
-            message: 'Une erreur est survenue',
-            color: 'negative',
-            icon: 'report_problem',
-            timeout: 3000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-          this.$router.push({ name: 'home' })
+          if (e.message !== 'No such data!') {
+            Notify.create({
+              message: 'Une erreur est survenue',
+              color: 'negative',
+              icon: 'report_problem',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+          }
+          this.loadingBets = false
         })
     }
   }
