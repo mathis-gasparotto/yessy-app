@@ -38,32 +38,48 @@ export default route(function () {
   })
 
   Router.beforeEach((to, from, next) => {
-    if(auth.currentUser) {
+    if (auth.currentUser) {
       const now = new Date()
-      const expirationDate = new Date(auth.currentUser.stsTokenManager.expirationTime)
+      const expirationDate = new Date(
+        auth.currentUser.stsTokenManager.expirationTime
+      )
       if (expirationDate < now) {
         auth.currentUser.getIdToken(true)
       }
     }
     const isAuthenticated = auth.currentUser
-    if (!isAuthenticated && LocalStorage.has('user')) {
-      LocalStorage.remove('user')
-    }
-    if (!isAuthenticated && LocalStorage.has('token')) {
-      LocalStorage.remove('token')
-    }
+    // if (!isAuthenticated && LocalStorage.has('user')) {
+    //   LocalStorage.remove('user')
+    // }
+    // if (!isAuthenticated && LocalStorage.has('token')) {
+    //   LocalStorage.remove('token')
+    // }
     if (
       !isAuthenticated &&
       to.name !== 'login' &&
       to.name !== 'signup' &&
       to.name !== 'welcome'
     ) {
-      next({ name: from.name !== 'login' && from.name !== 'signup' && from.name !== 'welcome' ? 'welcome' : from.name })
+      next({
+        name:
+          from.name !== 'login' &&
+          from.name !== 'signup' &&
+          from.name !== 'welcome'
+            ? 'welcome'
+            : from.name
+      })
     } else if (
       isAuthenticated &&
       (to.name === 'login' || to.name === 'signup' || to.name === 'welcome')
     ) {
-      next({ name: from.name === 'login' || from.name === 'signup' || from.name === 'welcome' ? 'home' : from.name })
+      next({
+        name:
+          from.name === 'login' ||
+          from.name === 'signup' ||
+          from.name === 'welcome'
+            ? 'home'
+            : from.name
+      })
     } else {
       next()
     }
