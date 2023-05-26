@@ -1,6 +1,6 @@
 <template>
-  <div class="page-container">
-    <q-page class="flex flex-center page column add-bet bg-2 scroll">
+  <div class="page-container bg-white bg-white--image">
+    <q-page class="flex flex-center page column add-bet scroll">
       <div class="page-content">
         <div class="add-bet__header flex flex-center column q-py-md">
           <q-icon name="fa fa-trophy" color="white" size="30px"></q-icon>

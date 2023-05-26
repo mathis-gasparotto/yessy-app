@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="page-container bg-2 bg-2--image">
     <div class="public-bets__top-container flex column">
       <q-icon class="public-bets__top-icon" name="public" size="55px" color="white"></q-icon>
       <p class="public-bets__top-text">Paris public</p>
@@ -7,9 +7,10 @@
     <q-page class="flex flex-center column public-bets page">
       <div class="page-content">
         <BetList class="bet-list-component" />
-        <div class="public-bets__add-bet-container fixed" @click="() => $router.push({ name: 'add-bets' })">
-          <q-btn class="public-bets__add-bet-btn q-mt-md q-ml-md" color="secondary" icon="add" round size="25px"
+        <div class="public-bets__add-bet-container fixed flex column" @click="() => $router.push({ name: 'add-bets' })">
+          <q-btn class="public-bets__add-bet-btn q-mt-md q-ml-lg" color="secondary" icon="add" round size="25px"
             padding="0" />
+          <p class="text-white text-small q-ml-sm">Créer un pari</p>
         </div>
       </div>
     </q-page>
@@ -55,9 +56,10 @@ export default {
       bottom: 10px;
       right: -50px;
       background-color: $secondary;
-      width: 130px;
-      height: 130px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
+      align-items: start;
     }
 
     &-btn {

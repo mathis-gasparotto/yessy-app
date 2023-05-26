@@ -3,7 +3,15 @@
     width: 100%;
   }
   &-form {
-    width: 75%;
+    width: 90%;
+  }
+}
+.signup {
+  &-input, &-toggle, &-text {
+    width: 100%;
+  }
+  &-form {
+    width: 85%;
   }
 }
 

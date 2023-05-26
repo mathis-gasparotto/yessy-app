@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container bg-2 single-bet">
+  <div class="page-container bg-2 bg-2--image single-bet">
     <div class="single-bet__top-container">
       <q-icon class="single-bet__top-icon" name="fa fa-trophy" size="xl" color="white"></q-icon>
     </div>
@@ -90,12 +90,12 @@
         </div>
         <q-btn v-if="iParticipate === false" label="Rejoindre le paris" type="button" color="secondary" rounded
           @click.prevent="joinBet()" :loading="joinLoading" padding="xs"
-          class="text-bold btn btn-secondary single-bet__leave-btn" />
+          class="btn btn-secondary btn-bordered--thin single-bet__leave-btn" />
         <q-btn v-else label="Quitter le paris" type="button" color="secondary" rounded @click.prevent="leaveBet()"
-          :loading="leaveLoading" padding="xs" class="text-bold btn btn-secondary single-bet__join-btn" />
+          :loading="leaveLoading" padding="xs" class="btn btn-secondary single-bet__join-btn" />
         <q-btn label="Supprimer le paris" type="button" text-color="secondary" color="white" rounded
           @click.prevent="handleDeleteBet()" :loading="deleteLoading" padding="xs"
-          class="q-mb-md text-bold btn btn-secondary btn-bordered single-bet__delete-btn" v-if="isAuthor" />
+          class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn" v-if="isAuthor" />
       </div>
     </q-page>
   </div>

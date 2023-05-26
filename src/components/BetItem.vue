@@ -54,7 +54,6 @@ $height: 76px;
 
     &-section {
       &--img {
-        width: 25%;
         border-radius: 500000px;
         background-color: $primary;
         padding: $icon-spacing;
