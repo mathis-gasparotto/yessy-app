@@ -1,10 +1,10 @@
 <template>
-  <LoadingSpinner v-if="loadingBets" />
-  <div class="history q-pb-xl" v-else>
-    <div class="history__title">
+  <div class="history q-pb-xl">
+    <div class="history__title q-mb-md">
       <h2 class="text-h6">Historique des paris</h2>
     </div>
-    <div class="history__list" >
+    <LoadingSpinner v-if="loadingBets" />
+    <div class="history__list" v-else>
       <BetList :bets="bets" v-if="bets && bets.length > 0"/>
       <p class="text-center q-mt-lg" v-else-if="bets.length === 0">Vous n'avez pas encore participé à un pari</p>
     </div>
