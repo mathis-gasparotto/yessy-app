@@ -2,12 +2,19 @@
   <div class="page-container bg-2">
     <q-page class="flex flex-center column page">
       <div class="page-content">
-        <div class="home__user-container">
+        <div class="home__user-container flex q-my-md">
           <div class="home__user-avatar-container">
-            <q-img class="home__user-avatar" size="50px" :src="user.avatar.imgUrl" rounded />
+            <q-img class="home__user-avatar" :src="user.avatar.imgUrl" />
+          </div>
+          <div class="home__user-text">
+            <div class="home__user-username text-bold">{{ user.username }}</div>
+            <div class="home__user-token-count text-bold text-secondary">
+              <q-icon name="fa fa-coins"></q-icon>
+              {{ user.tokenCount }}
+            </div>
           </div>
         </div>
-        <div class="home-cat-title">
+        <div class="home-cat-title q-my-lg">
           <h2 class="text-h6">Chauffe toi sur ces paris</h2>
         </div>
         <BetList class="bet-list-component" />
@@ -42,9 +49,17 @@ export default {
 }
 
 .home {
+  &__user {
+    &-container {
+      gap: 10px;
+    }
+    &-avatar {
+      width: 70px;
+      height: 70px;
+    }
+  }
   &-cat-title {
     position: relative;
-    margin-bottom: 20px;
     text-align: center;
 
     h2 {
