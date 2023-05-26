@@ -1,17 +1,15 @@
 <template>
   <div class="page-container">
+    <div class="public-bets__top-container flex column">
+      <q-icon class="public-bets__top-icon" name="public" size="55px" color="white"></q-icon>
+      <p class="public-bets__top-text">Paris public</p>
+    </div>
     <q-page class="flex flex-center column public-bets page">
       <div class="page-content">
         <BetList class="bet-list-component" />
         <div class="public-bets__add-bet-container fixed" @click="() => $router.push({ name: 'add-bets' })">
-          <q-btn
-            class="public-bets__add-bet-btn q-mt-md q-ml-md"
-            color="secondary"
-            icon="add"
-            round
-            size="25px"
-            padding="0"
-          />
+          <q-btn class="public-bets__add-bet-btn q-mt-md q-ml-md" color="secondary" icon="add" round size="25px"
+            padding="0" />
         </div>
       </div>
     </q-page>
@@ -31,6 +29,27 @@ export default {
 
 <style lang="scss" scoped>
 .public-bets {
+  &__top {
+    &-container {
+      width: 100%;
+      height: 120px;
+      background: url('/src/assets/public-bets-top.png') no-repeat top center/contain;
+      text-align: center;
+    }
+
+    &-icon {
+      margin: 15px auto 0 auto;
+    }
+
+    &-text {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      margin: 0;
+      line-height: 1em;
+    }
+  }
+
   &__add-bet {
     &-container {
       bottom: 10px;
@@ -40,15 +59,18 @@ export default {
       height: 130px;
       border-radius: 50%;
     }
+
     &-btn {
       color: #fff;
       background-color: none !important;
+
       &::before {
         box-shadow: none !important;
       }
     }
   }
 }
+
 .page {
   justify-content: start;
 }

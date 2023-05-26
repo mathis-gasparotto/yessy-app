@@ -37,6 +37,10 @@ export default {
     background-color: transparent;
     .q-tab {
       flex: 1 1 auto;
+      &__label {
+        font-size: 16px;
+        font-weight: 300;
+      }
     }
   }
 }

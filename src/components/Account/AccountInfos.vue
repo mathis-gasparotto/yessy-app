@@ -311,7 +311,7 @@
     </div>
   </div>
   <div class="account__toggles-container flex column" v-if="user">
-    <q-toggle
+    <!-- <q-toggle
       v-model="user.private"
       :label="`Compte ${user.private ? 'privé' : 'public'}`"
       color="primary"
@@ -323,7 +323,7 @@
       @update:model-value="
         handleUpdateAccount({ private: user.private })
       "
-    />
+    /> -->
     <q-toggle
       v-model="user.newsletter"
       label="Recevoir la newsletter"

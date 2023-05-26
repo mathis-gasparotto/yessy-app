@@ -10,7 +10,7 @@
     </div>
 
     <div class="bet-card-section bet-card-section--next flex flex-center">
-      <q-btn flat round color="white" icon="navigate_next" class="bet-card-next-icon"/>
+      <q-btn flat round color="white" icon="navigate_next" class="bet-card-next-icon" />
     </div>
   </q-item>
 </template>
@@ -22,7 +22,7 @@ export default {
     item: Object
   },
   computed: {
-    cardLabel () {
+    cardLabel() {
       const now = new Date()
       const end = new Date(this.item.endAt.seconds * 1000)
       const start = new Date(this.item.startAt.seconds * 1000)
@@ -40,34 +40,41 @@ export default {
 
 <style lang="scss" scoped>
 $spacing: 12px;
-$height: 100px;
+$icon-spacing: 16px;
+$height: 76px;
+
 .bet {
   &-card {
     &-container {
-      height: $height;
+      height: calc(#{$height} + 2 * #{$spacing});
       padding: $spacing 0;
       gap: 15px;
       margin-left: -15px;
     }
+
     &-section {
       &--img {
         width: 25%;
+        border-radius: 500000px;
+        background-color: $primary;
+        padding: $icon-spacing;
       }
+
       &--text {
         width: 70%;
       }
+
       &--next {
         width: 25%;
       }
     }
+
     &-cat-icon {
-      width: calc(#{$height} - 2 * #{$spacing});
-      height: calc(#{$height} - 2 * #{$spacing});
-      background-color: $primary;
-      padding: 12px;
-      border-radius: 500000px;
+      width: calc(#{$height} - 2 * #{$icon-spacing});
+      height: calc(#{$height} - 2 * #{$icon-spacing});
       color: white;
     }
+
     &-next-icon {
       width: 40px;
       height: 40px;
@@ -75,11 +82,11 @@ $height: 100px;
       padding: 10px;
       border-radius: 500000px;
     }
+
     &-pre-title {
       font-weight: 700;
       color: $secondary;
       font-size: 1.1rem;
     }
   }
-}
-</style>
+}</style>

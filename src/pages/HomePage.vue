@@ -29,7 +29,7 @@ export default {
 .home {
   &-cat-title {
     position: relative;
-    margin: auto;
+    margin-bottom: 20px;
     text-align: center;
     h2 {
       position: relative;
