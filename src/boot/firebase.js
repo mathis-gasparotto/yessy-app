@@ -21,7 +21,7 @@ import {
   deleteUser
 } from 'firebase/auth'
 import createFormat from '../stores/formatting.js'
-// import { LocalStorage } from 'quasar'
+import { LocalStorage } from 'quasar'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -57,25 +57,21 @@ export async function signup(email, password, username, birthday, referralCode, 
             newsletter,
             referralCode: referralCode ? referralCode.trim() : ''
           }
-          return (
-            addUser(userCredential.user.uid, payload, username.trim())
-              // .then((res) => {
-              //   LocalStorage.set('token', userCredential.user.refreshToken)
-              //   LocalStorage.set('user', {
-              //     ...payload,
-              //     lastLoginAt: new Date(
-              //       parseInt(userCredential.user.metadata.lastLoginAt)
-              //     ),
-              //     birthday: new Date(res.birthday.seconds * 1000),
-              //     createdAt: new Date(res.createdAt.seconds * 1000),
-              //     updatedAt: new Date(res.updatedAt.seconds * 1000),
-              //     uid: userCredential.user.uid
-              //   })
-              // })
-              .catch((error) => {
-                throw new Error(error.message)
+          return addUser(userCredential.user.uid, payload, username.trim())
+            .then((res) => {
+              // LocalStorage.set('token', userCredential.user.refreshToken)
+              LocalStorage.set('user', {
+                ...payload,
+                lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
+                // birthday: new Date(res.birthday.seconds * 1000),
+                // createdAt: new Date(res.createdAt.seconds * 1000),
+                // updatedAt: new Date(res.updatedAt.seconds * 1000),
+                uid: userCredential.user.uid
               })
-          )
+            })
+            .catch((error) => {
+              throw new Error(error.message)
+            })
         })
         .catch((error) => {
           throw new Error(error.message)
@@ -90,25 +86,21 @@ export function login(email, password) {
     .then(() => {
       return signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          return (
-            getUser(userCredential.user.uid)
-              // .then((res) => {
+          return getUser(userCredential.user.uid)
+            .then((res) => {
               //   LocalStorage.set('token', userCredential.user.refreshToken)
-              //   LocalStorage.set('user', {
-              //     ...res,
-              //     lastLoginAt: new Date(
-              //       parseInt(userCredential.user.metadata.lastLoginAt)
-              //     ),
-              //     birthday: new Date(res.birthday.seconds * 1000),
-              //     createdAt: new Date(res.createdAt.seconds * 1000),
-              //     updatedAt: new Date(res.updatedAt.seconds * 1000),
-              //     uid: userCredential.user.uid
-              //   })
-              // })
-              .catch((error) => {
-                throw new Error(error.message)
+              LocalStorage.set('user', {
+                ...res,
+                lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
+                // birthday: new Date(res.birthday.seconds * 1000),
+                // createdAt: new Date(res.createdAt.seconds * 1000),
+                // updatedAt: new Date(res.updatedAt.seconds * 1000),
+                uid: userCredential.user.uid
               })
-          )
+            })
+            .catch((error) => {
+              throw new Error(error.message)
+            })
         })
         .catch((error) => {
           throw new Error(error.message)
@@ -120,17 +112,15 @@ export function login(email, password) {
 }
 export function logout() {
   const auth = getAuth(app)
-  return (
-    auth
-      .signOut()
-      // .then(() => {
-      //   LocalStorage.remove('token')
-      //   LocalStorage.remove('user')
-      // })
-      .catch((error) => {
-        throw new Error(error.message)
-      })
-  )
+  return auth
+    .signOut()
+    .then(() => {
+      // LocalStorage.remove('token')
+      LocalStorage.remove('user')
+    })
+    .catch((error) => {
+      throw new Error(error.message)
+    })
 }
 
 /**********************************

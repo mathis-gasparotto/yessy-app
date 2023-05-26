@@ -81,6 +81,7 @@ import {
 } from 'firebase/auth'
 import AccountInfos from 'src/components/Account/AccountInfos.vue'
 import ParticipationHistory from 'src/components/Account/ParticipationHistory.vue'
+import { LocalStorage } from 'quasar'
 
 export default {
   name: 'AccountPage',
@@ -130,7 +131,7 @@ export default {
       // })
       getUser(auth.currentUser.uid)
         .then((user) => {
-          // LocalStorage.set('user', user)
+          LocalStorage.set('user', user)
           this.user = user
           this.loadingUser = false
           Loading.hide()
@@ -259,7 +260,7 @@ export default {
       }
       getUser(auth.currentUser.uid)
         .then((user) => {
-          // LocalStorage.set('user', user)
+          LocalStorage.set('user', user)
           this.user = {
             ...user,
             avatar: this.user.avatar
