@@ -1,7 +1,7 @@
 <template>
   <div class="page-container bg-2 bg-2--image">
     <div class="public-bets__top-container flex column">
-      <q-icon class="public-bets__top-icon" name="public" size="55px" color="white"></q-icon>
+      <q-icon class="public-bets__top-icon" name="fa fa-earth-americas" size="55px" color="white"></q-icon>
       <p class="public-bets__top-text">Paris public</p>
     </div>
     <q-page class="flex flex-center column public-bets page">
