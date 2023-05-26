@@ -47,7 +47,7 @@ export default {
   methods: {
     reloadData () {
       this.loadingBets = true
-      getBets('future').then((response) => {
+      getBets('active').then((response) => {
         this.betList = response
         console.log(this.betList)
         setTimeout(() => {

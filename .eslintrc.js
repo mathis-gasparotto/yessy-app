@@ -62,7 +62,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
 
     semi: [1, 'never'],
-    quotes: ['error', 'single'],
+    // quotes: ['error', 'single'],
 
     'no-unused-vars': 'off',
     'no-unreachable': 'off',

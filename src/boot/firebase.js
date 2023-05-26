@@ -41,21 +41,11 @@ export const auth = getAuth(app)
 /**********************************
  ***  Auth
  *********************************/
-export async function signup(
-  email,
-  password,
-  username,
-  birthday,
-  referralCode,
-  newsletter
-) {
-  const q = query(
-    collection(db, 'users'),
-    where('username', '==', username.trim())
-  )
+export async function signup(email, password, username, birthday, referralCode, newsletter) {
+  const q = query(collection(db, 'users'), where('username', '==', username.trim()))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
-    throw new Error('Nom d\'utilisateur déjà utilisé')
+    throw new Error("Nom d'utilisateur déjà utilisé")
   }
   return setPersistence(auth, browserLocalPersistence)
     .then(() => {
@@ -65,7 +55,7 @@ export async function signup(
             email: userCredential.user.email.trim(),
             birthday: createFormat().dateTimeFormatToBDD(birthday),
             newsletter,
-            referralCode: referralCode ? referralCode.trim() : '',
+            referralCode: referralCode ? referralCode.trim() : ''
           }
           return (
             addUser(userCredential.user.uid, payload, username.trim())
@@ -255,13 +245,10 @@ export function updateUser(uid, payload) {
     })
 }
 export async function updateUserName(uid, username) {
-  const q = query(
-    collection(db, 'users'),
-    where('username', '==', username.trim())
-  )
+  const q = query(collection(db, 'users'), where('username', '==', username.trim()), where('disabled', '==', false))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
-    throw new Error('Nom d\'utilisateur déjà utilisé')
+    throw new Error("Nom d'utilisateur déjà utilisé")
   }
   const payload = {
     username: username.trim(),
@@ -276,7 +263,9 @@ export async function updateUserName(uid, username) {
     })
 }
 export async function deleteUserData() {
-  await updateDoc(doc(db, 'users', auth.currentUser.uid), {disabled: true}).catch((error) => {
+  await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+    disabled: true
+  }).catch((error) => {
     throw new Error(error.message)
   })
   await deleteMyParticipations().catch((error) => {
@@ -300,7 +289,7 @@ export async function getBets(type = 'all', privacy = 'public') {
     conditions.push(where('startAt', '>', now))
   } else if (type === 'active') {
     conditions.push(
-      where('startAt', '<=', now),
+      where('startAt', '<=', now)
       // where('endAt', '>', now)
     )
   } else if (type === 'ended') {
@@ -389,9 +378,10 @@ export function addBet(payload, categoryId) {
     category: doc(db, 'bet_categories', categoryId),
     author: doc(db, 'users', auth.currentUser.uid),
     disabled: false,
-    winnerChoice: null,
+    winnerChoice: null
     // authorId: LocalStorage.getItem('user').uid
-  }).then((ref) => {
+  })
+    .then((ref) => {
       return {
         id: ref.id,
         ...payload,
@@ -409,7 +399,7 @@ export async function deleteBet(id) {
   const snap = await getDoc(ref)
   if (snap.exists()) {
     if (snap.data().author.id === auth.currentUser.uid) {
-      updateDoc(doc(db, 'simple_bets', id), {disabled: true})
+      updateDoc(doc(db, 'simple_bets', id), { disabled: true })
     } else {
       throw new Error('Vous ne pouvez pas supprimer ce pari')
     }
@@ -499,20 +489,19 @@ export async function getBetCategoryWithDoc(ref) {
  ***  Participations
  *********************************/
 export async function getMyParticipations() {
-  const ref = query(
-    collection(db, 'participations'),
-    where('user', '==', doc(db, 'users', auth.currentUser.uid))
-  )
+  const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
   const snap = await getDocs(ref)
   let list = snap.docs.map((doc) => {
-    return getBetWithDoc(doc.data().bet).then((res) => {
-      return {
-        participationId: doc.id,
-        ...res
-      }
-    }).catch(() => {
-      return {deletedBet: true}
-    })
+    return getBetWithDoc(doc.data().bet)
+      .then((res) => {
+        return {
+          participationId: doc.id,
+          ...res
+        }
+      })
+      .catch(() => {
+        return { deletedBet: true }
+      })
   })
   list = await Promise.all(list)
   return list.filter((item) => {
@@ -520,10 +509,7 @@ export async function getMyParticipations() {
   })
 }
 export async function getParticipationCount(betId, betCollectionName = 'simple_bets') {
-  const ref = query(
-    collection(db, 'participations'),
-    where('bet', '==', doc(db, betCollectionName, betId))
-  )
+  const ref = query(collection(db, 'participations'), where('bet', '==', doc(db, betCollectionName, betId)))
   const snap = await getDocs(ref)
   return snap.docs.length
   // const snap = await getCountFromServer(ref)
@@ -558,31 +544,25 @@ export async function iParticipate(betId, betCollectionName = 'simple_bets') {
   return snap.docs.length > 0
 }
 export async function deleteMyParticipations() {
-  const ref = query(
-    collection(db, 'participations'),
-    where('user', '==', doc(db, 'users', auth.currentUser.uid))
-  )
+  const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
   const snap = await getDocs(ref)
   snap.docs.forEach((singleDoc) => {
     deleteDoc(doc(db, 'participations', singleDoc.id))
   })
 }
 export async function deleteBetParticipations(betDoc) {
-  const ref = query(
-    collection(db, 'participations'),
-    where('bet', '==', betDoc)
-  )
+  const ref = query(collection(db, 'participations'), where('bet', '==', betDoc))
   const snap = await getDocs(ref)
   snap.docs.forEach((singleDoc) => {
     deleteDoc(doc(db, 'participations', singleDoc.id))
   })
 }
-// export async function deleteParticipation(betId, betCollectionName = 'simple_bets') {
-//   const ref = query(
-//     collection(db, 'participations'),
-//     where('user', '==', doc(db, 'users', auth.currentUser.uid)),
-//     where('bet', '==', doc(db, betCollectionName, betId))
-//   )
-//   const snap = await getDocs(ref)
-//   return deleteDoc(doc(db, 'participations', snap.docs[0].id))
-// }
+export async function deleteParticipation(betId, betCollectionName = 'simple_bets') {
+  const ref = query(
+    collection(db, 'participations'),
+    where('user', '==', doc(db, 'users', auth.currentUser.uid)),
+    where('bet', '==', doc(db, betCollectionName, betId))
+  )
+  const snap = await getDocs(ref)
+  return deleteDoc(doc(db, 'participations', snap.docs[0].id))
+}
