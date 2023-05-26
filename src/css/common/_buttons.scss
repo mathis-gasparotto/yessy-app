@@ -1,5 +1,12 @@
 .btn {
   text-transform: unset;
+  &.text-bold {
+    .q-btn__content {
+      .block {
+        font-weight: 600;
+      }
+    }
+  }
   &-primary {
     background-color: $primary;
     color: $white;
@@ -10,7 +17,7 @@
     &.btn {
       &-bordered {
         border: 4px solid $secondary;
-        &-thin {
+        &--thin {
           border: 2px solid $secondary;
         }
       }

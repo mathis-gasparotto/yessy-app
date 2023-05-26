@@ -1,7 +1,7 @@
 <template>
   <q-layout
     view="lHh Lpr lFf"
-    :class="this.$route.name === 'signup' ? 'bg-white' : 'bg-primary'"
+    :class="this.$route.name === 'signup' ? 'bg-white bg-white--image' : 'bg-primary bg-primary--image'"
   >
     <q-page-container>
       <q-page class="flex flex-center column">

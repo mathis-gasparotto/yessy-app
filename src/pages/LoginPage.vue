@@ -1,7 +1,7 @@
 <template>
-  <q-container class="bg-primary login-page page">
+  <q-container class="login-page page">
     <q-img
-      src="~assets/quasar-logo-vertical.svg"
+      src="~assets/logo_yessy_carre.png"
       style="width: 200px; height: 200px"
       class="q-mb-xl"
     ></q-img>

@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="page-container bg-2">
     <q-page class="page">
       <div v-if="!loadingUser">
         <div class="page-content">
@@ -7,89 +7,53 @@
             <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
           </div>
           <div class="account__username-container q-mt-md">
-            <q-form
-              class="flex flex-center row form account-form"
-              ref="updateEmailForm"
-              v-if="forms.username.show"
-              @submit.prevent="
-                () => {
+            <q-form class="flex flex-center row form account-form" ref="updateEmailForm" v-if="forms.username.show"
+              @submit.prevent="() => {
                   handleUpdateAccount({ username: forms.username.value.trim() }).then(() => {
                     forms.username.show = false
                     forms.username.value = ''
                   })
                 }
-              "
-            >
-              <q-input
-                name="username"
-                outlined
-                autofocus
-                class="account-input"
-                type="text"
-                v-model="forms.username.value"
-                lazy-rules
-                :rules="[
+                ">
+              <q-input name="username" outlined autofocus class="account-input bg-white" type="text"
+                v-model="forms.username.value" lazy-rules :rules="[
                   (val) =>
                     val.length > 3 || 'Veullez renseigner minimum 4 caractères'
-                ]"
-                hide-bottom-space
-              ></q-input>
-              <q-btn
-                icon="save"
-                type="submit"
-                class="form-btn btn btn-primary account-submit"
-                padding="md"
-              />
-              <q-btn
-                icon="close"
-                type="button"
-                class="form-btn btn btn-secondary account-submit"
-                padding="md"
-                @click="
-                  () => {
-                    forms.username.show = false
-                    forms.username.value = ''
-                  }
-                "
-              />
+                ]" hide-bottom-space></q-input>
+              <q-btn icon="save" type="submit" class="form-btn btn btn-primary account-submit" padding="md" />
+              <q-btn icon="close" type="button" class="form-btn btn btn-secondary account-submit" padding="md" @click="() => {
+                  forms.username.show = false
+                  forms.username.value = ''
+                }
+                " />
             </q-form>
             <div class="text-h6 text-center account__username-content" v-else>
               <p class="account__username q-mr-xs text-bold">
                 {{ user.username }}
               </p>
-              <q-icon
-                name="edit"
-                color="secondary"
-                @click="
-                  () => {
-                    forms.username.show = true
-                    forms.username.value = user.username
-                  }
-                "
-              ></q-icon>
+              <q-icon name="edit" color="secondary" @click="() => {
+                  forms.username.show = true
+                  forms.username.value = user.username
+                }
+                "></q-icon>
             </div>
           </div>
         </div>
         <div class="account__choices flex justify-between q-my-lg">
-          <q-btn :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'ParticipationHistory'" icon="fa fa-trophy" size="1.5rem"></q-btn>
+          <q-btn
+            :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`"
+            @click="this.choice = 'ParticipationHistory'" icon="fa fa-trophy" size="1.5rem"></q-btn>
           <!-- <q-btn :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'ParticipationHistory'" icon="fa fa-coins" size="1.5rem"></q-btn> -->
-          <q-btn :class="`account__choice-btn ${this.choice === 'AccountInfos' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'AccountInfos'" icon="settings" size="1.5rem"></q-btn>
+          <q-btn :class="`account__choice-btn ${this.choice === 'AccountInfos' ? 'account__choice-btn--active' : ''}`"
+            @click="this.choice = 'AccountInfos'" icon="settings" size="1.5rem"></q-btn>
         </div>
         <div class="page-content">
           <AccountInfos :userData="user" v-if="!loadingUser && this.choice === 'AccountInfos'" />
           <ParticipationHistory v-if="this.choice === 'ParticipationHistory'" />
           <div class="logout-btn-container" v-if="this.choice !== 'AccountInfos'">
-            <q-btn
-              label="Déconnexion"
-              type="button"
-              color="secondary"
-              rounded
-              @click.prevent="handleLogout()"
-              :loading="logoutLoading"
-              size="20px"
-              padding="xs"
-              class="text-bold btn btn-secondary btn-full-width btn-thin logout-btn"
-            />
+            <q-btn label="Déconnexion" type="button" color="secondary" rounded @click.prevent="handleLogout()"
+              :loading="logoutLoading" size="20px" padding="xs"
+              class="text-bold btn btn-secondary btn-full-width btn-thin logout-btn" />
           </div>
         </div>
       </div>
@@ -105,7 +69,7 @@ import {
   logout,
   updateUserData,
   auth,
-updateUserName
+  updateUserName
 } from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
 import {
@@ -344,24 +308,29 @@ export default {
       border-radius: 50%;
       margin: auto;
     }
+
     &-img {
       border-radius: 50%;
       margin: auto;
     }
   }
+
   &__username {
     line-height: 1;
     margin-bottom: 0;
+
     &-content {
       display: flex;
       align-items: center;
       justify-content: center;
     }
   }
+
   &__choice {
     &s {
       width: 100vw;
     }
+
     &-btn {
       width: 35%;
       border: none;
@@ -370,24 +339,30 @@ export default {
       color: #fff;
       padding: 20px 0;
       transition: .2s ease-in-out;
+
       &:nth-of-type(1) {
         border-radius: 0 10px 10px 0;
       }
+
       &:nth-of-type(2) {
         border-radius: 10px 0 0 10px;
       }
+
       &--active {
         width: 50%;
       }
     }
   }
 }
+
 .page {
   padding-top: 20px;
 }
+
 .logout-btn {
   width: 85%;
   margin: auto;
+
   &-container {
     position: fixed;
     bottom: 90px;

@@ -3,14 +3,14 @@
     <p class="text-h6 q-py-md bg-primary text-center text-bold title">
       Inscription
     </p>
-    <q-form class="flex flex-center column form login-form" ref="signupForm" @submit.prevent="onsubmit()">
+    <q-form class="flex flex-center column form signup-form" ref="signupForm" @submit.prevent="onsubmit()">
       <q-input
         name="username"
         rounded
         outlined
         label="Nom d'utilisateur*"
         autofocus
-        class="q-mb-md login-input"
+        class="q-mb-md signup-input bg-white"
         type="text"
         v-model="form.username"
         lazy-rules
@@ -48,7 +48,7 @@
           }
         ]"
         label="Date d'anniversaire*"
-        class="q-mb-md login-input"
+        class="q-mb-md signup-input bg-white"
         hide-bottom-space
       >
         <template v-slot:append>
@@ -75,7 +75,7 @@
         rounded
         outlined
         label="Addresse email*"
-        class="q-mb-md login-input"
+        class="q-mb-md signup-input bg-white"
         type="text"
         v-model="form.email"
         lazy-rules
@@ -90,7 +90,7 @@
         rounded
         outlined
         label="Mot de passe*"
-        class="q-mb-md login-input"
+        class="q-mb-md signup-input bg-white"
         :type="showPassword ? 'text' : 'password'"
         v-model="form.password"
         lazy-rules
@@ -118,7 +118,7 @@
         rounded
         outlined
         label="Confirmation du mot de passe*"
-        class="q-mb-md login-input"
+        class="q-mb-md signup-input bg-white"
         :type="showConfirmPassword ? 'text' : 'password'"
         v-model="form.confirmPassword"
         lazy-rules
@@ -143,14 +143,14 @@
         rounded
         outlined
         label="Code de parrainage"
-        class="q-mb-md login-input"
+        class="q-mb-md signup-input bg-white"
         type="text"
         v-model="form.referralCode"
         hide-bottom-space
       ></q-input>
 
-      <p class="flex-end text-right login-text">*Champ obligatoire</p>
-      <q-toggle v-model="form.minAgeCheck" class="q-mb-md login-toggle">
+      <p class="flex-end text-right signup-text">*Champ obligatoire</p>
+      <q-toggle v-model="form.minAgeCheck" class="q-mb-md signup-toggle">
         <p>
           Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les
           <span class="text-underline">conditions générales</span>.
@@ -159,7 +159,7 @@
       <q-toggle
         v-model="form.newsletterCheck"
         label="J'accepte de recevoir le bonus d'inscription, les offres spéciales et les informations de la part de Yessy."
-        class="q-mb-lg login-toggle"
+        class="q-mb-lg signup-toggle"
       />
 
       <q-btn

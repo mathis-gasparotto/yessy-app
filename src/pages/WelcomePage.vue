@@ -1,12 +1,11 @@
 <template>
   <q-container
-    class="flex flex-center column bg-primary"
+    class="flex flex-center column"
     :style="{ color: 'white', width: '100%' }"
   >
     <q-img
-      src="~assets/quasar-logo-vertical.svg"
+      src="~assets/logo_yessy_carre.png"
       style="width: 200px; height: 200px"
-      class="q-mb-xl"
     ></q-img>
     <q-container class="q-my-xl">
       <p class="text-h2 text-bold">Vivez</p>

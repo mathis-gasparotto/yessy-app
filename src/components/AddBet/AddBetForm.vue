@@ -1,7 +1,7 @@
 <template>
   <div class="add-bet-category__cards page-content">
       <q-form class="add-bet-form__form flex flex-center column form" ref="addBetForm">
-        <q-input name="label" rounded outlined label="Intitulé du pari" autofocus class="q-mb-md global-input" type="text"
+        <q-input name="label" rounded outlined label="Intitulé du pari" autofocus class="q-mb-md global-input bg-white" type="text"
           v-model="form.label" lazy-rules :rules="[
             (val) => val.trim().length > 5 || 'Veullez renseigner minimum 6 caractères'
           ]" hide-bottom-space>
@@ -9,7 +9,7 @@
             <q-icon name="edit" color="secondary" size="xs"></q-icon>
           </template>
         </q-input>
-        <q-input name="choiceA" rounded outlined label="Premier choix" class="q-mb-md global-input" type="text"
+        <q-input name="choiceA" rounded outlined label="Premier choix" class="q-mb-md global-input bg-white" type="text"
           v-model="form.choiceA" lazy-rules :rules="[
             (val) => val.trim().length > 2 || 'Veullez renseigner minimum 3 caractères'
           ]" hide-bottom-space>
@@ -17,7 +17,7 @@
             <q-icon name="fa fa-dice-four" color="secondary" size="xs"></q-icon>
           </template>
         </q-input>
-        <q-input name="choiceB" rounded outlined label="Second choix" class="q-mb-md global-input" type="text"
+        <q-input name="choiceB" rounded outlined label="Second choix" class="q-mb-md global-input bg-white" type="text"
           v-model="form.choiceB" lazy-rules :rules="[
             (val) => val.trim().length > 2 || 'Veullez renseigner minimum 3 caractères'
           ]" hide-bottom-space>
@@ -25,7 +25,7 @@
             <q-icon name="fa fa-dice-five" color="secondary" size="xs"></q-icon>
           </template>
         </q-input>
-        <q-input name="description" rounded outlined label="Description" class="q-mb-md global-textarea" type="textarea"
+        <q-input name="description" rounded outlined label="Description" class="q-mb-md global-textarea bg-white" type="textarea"
           v-model="form.description" lazy-rules :rules="[
             (val) => val.trim().length > 0 || 'Veullez renseigner une description'
           ]" hide-bottom-space>
@@ -34,7 +34,7 @@
           </template>
         </q-input>
         <q-select rounded outlined name="reward" v-model="form.reward" :options="rewards" label="Récompense"
-          class="q-mb-md global-select" lazy-rules :rules="[
+          class="q-mb-md global-select bg-white" lazy-rules :rules="[
             (val) => typeof val === 'object' || 'Veullez renseigner un type de récompense'
           ]" hide-bottom-space>
           <template v-slot:prepend>
@@ -42,7 +42,7 @@
           </template>
         </q-select>
         <q-input v-if="form.reward.value === 'tokens'" name="tokenRewardOdd" rounded outlined label="Cote"
-          class="q-mb-md global-input" type="number" v-model="form.tokenRewardOdd" lazy-rules :rules="[
+          class="q-mb-md global-input bg-white" type="number" v-model="form.tokenRewardOdd" lazy-rules :rules="[
             (val) => (form.reward.value === 'other' || val > 1) || 'Veullez renseigner une cote supérieure à 1'
           ]" hide-bottom-space>
           <template v-slot:prepend>
@@ -50,7 +50,7 @@
           </template>
         </q-input>
         <q-input v-if="form.reward.value === 'other'" name="customReward" rounded outlined label="Récompense personnalisée"
-          class="q-mb-md global-input" type="text" v-model="form.customReward" lazy-rules :rules="[
+          class="q-mb-md global-input bg-white" type="text" v-model="form.customReward" lazy-rules :rules="[
             (val) => (form.reward.value === 'tokens' || val.trim().length > 0) || 'Veullez renseigner une récompense personnalisée'
           ]" hide-bottom-space>
           <template v-slot:prepend>
@@ -58,7 +58,7 @@
           </template>
         </q-input>
         <q-input v-if="form.reward === rewards[1]" name="customCost" rounded outlined label="Mise en jeu"
-          class="q-mb-md global-input" type="text" v-model="form.customCost" lazy-rules :rules="[
+          class="q-mb-md global-input bg-white" type="text" v-model="form.customCost" lazy-rules :rules="[
             (val) => (form.reward === rewards[0] || val.trim().length > 0) || 'Veullez renseigner une mise en jeu'
           ]" hide-bottom-space>
           <template v-slot:prepend>
@@ -76,7 +76,7 @@
               (now < date || val.length === 0) || 'Veuillez renseigner une date supérieure à maintenant'
             )
           }
-        ]" label="Date de début" class="q-mb-md global-input q-mb-0" hide-bottom-space mask="datetime">
+        ]" label="Date de début" class="q-mb-md global-input q-mb-0 bg-white" hide-bottom-space mask="datetime">
           <template v-slot:prepend>
             <q-icon name="calendar_month" color="secondary" size="xs"></q-icon>
           </template>
@@ -128,7 +128,7 @@
               'Veuillez renseigner une date supérieure à la date de début'
             )
           }
-        ]" label="Date de fin" class="q-mb-md global-input" hide-bottom-space>
+        ]" label="Date de fin" class="q-mb-md global-input bg-white" hide-bottom-space>
           <template v-slot:prepend>
             <q-icon name="sports_score" color="secondary" size="xs">
             </q-icon>
