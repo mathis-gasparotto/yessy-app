@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$spacing: 12px;
+$spacing: 10px;
 $icon-spacing: 16px;
 $height: 76px;
 

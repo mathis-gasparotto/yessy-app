@@ -3,7 +3,13 @@
     <q-page class="page">
       <div v-if="!loadingUser">
         <div class="page-content">
-          <div class="account__avatar-container q-mb-md">
+          <div class="account__avatar-container q-mb-md position-relative">
+            <div class="account__token-count-container absolute flex flex-center column text-white">
+              <div class="account_token-count">
+                {{ user.tokenCount }}
+              </div>
+              <q-icon name="fa fa-coins" size="lg"></q-icon>
+            </div>
             <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
           </div>
           <div class="account__username-container q-mt-md">
@@ -39,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="account__choices flex justify-between q-my-lg">
+        <div class="account__choices flex justify-between q-mt-lg q-mb-md">
           <q-btn
             :class="`account__choice-btn ${this.choice === 'ParticipationHistory' ? 'account__choice-btn--active' : ''}`"
             @click="this.choice = 'ParticipationHistory'" icon="fa fa-trophy" size="1.5rem"></q-btn>
@@ -302,12 +308,26 @@ export default {
 
 <style lang="scss" scoped>
 .account {
+  &__token-count {
+    &-container {
+      bottom: 0;
+      left: -70px;
+      padding: 10px;
+      height: 90px;
+      width: 90px;
+      border-radius: 50%;
+      background: url('/src/assets/token-bg.svg') no-repeat center center/cover;
+      z-index: 1;
+    }
+    // ba
+  }
   &__avatar {
     &-container {
       width: 150px;
       height: 150px;
       border-radius: 50%;
       margin: auto;
+      position: relative;
     }
 
     &-img {
