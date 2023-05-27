@@ -71,7 +71,6 @@ $height: 76px;
     &-cat-icon {
       width: calc(#{$height} - 2 * #{$icon-spacing});
       height: calc(#{$height} - 2 * #{$icon-spacing});
-      color: white;
     }
 
     &-next-icon {

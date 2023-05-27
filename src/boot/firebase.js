@@ -363,13 +363,12 @@ export async function getBetWithDoc(ref) {
     throw new Error('No such data!')
   }
 }
-export function addBet(payload, categoryId) {
-  return addDoc(collection(db, 'simple_bets'), {
+export async function addBet(payload, choices, categoryId) {
+  const betCreated = await addDoc(collection(db, 'simple_bets'), {
     ...payload,
     category: doc(db, 'bet_categories', categoryId),
     author: doc(db, 'users', auth.currentUser.uid),
-    disabled: false,
-    winnerChoice: null
+    disabled: false
     // authorId: LocalStorage.getItem('user').uid
   })
     .then((ref) => {
@@ -384,17 +383,44 @@ export function addBet(payload, categoryId) {
     .catch((error) => {
       throw new Error(error.message)
     })
+
+  // add choices linked to the bet
+  const choicesCreated = await choices.map((choice) => {
+    return addChoice(choice.label, doc(db, 'simple_bets', betCreated.id))
+      .then((ref) => {
+        return {
+          id: ref.id,
+          label: choice.label,
+          bet: doc(db, 'simple_bets', betCreated.id)
+        }
+      })
+      .catch((error) => {
+        throw new Error(error.message)
+      })
+  })
+
+  return Promise.all(choicesCreated).then(() => {
+    return {
+      ...betCreated,
+      chocies: choicesCreated
+    }
+  })
 }
 export async function deleteBet(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
     if (snap.data().author.id === auth.currentUser.uid) {
-      updateDoc(doc(db, 'simple_bets', id), { disabled: true })
+      await updateDoc(doc(db, 'simple_bets', id), { disabled: true })
+
+      // delete all choices
+      await deleteChoices(ref)
+
+      // delete all participations
+      return deleteBetParticipations(ref)
     } else {
       throw new Error('Vous ne pouvez pas supprimer ce pari')
     }
-    return deleteBetParticipations(ref)
   } else {
     throw new Error('No such data!')
   }
@@ -556,4 +582,41 @@ export async function deleteParticipation(betId, betCollectionName = 'simple_bet
   )
   const snap = await getDocs(ref)
   return deleteDoc(doc(db, 'participations', snap.docs[0].id))
+}
+
+/**********************************
+ ***  Bet Choices
+ *********************************/
+export async function getBetChoices(betDoc) {
+  const ref = query(collection(db, 'bet_choices'), where('bet', '==', betDoc))
+  const snap = await getDocs(ref)
+  const list = snap.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+  return list
+}
+export function addChoice(label, betDoc) {
+  return addDoc(collection(db, 'bet_choices'), {
+    label,
+    bet: betDoc
+  })
+    .then((res) => {
+      return {
+        id: res.id,
+        label
+      }
+    })
+    .catch((error) => {
+      throw new Error(error.message)
+    })
+}
+export async function deleteChoices(betDoc) {
+  const ref = query(collection(db, 'bet_choices'), where('bet', '==', betDoc))
+  const snap = await getDocs(ref)
+  snap.docs.forEach((singleDoc) => {
+    deleteDoc(doc(db, 'bet_choices', singleDoc.id))
+  })
 }

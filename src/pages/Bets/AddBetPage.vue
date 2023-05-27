@@ -16,7 +16,7 @@
         <component :is="component"
           @choosePrivacy="(privacy) => choosePrivacy(privacy)"
           @chooseCategory="(categoryId) => chooseCategory(categoryId)"
-          @submitForm="(data) => submitForm(data)"
+          @submitForm="(data, choices) => submitForm(data, choices)"
         />
       </div>
     </q-page>
@@ -68,20 +68,20 @@ export default {
       this.categoryId = categoryId
       this.component = 'AddBetForm'
     },
-    submitForm(data) {
+    submitForm(data, choices) {
       Loading.show()
       const payload = {
         ...data,
         privacy: this.privacy,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         startAt: data.startAt ? new Date(data.startAt) : new Date(),
         endAt: new Date(data.endAt)
       }
-      addBet(payload, this.categoryId)
+      addBet(payload, choices, this.categoryId)
         .then((res) => {
           Loading.hide()
-          this.$router.push({ name: 'single-bet', params: { id: res } })
+          this.$router.push({ name: 'single-bet', params: { id: res.id } })
         })
         .catch((err) => {
           Loading.hide()
