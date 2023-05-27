@@ -1,17 +1,22 @@
 <template>
   <div class="page-container bg-2 bg-2--image">
-    <div class="public-bets__top-container flex column">
-      <q-icon class="public-bets__top-icon" name="fa fa-earth-americas" size="55px" color="white"></q-icon>
-      <p class="public-bets__top-text">Paris public</p>
-    </div>
     <q-page class="flex flex-center column public-bets page">
+      <div class="public-bets__top-container flex column">
+        <q-icon class="public-bets__top-icon" name="fa fa-earth-americas" size="55px" color="white"></q-icon>
+        <p class="public-bets__top-text">Paris public</p>
+      </div>
       <div class="page-content">
         <BetList class="bet-list-component" />
-        <div class="public-bets__add-bet-container fixed flex column" @click="() => $router.push({ name: 'add-bets' })">
-          <q-btn class="public-bets__add-bet-btn q-mt-md q-ml-lg" color="secondary" icon="add" round size="25px"
-            padding="0" />
-          <p class="text-white text-small q-ml-sm">Créer un pari</p>
-        </div>
+        <q-btn
+          class="public-bets__add-bet-btn q-mt-md q-ml-lg fixed"
+          label="Créer un pari"
+          color="secondary"
+          icon="add"
+          round
+          size="25px"
+          padding="0"
+          @click.prevent="() => $router.push({ name: 'add-bets' })"
+        />
       </div>
     </q-page>
   </div>
@@ -52,19 +57,15 @@ export default {
   }
 
   &__add-bet {
-    &-container {
+
+    &-btn {
       bottom: 10px;
       right: -50px;
       background-color: $secondary;
       width: 140px;
       height: 140px;
       border-radius: 50%;
-      align-items: start;
-    }
-
-    &-btn {
       color: #fff;
-      background-color: none !important;
 
       &::before {
         box-shadow: none !important;
@@ -75,5 +76,28 @@ export default {
 
 .page {
   justify-content: start;
+}
+</style>
+<style lang="scss">
+.public-bets {
+  &__add-bet {
+    &-btn {
+      .q-btn__content {
+        flex-direction: column;
+        justify-content: start;
+        margin: 15px 0 0 -45px;
+        i {
+          margin: 0;
+        }
+        span {
+          font-size: 12px;
+          text-transform: initial;
+          font-weight: 300;
+          line-height: 1;
+          // margin-left: -10px;
+        }
+      }
+    }
+  }
 }
 </style>

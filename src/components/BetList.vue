@@ -15,7 +15,7 @@
 <script>
 import { Notify } from 'quasar'
 import BetItem from './BetItem.vue'
-import { getBets, logout } from 'src/boot/firebase'
+import { getBets } from 'src/boot/firebase'
 import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
@@ -50,21 +50,10 @@ export default {
       getBets('active').then((response) => {
         this.betList = response
         console.log(this.betList)
+        // Timeout is required to avoid a bug with loading categories icons
         setTimeout(() => {
           this.loadingBets = false
         }, 500)
-        // this.betList.forEach((bet) => {
-        //   bet.author = {
-        //     id: 1,
-        //     pseudo: 'John Doe',
-        //     avatarPath: '/src/assets/quasar-logo-vertical.svg'
-        //   }
-        //   bet.category = {
-        //     id: 1,
-        //     title: 'Sport',
-        //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
-        //   }
-        // })
       }).catch((e) => {
         console.error(e)
         Notify.create({

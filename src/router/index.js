@@ -47,12 +47,18 @@ export default route(function () {
         auth.currentUser.getIdToken(true)
       }
     }
-    const isAuthenticated = auth.currentUser && LocalStorage.has('user')
-    if (!auth.currentUser && LocalStorage.has('user')) {
-      LocalStorage.remove('user')
-    }
-    if (!auth.currentUser && LocalStorage.has('token')) {
-      LocalStorage.remove('token')
+    let isAuthenticated = auth.currentUser && LocalStorage.has('user')
+    // if (!auth.currentUser && LocalStorage.has('user') && LocalStorage.has('token')) {
+    //   auth.verifyIdToken(LocalStorage.getItem('token'))
+    //     .then(() => {
+    //       isAuthenticated = true
+    //     })
+    //     .catch((error) => {
+    //       LocalStorage.remove('user')
+    //     })
+    // }
+    if (auth.currentUser && !LocalStorage.has('user')) {
+      auth.signOut()
     }
     if (
       !isAuthenticated &&

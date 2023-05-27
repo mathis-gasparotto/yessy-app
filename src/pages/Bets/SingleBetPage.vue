@@ -52,15 +52,15 @@
               <q-icon class="single-bet__prop-icon" name="calendar_month" size="md" color="secondary" />
             </span>
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
-              {{ createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000) }}
+              {{ (new Date(bet.startAt.seconds * 1000) > new Date() ? 'Débute le ' : 'A débuté le ') + createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000) }}
             </p>
           </q-item>
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container flex flex-center">
-              <q-icon class="single-bet__prop-icon" name="calendar_month" size="md" color="secondary" />
+              <q-icon class="single-bet__prop-icon" name="sports_score" size="md" color="secondary" />
             </span>
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
-              {{ createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}
+              {{ (new Date(bet.endAt.seconds * 1000) > new Date() ? 'Se termine le ' : 'Est terminé depuis le ') + createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}
             </p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.customCost">

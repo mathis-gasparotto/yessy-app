@@ -2,7 +2,7 @@
   <div class="add-bet-category__cards page-content">
     <q-card flat v-for="category in betCatgories" :key="category.id" class="add-bet-category__card" @click.prevent="$emit('chooseCategory', category.id)">
       <q-card-section class="add-bet-category__card-section">
-        <h2 class="add-bet-category__card-text text-h6 text-bold text-center">{{ category.label }}</h2>
+        <h2 class="add-bet-category__card-text text-h6 text-center">{{ category.label }}</h2>
         <img :src="category.iconUrl" :alt="`image-de-${createFormat().kebabCaseFormatting(category.label)}`" class="add-bet-category__card-icon" />
         <div class="add-bet-category__card-bg"></div>
       </q-card-section>
@@ -58,14 +58,14 @@ export default {
     &__card {
       border-radius: 30px;
       &-bg {
-        width: 60%;
-        height: 60%;
+        width: 40%;
+        height: 40%;
         z-index: -1;
         position: absolute;
-        background-image: url('/src/assets/quasar-logo-vertical.svg');
+        background-image: url('/src/assets/logo-yessy.png');
         background-repeat: no-repeat;
         background-size: contain;
-        opacity: .3;
+        opacity: .25;
       }
       &-section {
         position: relative;
@@ -116,26 +116,26 @@ export default {
       }
       &:nth-of-type(4n) {
         .add-bet-category__card-bg {
-          top: 0;
-          left: 0;
+          bottom: 10px;
+          left: 20px;
         }
       }
       &:nth-of-type(4n+1) {
         .add-bet-category__card-bg {
-          bottom: 0;
-          left: 0;
+          bottom: 10px;
+          right: 20px;
         }
       }
       &:nth-of-type(4n+2) {
         .add-bet-category__card-bg {
-          top: 0;
-          right: 0;
+          top: 15px;
+          left: 20px;
         }
       }
       &:nth-of-type(4n+3) {
         .add-bet-category__card-bg {
-          bottom: 0;
-          right: 0;
+          top: 15px;
+          right: 20px;
         }
       }
       &-text {

@@ -36,8 +36,6 @@ export const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 export const auth = getAuth(app)
 
-// export default db
-
 /**********************************
  ***  Auth
  *********************************/
@@ -59,7 +57,7 @@ export async function signup(email, password, username, birthday, referralCode, 
           }
           return addUser(userCredential.user.uid, payload, username.trim())
             .then((res) => {
-              // LocalStorage.set('token', userCredential.user.refreshToken)
+              LocalStorage.set('token', userCredential.user.refreshToken)
               LocalStorage.set('user', {
                 ...payload,
                 lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
@@ -88,7 +86,7 @@ export function login(email, password) {
         .then((userCredential) => {
           return getUser(userCredential.user.uid)
             .then((res) => {
-              //   LocalStorage.set('token', userCredential.user.refreshToken)
+              LocalStorage.set('token', userCredential.user.refreshToken)
               LocalStorage.set('user', {
                 ...res,
                 lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
@@ -322,6 +320,9 @@ export async function getBets(type = 'all', privacy = 'public') {
   if (type === 'active') {
     return list.filter((item) => new Date(item.endAt.seconds * 1000) > now)
   }
+  // return Promise.all(list).then((res) => {
+  //   return res
+  // })
   return Promise.all(list)
 }
 export async function getBet(id) {
