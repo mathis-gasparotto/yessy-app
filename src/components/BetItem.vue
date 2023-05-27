@@ -27,11 +27,11 @@ export default {
       const end = new Date(this.item.endAt.seconds * 1000)
       const start = new Date(this.item.startAt.seconds * 1000)
       if (now < start) {
-        return 'Paris à venir :'
+        return 'Pari à venir :'
       } else if (now < end) {
-        return 'Paris en cours :'
+        return 'Pari en cours :'
       } else {
-        return 'Paris terminés :'
+        return 'Pari terminé :'
       }
     }
   }
