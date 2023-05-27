@@ -227,11 +227,13 @@ export default {
   methods: {
     handleUpdateDate(reason, valueName) {
       if (reason === 'add-day' && valueName === 'startAt') {
+        // To have a little delay before switching to time
         setTimeout(() => {
           this.showTimeStartAt = true
         }, 300)
       }
       if (reason === 'add-day' && valueName === 'endAt') {
+        // To have a little delay before switching to time
         setTimeout(() => {
           this.showTimeEndAt = true
         }, 300)
