@@ -21,9 +21,10 @@ a {
     // color: #fff;
     &--image {
       background-image: url('/src/assets/bg-primary--image.png') !important;
-      background-repeat: no-repeat;
-      background-position-x: center;
-      background-position-y: center;
+      background-repeat: no-repeat !important;
+      background-position-x: center !important;
+      background-position-y: top !important;
+      background-size: cover !important;
       background-attachment: fixed;
     }
     .q-card {
@@ -46,10 +47,10 @@ a {
   &-white {
     &--image {
       background-image: url('/src/assets/bg-white--image.jpg') !important;
-      background-repeat: no-repeat;
-      background-position-x: center;
-      background-position-y: top;
-      background-size: cover;
+      background-repeat: no-repeat !important;
+      background-position-x: center !important;
+      background-position-y: top !important;
+      background-size: cover !important;
       background-attachment: fixed;
     }
   }
@@ -57,9 +58,9 @@ a {
     background-color: #ededed;
     &--image {
       background-image: url('/src/assets/bg-2--image.png') !important;
-      background-repeat: no-repeat;
-      background-position-x: left;
-      background-position-y: top;
+      background-repeat: no-repeat !important;
+      background-position-x: left !important;
+      background-position-y: top !important;
       background-size: 70%;
     }
   }
