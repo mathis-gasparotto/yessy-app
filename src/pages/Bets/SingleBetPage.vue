@@ -88,12 +88,12 @@
             </div>
           </span>
         </div>
-        <q-btn v-if="iParticipate === false" label="Rejoindre le paris" type="button" color="secondary" rounded
+        <q-btn v-if="iParticipate === false" label="Rejoindre le pari" type="button" color="secondary" rounded
           @click.prevent="joinBet()" :loading="joinLoading" padding="xs"
           class="btn btn-secondary btn-bordered--thin single-bet__leave-btn" />
-        <q-btn v-else label="Quitter le paris" type="button" color="secondary" rounded @click.prevent="leaveBet()"
+        <q-btn v-else label="Quitter le pari" type="button" color="secondary" rounded @click.prevent="leaveBet()"
           :loading="leaveLoading" padding="xs" class="btn btn-secondary single-bet__join-btn" />
-        <q-btn label="Supprimer le paris" type="button" text-color="secondary" color="white" rounded
+        <q-btn label="Supprimer le pari" type="button" text-color="secondary" color="white" rounded
           @click.prevent="handleDeleteBet()" :loading="deleteLoading" padding="xs"
           class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn" v-if="isAuthor" />
       </div>
@@ -171,7 +171,7 @@ export default {
         .then(() => {
           this.joinLoading = false
           Notify.create({
-            message: 'Vous avez rejoint le paris',
+            message: 'Vous avez rejoint le pari',
             color: 'positive',
             icon: 'check_circle',
             timeout: 3000,
@@ -224,6 +224,19 @@ export default {
         .then(() => {
           this.deleteLoading = false
           this.$router.push({ name: 'public-bets' })
+          Notify.create({
+            message: 'Le pari a bien été supprimé',
+            color: 'positive',
+            icon: 'check_circle',
+            timeout: 3000,
+            position: 'top',
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
         })
         .catch((err) => {
           this.deleteLoading = false
@@ -248,7 +261,7 @@ export default {
         .then(() => {
           this.leaveLoading = false
           Notify.create({
-            message: 'Vous avez quitté le paris',
+            message: 'Vous avez quitté le pari',
             color: 'positive',
             icon: 'check_circle',
             timeout: 3000,
