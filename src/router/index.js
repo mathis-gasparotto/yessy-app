@@ -47,13 +47,13 @@ export default route(function () {
         auth.currentUser.getIdToken(true)
       }
     }
-    const isAuthenticated = auth.currentUser
-    // if (!isAuthenticated && LocalStorage.has('user')) {
-    //   LocalStorage.remove('user')
-    // }
-    // if (!isAuthenticated && LocalStorage.has('token')) {
-    //   LocalStorage.remove('token')
-    // }
+    const isAuthenticated = auth.currentUser && LocalStorage.has('user')
+    if (!auth.currentUser && LocalStorage.has('user')) {
+      LocalStorage.remove('user')
+    }
+    if (!auth.currentUser && LocalStorage.has('token')) {
+      LocalStorage.remove('token')
+    }
     if (
       !isAuthenticated &&
       to.name !== 'login' &&
