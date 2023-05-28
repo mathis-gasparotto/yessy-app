@@ -95,5 +95,13 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateSetWinnerChoiceError(error) {
+    switch (error.message) {
+      case 'Le choix ne correspond pas au pari':
+        return error.message
+      default:
+        return 'Une erreur est survenue'
+    }
   }
 })

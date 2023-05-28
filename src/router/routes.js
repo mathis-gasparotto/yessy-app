@@ -56,6 +56,11 @@ const routes = [
             component: () => import('src/pages/Bets/JoinBetPage.vue')
           },
           {
+            path: 'define-winner-choice/:id',
+            name: 'define-winner-choice',
+            component: () => import('src/pages/Bets/DefineWinnerChoicePage.vue')
+          },
+          {
             path: ':id',
             name: 'single-bet',
             component: () => import('src/pages/Bets/SingleBetPage.vue')

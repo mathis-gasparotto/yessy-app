@@ -77,7 +77,7 @@
             </p>
           </q-item>
         </q-list>
-        <div class="single-bet__participants flex items-center justify-evenly">
+        <div class="single-bet__participants flex items-center justify-evenly q-my-md">
           <span class="single-bet__participants-text">
             <span class="single-bet__participants-count">{{ bet.participants }}</span>
             participant{{ bet.participants > 1 ? 's' : '' }}
@@ -106,6 +106,8 @@
             </div>
           </span>
         </div>
+        <p v-if="iParticipate" class="text-center q-mb-md">Vous avez parier {{ myTokenParticipation }} Smiles 😊</p>
+        <p v-if="bet.winnerChoice" class="text-center q-mb-md">La bonne réponse était : "{{ bet.winnerChoice.label }}"</p>
         <q-btn
           v-if="
             iParticipate === false && bet.startAt.seconds * 1000 < Date.now() && bet.endAt.seconds * 1000 >= Date.now()
@@ -115,9 +117,8 @@
           color="secondary"
           rounded
           :to="`/bets/join/${route.params.id}`"
-          :loading="joinLoading"
           padding="xs"
-          class="btn btn-secondary btn-bordered--thin single-bet__leave-btn"
+          class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__leave-btn"
         />
         <q-btn
           v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now()"
@@ -128,7 +129,18 @@
           @click.prevent="leaveBet()"
           :loading="leaveLoading"
           padding="xs"
-          class="btn btn-secondary single-bet__join-btn"
+          class="q-mb-md btn btn-secondary single-bet__join-btn"
+        />
+        <q-btn
+          label="Définir le choix gagnant"
+          type="button"
+          text-color="white"
+          color="secondary"
+          rounded
+          :to="`/bets/define-winner-choice/${route.params.id}`"
+          padding="xs"
+          class="q-mb-md btn btn-secondary single-bet__delete-btn"
+          v-if="isAuthor && bet.endAt.seconds * 1000 <= Date.now() && !bet.winnerChoice"
         />
         <q-btn
           label="Supprimer le pari"
@@ -140,7 +152,7 @@
           :loading="deleteLoading"
           padding="xs"
           class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn"
-          v-if="isAuthor"
+          v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()"
         />
       </div>
     </q-page>
@@ -155,9 +167,9 @@ import translate from '../../stores/translatting'
 import { auth } from 'src/boot/firebase'
 import {
   deleteParticipation,
+  getMyTokenParticipation,
   getParticipationCount,
-  iParticipate,
-  participate
+  iParticipate
 } from 'src/services/participationService'
 import { deleteBet, getBet } from 'src/services/betService'
 
@@ -173,11 +185,11 @@ export default {
   data() {
     return {
       bet: null,
-      joinLoading: false,
       deleteLoading: false,
       createFormat: createFormat(),
       iParticipate: null,
-      defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL
+      defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
+      myTokenParticipation: null
       // leaveLoading: false
     }
   },
@@ -191,46 +203,11 @@ export default {
     }
   },
   methods: {
-    joinBet() {
-      this.joinLoading = true
-      participate(this.route.params.id)
-        .then(() => {
-          this.joinLoading = false
-          Notify.create({
-            message: 'Vous avez rejoint le pari',
-            color: 'positive',
-            icon: 'check_circle',
-            timeout: 3000,
-            position: 'top',
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-          this.reloadData()
-        })
-        .catch((err) => {
-          this.joinLoading = false
-          Notify.create({
-            message: translate().translateAddParticipationError(err),
-            color: 'negative',
-            icon: 'report_problem',
-            timeout: 3000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-        })
-    },
-    reloadData() {
-      iParticipate(this.route.params.id).then((res) => {
-        this.iParticipate = res
-      })
+    async reloadData() {
+      this.iParticipate = await iParticipate(this.route.params.id)
+      if (this.iParticipate) {
+        this.myTokenParticipation = await getMyTokenParticipation(this.route.params.id)
+      }
       getBet(this.route.params.id)
         .then((res) => {
           this.bet = res
@@ -426,7 +403,6 @@ export default {
         padding: 5px 0;
       }
 
-      margin: 20px 0;
       color: white;
       background-color: $primary;
       padding: 8px;
@@ -468,10 +444,6 @@ export default {
   &__delete-btn {
     width: 100%;
     font-size: 1.2rem;
-  }
-
-  &__delete-btn {
-    margin-top: 20px;
   }
 }
 </style>

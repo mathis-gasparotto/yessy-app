@@ -6,7 +6,7 @@
     <q-page-container>
       <q-page class="flex flex-center column">
         <router-view class="q-py-md" />
-        <q-container
+        <div
           class="flex flex-center column q-py-md bg-transparent"
           :style="{ color: this.$route.name === 'signup' ? 'black' : 'white' }"
         >
@@ -45,7 +45,7 @@
               >FAQ</q-btn
             >
           </div>
-        </q-container>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>

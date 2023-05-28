@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore/lite'
+// import { getFirestore } from 'firebase/firestore/lite'
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
@@ -12,5 +12,7 @@ const firebaseConfig = {
 }
 
 export const app = initializeApp(firebaseConfig)
-const db = getFirestore(app)
+// const db = getFirestore(app)
 export const auth = getAuth(app)
+
+export const defaultWinMultiplier = 1.2
