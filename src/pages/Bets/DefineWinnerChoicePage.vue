@@ -42,6 +42,7 @@
       </div>
     </q-page>
   </div>
+  <div class="nav-bar-bg"></div>
 </template>
 
 <script>
@@ -165,5 +166,8 @@ export default {
       }
     }
   }
+}
+.nav-bar-bg {
+  background-color: color-mix(in srgb, $primary 70%, #000 30%) !important;
 }
 </style>
