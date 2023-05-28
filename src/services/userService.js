@@ -147,7 +147,7 @@ export async function deleteUserData() {
     throw new Error(error.message)
   })
 }
-export async function getUserWallet() {
+export async function getMyWallet() {
   const ref = doc(db, 'users', auth.currentUser.uid)
   const snap = await getDoc(ref)
   if (snap.exists()) {
@@ -156,9 +156,27 @@ export async function getUserWallet() {
     throw new Error('No such data!')
   }
 }
-export async function updateUserWallet(amount) {
-  const currentAmount = await getUserWallet()
-  return updateDoc(doc(db, 'users', auth.currentUser.uid), {tokenCount: currentAmount + amount}, {merge: true})
+export async function getUserWalletWithDoc(userDoc) {
+  const snap = await getDoc(userDoc)
+  if (snap.exists()) {
+    return snap.data().tokenCount
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function updateMyWallet(amount) {
+  const currentAmount = await getMyWallet()
+  return updateDoc(doc(db, 'users', auth.currentUser.uid), {tokenCount: currentAmount + amount})
+    .then(() => {
+      return currentAmount + amount
+    })
+    .catch((error) => {
+      throw new Error(error.message)
+    })
+}
+export async function updateUserWalletWithDoc(amount, userDoc) {
+  const currentAmount = await getUserWalletWithDoc(userDoc)
+  return updateDoc(userDoc, {tokenCount: currentAmount + amount})
     .then(() => {
       return currentAmount + amount
     })

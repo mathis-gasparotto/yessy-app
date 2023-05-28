@@ -1,5 +1,5 @@
 <template>
-  <q-container class="login-page page">
+  <div class="login-page page">
     <q-img
       src="~assets/logo_yessy_carre.png"
       style="width: 200px; height: 200px"
@@ -73,7 +73,7 @@
         </p>
       </q-card-section>
     </q-card>
-  </q-container>
+  </div>
 </template>
 
 <script>

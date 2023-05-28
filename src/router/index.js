@@ -5,6 +5,7 @@ import routes from './routes'
 import { auth } from 'src/boot/firebase'
 import { LocalStorage, Notify } from 'quasar'
 import { iParticipate } from 'src/services/participationService'
+import { isAuthor } from 'src/services/betService'
 
 /*
  * If not building with SSR mode, you can
@@ -63,10 +64,29 @@ export default route(function () {
         name: from.name === 'login' || from.name === 'signup' || from.name === 'welcome' ? 'home' : from.name
       })
     } else if (to.name === 'join-bet') {
-      iParticipate(to.params.id).then((res) => {
-        if (res) {
+      iParticipate(to.params.id)
+        .then((res) => {
+          if (res) {
+            Notify.create({
+              message: 'Vous participez déjà à ce pari',
+              color: 'negative',
+              icon: 'report_problem',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+            next({ name: 'single-bet', params: { id: to.params.id } })
+          } else {
+            next()
+          }
+        })
+        .catch(() => {
           Notify.create({
-            message: 'Vous participez déjà à ce pari',
+            message: 'Une erreur est survenue',
             color: 'negative',
             icon: 'report_problem',
             timeout: 3000,
@@ -78,10 +98,43 @@ export default route(function () {
             ]
           })
           next({ name: 'single-bet', params: { id: to.params.id } })
-        } else {
-          next()
-        }
-      })
+        })
+    } else if (to.name === 'define-winner-choice') {
+      isAuthor(to.params.id)
+        .then((res) => {
+          if (!res) {
+            Notify.create({
+              message: 'Vous na pas accès à cette page',
+              color: 'negative',
+              icon: 'report_problem',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+            next({ name: 'single-bet', params: { id: to.params.id } })
+          } else {
+            next()
+          }
+        })
+        .catch(() => {
+          Notify.create({
+            message: 'Une erreur est survenue',
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          next({ name: 'single-bet', params: { id: to.params.id } })
+        })
     } else {
       next()
     }

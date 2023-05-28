@@ -1,9 +1,9 @@
-import { app, auth } from 'src/boot/firebase'
+import { app, auth, defaultWinMultiplier } from 'src/boot/firebase'
 import { doc, getDoc, updateDoc, query, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
-import { getUserWithDoc } from './userService'
+import { getUserWithDoc, updateUserWalletWithDoc } from './userService'
 import { getBetCategoryWithDoc } from './categoryService'
 import { addChoice, deleteChoices } from './choiceService'
-import { deleteBetParticipations } from './participationService'
+import { deleteBetParticipations, getParticipations } from './participationService'
 
 const db = getFirestore(app)
 
@@ -89,12 +89,23 @@ export async function getBet(id) {
       }
     })
     const category = await getBetCategoryWithDoc(snap.data().category)
-    return {
+    let toReturn = {
       id: snap.id,
       ...snap.data(),
       author,
       category
     }
+    if (snap.data().winnerChoice) {
+      const winnerChoice = await getDoc(snap.data().winnerChoice)
+      toReturn = {
+        ...toReturn,
+        winnerChoice: {
+          id: winnerChoice.id,
+          ...winnerChoice.data()
+        }
+      }
+    }
+    return toReturn
   } else {
     throw new Error('No such data!')
   }
@@ -183,4 +194,30 @@ export async function deleteBet(id) {
   } else {
     throw new Error('No such data!')
   }
+}
+export async function isAuthor(betId, betCollectionName = 'simple_bets') {
+  const ref = doc(db, betCollectionName, betId)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return snap.data().author.id === auth.currentUser.uid
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simple_bets') {
+  const choiceRef = doc(db, 'bet_choices', choiceId)
+  const betRef = doc(db, betCollectionName, betId)
+  const snap = await getDoc(choiceRef)
+  if (snap.data().bet.id !== betRef.id) {
+    throw new Error('Le choix ne correspond pas au pari')
+  }
+  await updateDoc(betRef, { winnerChoice: choiceRef })
+  const participations = await getParticipations(betId, betCollectionName)
+  participations.forEach(async (participation) => {
+    if (participation.chosenChoice.id === choiceRef.id) {
+      const amount = Math.round(participation.tokenAmount * defaultWinMultiplier)
+      await updateUserWalletWithDoc(amount, participation.user)
+    }
+  })
+  return true
 }
