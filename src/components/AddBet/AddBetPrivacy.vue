@@ -45,7 +45,4 @@ export default {
     }
   }
 }
-.nav-bar-container {
-  background-color: $primary;
-}
 </style>

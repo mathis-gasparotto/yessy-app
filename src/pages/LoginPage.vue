@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { login } from 'src/boot/firebase'
+import { login } from 'src/services/authService'
 import translate from '../stores/translatting.js'
 import { Notify } from 'quasar'
 // import { cp } from "fs";

@@ -70,13 +70,6 @@
 <script>
 import { Loading, Notify } from 'quasar'
 import createFormat from '../stores/formatting.js'
-import {
-  getUser,
-  logout,
-  updateUserData,
-  auth,
-  updateUserName
-} from 'src/boot/firebase'
 import translate from '../stores/translatting.js'
 import {
   // AuthCredential,
@@ -88,6 +81,9 @@ import {
 import AccountInfos from 'src/components/Account/AccountInfos.vue'
 import ParticipationHistory from 'src/components/Account/ParticipationHistory.vue'
 import { LocalStorage } from 'quasar'
+import { getUser, updateUserData, updateUserName } from 'src/services/userService'
+import { logout } from 'src/services/authService'
+import { auth } from 'src/boot/firebase'
 
 export default {
   name: 'AccountPage',

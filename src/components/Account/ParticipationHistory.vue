@@ -13,9 +13,9 @@
 
 <script>
 import { Notify } from 'quasar'
-import { getMyParticipations } from 'src/boot/firebase'
 import BetList from '../BetList.vue'
 import LoadingSpinner from '../LoadingSpinner.vue'
+import { getMyParticipations } from 'src/services/participationService'
 
 export default {
   name: 'ParticipationHistory',
@@ -37,7 +37,6 @@ export default {
       this.loadingBets = true
       getMyParticipations()
         .then((bets) => {
-          // LocalStorage.set('user', user)
           console.log(bets)
           this.bets = bets
           this.loadingBets = false
