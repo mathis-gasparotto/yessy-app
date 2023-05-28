@@ -1,9 +1,9 @@
 <template>
   <div class="page-container bg-2 bg-2--image single-bet">
-    <div class="single-bet__top-container">
-      <q-icon class="single-bet__top-icon" name="fa fa-trophy" size="xl" color="white"></q-icon>
-    </div>
     <q-page class="page flex flex-center column">
+      <div class="single-bet__top-container">
+        <q-icon class="single-bet__top-icon" name="fa fa-trophy" size="xl" color="white"></q-icon>
+      </div>
       <div class="page-content" v-if="bet">
         <q-img :src="bet.author.avatar.imgUrl || defaultAvatarUrl" class="single-bet__author-avatar q-mb-md"></q-img>
         <div class="single-bet__title-container">
