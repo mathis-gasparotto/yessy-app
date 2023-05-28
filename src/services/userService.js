@@ -147,3 +147,22 @@ export async function deleteUserData() {
     throw new Error(error.message)
   })
 }
+export async function getUserWallet() {
+  const ref = doc(db, 'users', auth.currentUser.uid)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return snap.data().tokenCount
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function updateUserWallet(amount) {
+  const currentAmount = await getUserWallet()
+  return updateDoc(doc(db, 'users', auth.currentUser.uid), {tokenCount: currentAmount + amount}, {merge: true})
+    .then(() => {
+      return currentAmount + amount
+    })
+    .catch((error) => {
+      throw new Error(error.message)
+    })
+}

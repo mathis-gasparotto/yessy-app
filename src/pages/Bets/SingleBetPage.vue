@@ -150,8 +150,8 @@
 <script>
 import { Loading, Notify } from 'quasar'
 import { useRoute } from 'vue-router'
-import createFormat from '../../stores/formatting.js'
-import translate from '../../stores/translatting.js'
+import createFormat from '../../stores/formatting'
+import translate from '../../stores/translatting'
 import { auth } from 'src/boot/firebase'
 import {
   deleteParticipation,

@@ -275,7 +275,7 @@
 </template>
 
 <script>
-// import createFormat from '../../stores/formatting.js'
+// import createFormat from '../../stores/formatting'
 
 export default {
   name: 'AddBetForm',
@@ -374,13 +374,18 @@ export default {
       })
       this.$refs.addBetForm.validate().then((success) => {
         if (success) {
-          const payload = {
+          let payload = {
             label: this.form.label.trim(),
             startAt: this.form.startAt,
             endAt: this.form.endAt,
-            customReward: this.form.customReward.trim(),
-            customCost: this.form.customCost.trim(),
             description: this.form.description.trim()
+          }
+          if (this.form.customReward.trim().length > 0 && this.form.customCost.trim().length > 0) {
+            payload = {
+              ...payload,
+              customReward: this.form.customReward.trim(),
+              customCost: this.form.customCost.trim()
+            }
           }
           this.$emit('submitForm', payload, this.form.choices)
           setTimeout(() => {

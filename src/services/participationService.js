@@ -1,6 +1,8 @@
 import { app, auth } from 'src/boot/firebase'
 import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
 import { getBetWithDoc } from './betService'
+import { getUserWallet, updateUserWallet } from './userService'
+import { LocalStorage } from 'quasar'
 
 const db = getFirestore(app)
 
@@ -31,7 +33,7 @@ export async function getParticipationCount(betId, betCollectionName = 'simple_b
   // const snap = await getCountFromServer(ref)
   // return snap.data().count
 }
-export async function participate(betId) {
+export async function participate(betId, chosenChoiceId, tokenAmount = null) {
   const ref = query(
     collection(db, 'participations'),
     where('user', '==', doc(db, 'users', auth.currentUser.uid)),
@@ -41,14 +43,30 @@ export async function participate(betId) {
   const snap = await getDocs(ref)
   if (snap.docs.length > 0) {
     throw new Error('Vous participez déjà à ce pari')
-  } else {
-    return addDoc(collection(db, 'participations'), {
-      user: doc(db, 'users', auth.currentUser.uid),
-      bet: doc(db, 'simple_bets', betId)
-    }).catch((error) => {
-      throw new Error(error.message)
-    })
   }
+  const currentWallet = await getUserWallet()
+  if (tokenAmount > currentWallet) {
+    throw new Error("Vous n'avez pas assez de jetons")
+  }
+  let payload = {
+    user: doc(db, 'users', auth.currentUser.uid),
+    bet: doc(db, 'simple_bets', betId),
+    chosenChoice: doc(db, 'bet_choices', chosenChoiceId)
+  }
+  if (tokenAmount) {
+    tokenAmount = parseInt(tokenAmount)
+    payload = {
+      ...payload,
+      tokenAmount
+    }
+  }
+  await updateUserWallet(-tokenAmount).then((newTokenCount) => {
+    const user = LocalStorage.getItem('user')
+    LocalStorage.set('user', { ...user, tokenCount: newTokenCount })
+  })
+  return addDoc(collection(db, 'participations'), payload).catch((error) => {
+    throw new Error(error.message)
+  })
 }
 export async function iParticipate(betId, betCollectionName = 'simple_bets') {
   const ref = query(
@@ -80,5 +98,9 @@ export async function deleteParticipation(betId, betCollectionName = 'simple_bet
     where('bet', '==', doc(db, betCollectionName, betId))
   )
   const snap = await getDocs(ref)
+  await updateUserWallet(snap.docs[0].data().tokenAmount).then((newTokenCount) => {
+    const user = LocalStorage.getItem('user')
+    LocalStorage.set('user', { ...user, tokenCount: newTokenCount })
+  })
   return deleteDoc(doc(db, 'participations', snap.docs[0].id))
 }

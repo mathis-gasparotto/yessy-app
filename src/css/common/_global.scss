@@ -40,6 +40,9 @@ a {
         }
       }
     }
+    &--dark {
+      background-color: $primary-dark !important;
+    }
   }
   &-light {
     // color: #000;
@@ -72,12 +75,6 @@ a {
 
 .content {
   width: 75%;
-}
-
-.bg {
-  &-2 {
-    background-color: #ededed;
-  }
 }
 
 .page {
