@@ -28,7 +28,7 @@ import AddBetPrivacy from 'src/components/AddBet/AddBetPrivacy.vue'
 import AddBetCategory from 'src/components/AddBet/AddBetCategory.vue'
 import AddBetForm from 'src/components/AddBet/AddBetForm.vue'
 import { Loading, Notify } from 'quasar'
-import translate from '../../stores/translatting.js'
+import translate from '../../stores/translatting'
 import { addBet } from 'src/services/betService'
 
 export default {

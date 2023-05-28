@@ -62,6 +62,20 @@ export async function getBets(type = 'all', privacy = 'public') {
   // })
   return Promise.all(list)
 }
+export async function getBetWithoutAuthor(id) {
+  const ref = doc(db, 'simple_bets', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    const category = await getBetCategoryWithDoc(snap.data().category)
+    return {
+      id: snap.id,
+      ...snap.data(),
+      category
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
 export async function getBet(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
@@ -105,6 +119,9 @@ export async function addBet(payload, choices, categoryId) {
     if (!payload.customCost || !payload.customReward) {
       throw new Error('Veuillez renseigner la récompense personnalisée et la mise en jeu personnalisée')
     }
+  }
+  if (choices.length < 2) {
+    throw new Error('Veuillez renseigner au moins deux choix')
   }
   const betCreated = await addDoc(collection(db, 'simple_bets'), {
     ...payload,

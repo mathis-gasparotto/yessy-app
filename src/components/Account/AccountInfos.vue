@@ -310,9 +310,9 @@
 
 <script>
 import { Dialog, Loading, Notify } from 'quasar'
-import createFormat from '../../stores/formatting.js'
+import createFormat from '../../stores/formatting'
 import { auth } from 'src/boot/firebase'
-import translate from '../../stores/translatting.js'
+import translate from '../../stores/translatting'
 import {
   // AuthCredential,
   getAuth,

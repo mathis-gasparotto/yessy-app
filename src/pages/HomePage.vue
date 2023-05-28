@@ -1,6 +1,6 @@
 <template>
   <div class="page-container bg-2">
-    <q-page class="flex flex-center column page">
+    <q-page class="flex flex-center column page" v-if="user">
       <div class="page-content">
         <div class="home__user-container flex q-my-md">
           <div class="home__user-avatar-container">
@@ -25,7 +25,9 @@
 
 <script>
 import BetList from 'src/components/BetList.vue'
-import { LocalStorage } from 'quasar'
+import { Loading, LocalStorage, Notify } from 'quasar'
+import { getUser } from 'src/services/userService'
+import { auth } from 'src/boot/firebase'
 
 export default {
   name: 'HomePage',
@@ -38,7 +40,34 @@ export default {
     }
   },
   created () {
-    this.user = LocalStorage.getItem('user')
+    this.reloadData()
+  },
+  methods: {
+    async reloadData() {
+      Loading.show()
+      getUser(auth.currentUser.uid)
+        .then((user) => {
+          LocalStorage.set('user', user)
+          this.user = user
+          Loading.hide()
+        })
+        .catch((e) => {
+          Notify.create({
+            message: 'Une erreur est survenue',
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          Loading.hide()
+          throw new Error(e.message)
+        })
+    },
   }
 }
 </script>

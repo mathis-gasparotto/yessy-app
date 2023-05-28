@@ -69,8 +69,8 @@
 
 <script>
 import { Loading, Notify } from 'quasar'
-import createFormat from '../stores/formatting.js'
-import translate from '../stores/translatting.js'
+import createFormat from '../stores/formatting'
+import translate from '../stores/translatting'
 import {
   // AuthCredential,
   getAuth,

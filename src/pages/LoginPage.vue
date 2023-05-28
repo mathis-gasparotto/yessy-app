@@ -78,7 +78,7 @@
 
 <script>
 import { login } from 'src/services/authService'
-import translate from '../stores/translatting.js'
+import translate from '../stores/translatting'
 import { Notify } from 'quasar'
 // import { cp } from "fs";
 

@@ -3,7 +3,18 @@ import { app } from 'src/boot/firebase'
 
 const db = getFirestore(app)
 
-export async function getBetChoices(betDoc) {
+export async function getBetChoices(betId, collectionName = 'simple_bets') {
+  const ref = query(collection(db, 'bet_choices'), where('bet', '==', doc(db, collectionName, betId)))
+  const snap = await getDocs(ref)
+  const list = snap.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+  return list
+}
+export async function getBetChoicesWithDoc(betDoc) {
   const ref = query(collection(db, 'bet_choices'), where('bet', '==', betDoc))
   const snap = await getDocs(ref)
   const list = snap.docs.map((doc) => {

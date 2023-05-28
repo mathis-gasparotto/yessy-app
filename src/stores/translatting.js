@@ -1,6 +1,6 @@
 export default () => ({
   translateSignupError(error) {
-    if (error.message === 'Nom d\'utilisateur déjà utilisé') return error.message
+    if (error.message === "Nom d'utilisateur déjà utilisé") return error.message
     switch (error.message) {
       case 'Firebase: Error (auth/email-already-in-use).':
         return 'Cette adresse email est déjà utilisée'
@@ -72,6 +72,8 @@ export default () => ({
     switch (error.message) {
       case 'Veuillez renseigner la récompense personnalisée et la mise en jeu personnalisée':
         return error.message
+      case 'Veuillez renseigner au moins deux choix':
+        return error.message
       default:
         return 'Une erreur est survenue'
     }
@@ -79,6 +81,8 @@ export default () => ({
   translateAddParticipationError(error) {
     switch (error.message) {
       case 'Vous participez déjà à ce pari':
+        return error.message
+      case "Vous n'avez pas assez de jetons":
         return error.message
       default:
         return 'Une erreur est survenue'
