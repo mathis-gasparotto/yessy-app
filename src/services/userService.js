@@ -184,3 +184,11 @@ export async function updateUserWalletWithDoc(amount, userDoc) {
       throw new Error(error.message)
     })
 }
+export async function getUserWinMultiplierWithDoc(userDoc) {
+  const snap = await getDoc(userDoc)
+  if (snap.exists()) {
+    return snap.data().winMultiplier
+  } else {
+    throw new Error('No such data!')
+  }
+}
