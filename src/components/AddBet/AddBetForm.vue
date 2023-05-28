@@ -79,6 +79,23 @@
         </template>
       </q-select>
       <q-input
+        v-if="form.reward === rewards[1]"
+        name="customCost"
+        rounded
+        outlined
+        label="Mise en jeu"
+        class="q-mb-md global-input bg-white"
+        type="text"
+        v-model="form.customCost"
+        lazy-rules
+        :rules="[(val) => form.reward === rewards[0] || val.trim().length > 0 || 'Veullez renseigner une mise en jeu']"
+        hide-bottom-space
+      >
+        <template v-slot:prepend>
+          <q-icon name="fa fa-hand-holding-dollar" color="secondary" size="xs"></q-icon>
+        </template>
+      </q-input>
+      <q-input
         v-if="form.reward.value === 'other'"
         name="customReward"
         rounded
@@ -96,23 +113,6 @@
       >
         <template v-slot:prepend>
           <q-icon name="edit" color="secondary" size="xs"></q-icon>
-        </template>
-      </q-input>
-      <q-input
-        v-if="form.reward === rewards[1]"
-        name="customCost"
-        rounded
-        outlined
-        label="Mise en jeu"
-        class="q-mb-md global-input bg-white"
-        type="text"
-        v-model="form.customCost"
-        lazy-rules
-        :rules="[(val) => form.reward === rewards[0] || val.trim().length > 0 || 'Veullez renseigner une mise en jeu']"
-        hide-bottom-space
-      >
-        <template v-slot:prepend>
-          <q-icon name="fa fa-hand-holding-dollar" color="secondary" size="xs"></q-icon>
         </template>
       </q-input>
       <q-input
@@ -407,7 +407,7 @@ export default {
         this.form.endAt.trim() !== '' &&
         this.form.reward.value &&
         this.form.description.trim() !== '' &&
-        ((this.form.reward.value === 'other' && this.form.customReward && this.form.customCost) ||
+        ((this.form.reward.value === 'other' && this.form.customReward.trim() !== '' && this.form.customCost.trim() !== '') ||
           this.form.reward.value === 'tokens')
       ) {
         this.$refs.addBetForm.validate().then((success) => {

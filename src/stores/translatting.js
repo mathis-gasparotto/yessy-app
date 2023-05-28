@@ -70,6 +70,8 @@ export default () => ({
   },
   translateAddBetError(error) {
     switch (error.message) {
+      case 'Veuillez renseigner la récompense personnalisée et la mise en jeu personnalisée':
+        return error.message
       default:
         return 'Une erreur est survenue'
     }

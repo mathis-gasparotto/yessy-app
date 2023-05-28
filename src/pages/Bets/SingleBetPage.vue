@@ -33,19 +33,17 @@
             </span>
             <p class="single-bet__prop-text q-mb-0">{{ bet.description }}</p>
           </q-item>
-          <q-item class="single-bet__prop" v-if="bet.customReward">
+          <q-item class="single-bet__prop" v-if="bet.customCost">
             <span class="single-bet__prop-icon-container flex flex-center">
-              <q-icon class="single-bet__prop-icon" name="fa fa-gift" size="md" color="secondary" />
+              <q-icon class="single-bet__prop-icon" name="fa fa-hand-holding-dollar" size="md" color="secondary" />
             </span>
-            <p class="single-bet__prop-text q-mb-0 flex flex-center">{{ bet.customReward }}</p>
+            <p class="single-bet__prop-text q-mb-0 flex flex-center">{{ bet.customCost }}</p>
           </q-item>
-          <q-item class="single-bet__prop" v-else-if="bet.tokenRewardOdd">
+          <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container flex flex-center">
               <q-icon class="single-bet__prop-icon" name="fa fa-gift" size="md" color="secondary" />
             </span>
-            <p class="single-bet__prop-text q-mb-0 flex flex-center">
-              La cote est de {{ bet.tokenRewardOdd }}
-            </p>
+            <p class="single-bet__prop-text q-mb-0 flex flex-center">{{ bet.customReward ? bet.customReward : 'Des smiles 😊' }}</p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.startAt">
             <span class="single-bet__prop-icon-container flex flex-center">
@@ -62,12 +60,6 @@
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
               {{ (new Date(bet.endAt.seconds * 1000) > new Date() ? 'Se termine le ' : 'Est terminé depuis le ') + createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}
             </p>
-          </q-item>
-          <q-item class="single-bet__prop" v-if="bet.customCost">
-            <span class="single-bet__prop-icon-container flex flex-center">
-              <q-icon class="single-bet__prop-icon" name="fa fa-hand-holding-dollar" size="md" color="secondary" />
-            </span>
-            <p class="single-bet__prop-text q-mb-0 flex flex-center">{{ bet.customCost }}</p>
           </q-item>
         </q-list>
         <div class="single-bet__participants flex items-center justify-evenly">
@@ -88,8 +80,7 @@
             </div>
           </span>
         </div>
-        <q-btn v-if="iParticipate === false" label="Rejoindre le pari" type="button" color="secondary" rounded
-          @click.prevent="joinBet()" :loading="joinLoading" padding="xs"
+        <q-btn v-if="iParticipate === false" label="Rejoindre le pari" type="button" color="secondary" rounded :to="`/bets/join/${route.params.id}`" :loading="joinLoading" padding="xs"
           class="btn btn-secondary btn-bordered--thin single-bet__leave-btn" />
         <q-btn v-else label="Quitter le pari" type="button" color="secondary" rounded @click.prevent="leaveBet()"
           :loading="leaveLoading" padding="xs" class="btn btn-secondary single-bet__join-btn" />
@@ -103,18 +94,12 @@
 
 <script>
 import { Loading, Notify } from 'quasar'
-import {
-  auth,
-  getBet,
-  participate,
-  iParticipate,
-  deleteBet,
-  getParticipationCount
-} from 'src/boot/firebase'
 import { useRoute } from 'vue-router'
 import createFormat from '../../stores/formatting.js'
 import translate from '../../stores/translatting.js'
-import { deleteParticipation } from 'src/boot/firebase'
+import { auth } from 'src/boot/firebase'
+import { deleteParticipation, getParticipationCount, iParticipate, participate } from 'src/services/participationService'
+import { deleteBet, getBet } from 'src/services/betService'
 
 export default {
   setup() {
@@ -127,25 +112,6 @@ export default {
   name: 'SingleBetPage',
   data() {
     return {
-      // bet: {
-      //   id: 1,
-      //   label: 'Qui va remporter la coupe du monde 2026 ?',
-      //   description: 'Description 1',
-      //   privacy: 'public',
-      //   author: {
-      //     id: 1,
-      //     pseudo: 'John Doe',
-      //     avatarPath: '/src/assets/quasar-logo-vertical.svg'
-      //   },
-      //   category: {
-      //     id: 1,
-      //     label: 'Sport',
-      //     iconUrl: '/src/assets/quasar-logo-vertical.svg'
-      //   },
-      //   customReward: 'Le gagnant obtiendra un skin',
-      //   endAt: '2023-03-11T12:00:00',
-      //   participants: 86
-      // },
       bet: null,
       joinLoading: false,
       deleteLoading: false,

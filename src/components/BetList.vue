@@ -15,7 +15,7 @@
 <script>
 import { Notify } from 'quasar'
 import BetItem from './BetItem.vue'
-import { getBets } from 'src/boot/firebase'
+import { getBets } from 'src/services/betService'
 import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
@@ -53,7 +53,7 @@ export default {
           this.betList = response
           console.log(this.betList)
           this.loadingBets = false
-        }, 500)
+        }, 700)
       }).catch((e) => {
         console.error(e)
         Notify.create({
