@@ -107,10 +107,15 @@
           </span>
         </div>
         <p v-if="iParticipate" class="text-center q-mb-md">Vous avez parier {{ myTokenParticipation }} Smiles 😊</p>
-        <p v-if="bet.winnerChoice" class="text-center q-mb-md">La bonne réponse était : "{{ bet.winnerChoice.label }}"</p>
+        <p v-if="bet.winnerChoice" class="text-center q-mb-md">
+          La bonne réponse était : "{{ bet.winnerChoice.label }}"
+        </p>
         <q-btn
           v-if="
-            iParticipate === false && bet.startAt.seconds * 1000 < Date.now() && bet.endAt.seconds * 1000 >= Date.now()
+            iParticipate === false &&
+            bet.startAt.seconds * 1000 < Date.now() &&
+            bet.endAt.seconds * 1000 >= Date.now() &&
+            !isAuthor
           "
           label="Rejoindre le pari"
           type="button"

@@ -64,29 +64,10 @@ export default route(function () {
         name: from.name === 'login' || from.name === 'signup' || from.name === 'welcome' ? 'home' : from.name
       })
     } else if (to.name === 'join-bet') {
-      iParticipate(to.params.id)
-        .then((res) => {
-          if (res) {
-            Notify.create({
-              message: 'Vous participez déjà à ce pari',
-              color: 'negative',
-              icon: 'report_problem',
-              timeout: 3000,
-              actions: [
-                {
-                  icon: 'close',
-                  color: 'white'
-                }
-              ]
-            })
-            next({ name: 'single-bet', params: { id: to.params.id } })
-          } else {
-            next()
-          }
-        })
-        .catch(() => {
+      iParticipate(to.params.id).then((res) => {
+        if (res) {
           Notify.create({
-            message: 'Une erreur est survenue',
+            message: 'Vous participez déjà à ce pari',
             color: 'negative',
             icon: 'report_problem',
             timeout: 3000,
@@ -98,7 +79,56 @@ export default route(function () {
             ]
           })
           next({ name: 'single-bet', params: { id: to.params.id } })
+        } else {
+          isAuthor(to.params.id).then((res) => {
+            if (res) {
+              Notify.create({
+                message: 'Vous ne pouvez pas participer à votre propre pari',
+                color: 'negative',
+                icon: 'report_problem',
+                timeout: 3000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
+              })
+              next({ name: 'single-bet', params: { id: to.params.id } })
+            } else {
+              next()
+            }
+          }).catch(() => {
+            Notify.create({
+              message: 'Une erreur est survenue',
+              color: 'negative',
+              icon: 'report_problem',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+            next({ name: 'single-bet', params: { id: to.params.id } })
+          })
+        }
+      }).catch(() => {
+        Notify.create({
+          message: 'Une erreur est survenue',
+          color: 'negative',
+          icon: 'report_problem',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
         })
+        next({ name: 'single-bet', params: { id: to.params.id } })
+      })
     } else if (to.name === 'define-winner-choice') {
       isAuthor(to.params.id)
         .then((res) => {
