@@ -3,7 +3,7 @@ import { createRouter, createMemoryHistory, createWebHistory, createWebHashHisto
 import routes from './routes'
 // import { LocalStorage } from 'quasar'
 import { auth } from 'src/boot/firebase'
-import { LocalStorage } from 'quasar'
+import { LocalStorage, Notify } from 'quasar'
 import { iParticipate } from 'src/services/participationService'
 
 /*
@@ -63,10 +63,25 @@ export default route(function () {
         name: from.name === 'login' || from.name === 'signup' || from.name === 'welcome' ? 'home' : from.name
       })
     } else if (to.name === 'join-bet') {
-      iParticipate(this.route.params.id).then((res) => {
-        this.iParticipate = res
+      iParticipate(to.params.id).then((res) => {
+        if (res) {
+          Notify.create({
+            message: 'Vous participez déjà à ce pari',
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          next({ name: 'single-bet', params: { id: to.params.id } })
+        } else {
+          next()
+        }
       })
-      next()
     } else {
       next()
     }

@@ -7,23 +7,30 @@
       <div class="page-content" v-if="bet">
         <q-img :src="bet.author.avatar.imgUrl || defaultAvatarUrl" class="single-bet__author-avatar q-mb-md"></q-img>
         <div class="single-bet__title-container">
-          <q-icon :class="`single-bet__privacy single-bet__privacy--${bet.privacy}`"
-            :name="`lock${bet.privacy === 'public' ? '_open' : ''}`" color="white"></q-icon>
+          <q-icon
+            :class="`single-bet__privacy single-bet__privacy--${bet.privacy}`"
+            :name="`lock${bet.privacy === 'public' ? '_open' : ''}`"
+            color="white"
+          ></q-icon>
           <div class="single-bet__title-text">
             <h1 class="single-bet__title text-h6">{{ bet.label }}</h1>
           </div>
         </div>
         <p class="single-bet__subtitle">
           <span class="single-bet__created-by">créé par&nbsp;</span>
-          <span :class="`single-bet__author ${bet.author.username === 'Utilisateur supprimé'
-            ? 'text-italic'
-            : ''
-            }`">{{ bet.author.username }}</span>
+          <span :class="`single-bet__author ${bet.author.username === 'Utilisateur supprimé' ? 'text-italic' : ''}`">{{
+            bet.author.username
+          }}</span>
         </p>
         <q-list class="single-bet__props">
           <q-item class="single-bet__prop">
             <span class="single-bet__prop-icon-container flex flex-center">
-              <img class="single-bet__prop-icon" :src="`${bet.category.iconUrl.replace('.svg', '')}-secondary.svg`" width="32" height="32" />
+              <img
+                class="single-bet__prop-icon"
+                :src="`${bet.category.iconUrl.replace('.svg', '')}-secondary.svg`"
+                width="32"
+                height="32"
+              />
             </span>
             <p class="single-bet__prop-text q-mb-0 flex flex-center">{{ bet.category.label }}</p>
           </q-item>
@@ -43,14 +50,19 @@
             <span class="single-bet__prop-icon-container flex flex-center">
               <q-icon class="single-bet__prop-icon" name="fa fa-gift" size="md" color="secondary" />
             </span>
-            <p class="single-bet__prop-text q-mb-0 flex flex-center">{{ bet.customReward ? bet.customReward : 'Des smiles 😊' }}</p>
+            <p class="single-bet__prop-text q-mb-0 flex flex-center">
+              {{ bet.customReward ? bet.customReward : 'Des smiles 😊' }}
+            </p>
           </q-item>
           <q-item class="single-bet__prop" v-if="bet.startAt">
             <span class="single-bet__prop-icon-container flex flex-center">
               <q-icon class="single-bet__prop-icon" name="calendar_month" size="md" color="secondary" />
             </span>
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
-              {{ (new Date(bet.startAt.seconds * 1000) > new Date() ? 'Débute le ' : 'A débuté le ') + createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000) }}
+              {{
+                (new Date(bet.startAt.seconds * 1000) > new Date() ? 'Débute le ' : 'A débuté le ') +
+                createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000)
+              }}
             </p>
           </q-item>
           <q-item class="single-bet__prop">
@@ -58,35 +70,78 @@
               <q-icon class="single-bet__prop-icon" name="sports_score" size="md" color="secondary" />
             </span>
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
-              {{ (new Date(bet.endAt.seconds * 1000) > new Date() ? 'Se termine le ' : 'Est terminé depuis le ') + createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000) }}
+              {{
+                (new Date(bet.endAt.seconds * 1000) > new Date() ? 'Se termine le ' : 'Est terminé depuis le ') +
+                createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000)
+              }}
             </p>
           </q-item>
         </q-list>
         <div class="single-bet__participants flex items-center justify-evenly">
           <span class="single-bet__participants-text">
-            <span class="single-bet__participants-count">{{
-              bet.participants
-            }}</span>
+            <span class="single-bet__participants-count">{{ bet.participants }}</span>
             participant{{ bet.participants > 1 ? 's' : '' }}
           </span>
           <span class="single-bet__participants-avatars" v-if="bet.participants > 0">
-            <q-img v-if="bet.participants > 0" src="~assets/example-avatar-1.png" class="single-bet__participant-avatar"
-              style="z-index: 3"></q-img>
-            <q-img v-if="bet.participants > 1" src="~assets/example-avatar-2.png" class="single-bet__participant-avatar"
-              style="z-index: 2"></q-img>
-            <q-img v-if="bet.participants > 2" src="~assets/example-avatar-3.png" class="single-bet__participant-avatar"
-              style="z-index: 1"></q-img>
-            <div class="single-bet__participants-surplus-count" v-if="bet.participants > 3">+{{ bet.participants - 3 }}
+            <q-img
+              v-if="bet.participants > 0"
+              src="~assets/example-avatar-1.png"
+              class="single-bet__participant-avatar"
+              style="z-index: 3"
+            ></q-img>
+            <q-img
+              v-if="bet.participants > 1"
+              src="~assets/example-avatar-2.png"
+              class="single-bet__participant-avatar"
+              style="z-index: 2"
+            ></q-img>
+            <q-img
+              v-if="bet.participants > 2"
+              src="~assets/example-avatar-3.png"
+              class="single-bet__participant-avatar"
+              style="z-index: 1"
+            ></q-img>
+            <div class="single-bet__participants-surplus-count" v-if="bet.participants > 3">
+              +{{ bet.participants - 3 }}
             </div>
           </span>
         </div>
-        <q-btn v-if="iParticipate === false" label="Rejoindre le pari" type="button" color="secondary" rounded :to="`/bets/join/${route.params.id}`" :loading="joinLoading" padding="xs"
-          class="btn btn-secondary btn-bordered--thin single-bet__leave-btn" />
-        <q-btn v-else label="Quitter le pari" type="button" color="secondary" rounded @click.prevent="leaveBet()"
-          :loading="leaveLoading" padding="xs" class="btn btn-secondary single-bet__join-btn" />
-        <q-btn label="Supprimer le pari" type="button" text-color="secondary" color="white" rounded
-          @click.prevent="handleDeleteBet()" :loading="deleteLoading" padding="xs"
-          class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn" v-if="isAuthor" />
+        <q-btn
+          v-if="
+            iParticipate === false && bet.startAt.seconds * 1000 < Date.now() && bet.endAt.seconds * 1000 >= Date.now()
+          "
+          label="Rejoindre le pari"
+          type="button"
+          color="secondary"
+          rounded
+          :to="`/bets/join/${route.params.id}`"
+          :loading="joinLoading"
+          padding="xs"
+          class="btn btn-secondary btn-bordered--thin single-bet__leave-btn"
+        />
+        <q-btn
+          v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now()"
+          label="Quitter le pari"
+          type="button"
+          color="secondary"
+          rounded
+          @click.prevent="leaveBet()"
+          :loading="leaveLoading"
+          padding="xs"
+          class="btn btn-secondary single-bet__join-btn"
+        />
+        <q-btn
+          label="Supprimer le pari"
+          type="button"
+          text-color="secondary"
+          color="white"
+          rounded
+          @click.prevent="handleDeleteBet()"
+          :loading="deleteLoading"
+          padding="xs"
+          class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn"
+          v-if="isAuthor"
+        />
       </div>
     </q-page>
   </div>
@@ -98,7 +153,12 @@ import { useRoute } from 'vue-router'
 import createFormat from '../../stores/formatting.js'
 import translate from '../../stores/translatting.js'
 import { auth } from 'src/boot/firebase'
-import { deleteParticipation, getParticipationCount, iParticipate, participate } from 'src/services/participationService'
+import {
+  deleteParticipation,
+  getParticipationCount,
+  iParticipate,
+  participate
+} from 'src/services/participationService'
 import { deleteBet, getBet } from 'src/services/betService'
 
 export default {
@@ -345,7 +405,6 @@ export default {
 
   &__prop {
     &-icon {
-
       &-container {
         margin-right: 10px;
       }
