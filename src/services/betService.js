@@ -1,7 +1,7 @@
 import { app, auth, defaultWinMultiplier } from 'src/boot/firebase'
 import { doc, getDoc, updateDoc, query, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
-import { getUserWinMultiplierWithDoc, getUserWithDoc } from './userService'
-import { getBetCategoryWithDoc } from './categoryService'
+import { getUserWinMultiplierByDoc, getUserByDoc } from './userService'
+import { getBetCategoryByDoc } from './categoryService'
 import { addChoice, deleteChoices } from './choiceService'
 import { deleteBetParticipations, getParticipations } from './participationService'
 import { addTokenTransaction } from './tokenTransactionServices'
@@ -33,7 +33,7 @@ export async function getBets(type = 'all', privacy = 'public') {
     }
   })
   list.forEach(async (bet) => {
-    const author = await getUserWithDoc(bet.author)
+    const author = await getUserByDoc(bet.author)
       .then((res) => {
         return res
       })
@@ -46,7 +46,7 @@ export async function getBets(type = 'all', privacy = 'public') {
         }
       })
     bet.author = author
-    const category = await getBetCategoryWithDoc(bet.category)
+    const category = await getBetCategoryByDoc(bet.category)
       .then((res) => {
         return res
       })
@@ -67,7 +67,7 @@ export async function getBetWithoutAuthor(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
-    const category = await getBetCategoryWithDoc(snap.data().category)
+    const category = await getBetCategoryByDoc(snap.data().category)
     return {
       id: snap.id,
       ...snap.data(),
@@ -81,7 +81,7 @@ export async function getBet(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
-    const author = await getUserWithDoc(snap.data().author).catch(() => {
+    const author = await getUserByDoc(snap.data().author).catch(() => {
       return {
         username: 'Utilisateur supprimé',
         avatar: {
@@ -89,7 +89,7 @@ export async function getBet(id) {
         }
       }
     })
-    const category = await getBetCategoryWithDoc(snap.data().category)
+    const category = await getBetCategoryByDoc(snap.data().category)
     let toReturn = {
       id: snap.id,
       ...snap.data(),
@@ -111,11 +111,11 @@ export async function getBet(id) {
     throw new Error('No such data!')
   }
 }
-export async function getBetWithDoc(ref) {
+export async function getBetByDoc(ref) {
   const snap = await getDoc(ref)
   if (snap.exists()) {
-    const author = await getUserWithDoc(snap.data().author)
-    const category = await getBetCategoryWithDoc(snap.data().category)
+    const author = await getUserByDoc(snap.data().author)
+    const category = await getBetCategoryByDoc(snap.data().category)
     return {
       id: snap.id,
       ...snap.data(),
@@ -216,7 +216,7 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
   const participations = await getParticipations(betId, betCollectionName)
   participations.forEach(async (participation) => {
     if (participation.choice.id === choiceRef.id) {
-      const userWinMultiplier = await getUserWinMultiplierWithDoc(participation.user)
+      const userWinMultiplier = await getUserWinMultiplierByDoc(participation.user)
       const amount = Math.round(participation.tokenAmount * defaultWinMultiplier * userWinMultiplier)
       await addTokenTransaction(amount, 'win', participation.user.id)
     }

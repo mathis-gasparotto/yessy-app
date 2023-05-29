@@ -1,6 +1,6 @@
 import { app, auth } from 'src/boot/firebase'
 import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
-import { getBetWithDoc } from './betService'
+import { getBetByDoc } from './betService'
 import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionServices'
 import { LocalStorage } from 'quasar'
 
@@ -10,7 +10,7 @@ export async function getMyParticipations() {
   const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
   const snap = await getDocs(ref)
   let list = snap.docs.map((doc) => {
-    return getBetWithDoc(doc.data().bet)
+    return getBetByDoc(doc.data().bet)
       .then((res) => {
         return {
           participationId: doc.id,

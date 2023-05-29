@@ -26,8 +26,8 @@ export async function getAvatar(id) {
     throw new Error('No such data!')
   }
 }
-export async function getAvatarWithDoc(ref) {
-  const snap = await getDoc(ref)
+export async function getAvatarByDoc(avatarDoc) {
+  const snap = await getDoc(avatarDoc)
   if (snap.exists()) {
     return {
       id: snap.id,

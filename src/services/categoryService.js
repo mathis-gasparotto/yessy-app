@@ -26,7 +26,7 @@ export async function getBetCategory(id) {
     throw new Error('No such data!')
   }
 }
-export async function getBetCategoryWithDoc(ref) {
+export async function getBetCategoryByDoc(ref) {
   const snap = await getDoc(ref)
   if (snap.exists()) {
     return {

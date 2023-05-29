@@ -29,7 +29,7 @@ export async function getUser(uid) {
     throw new Error('No such data!')
   }
 }
-export async function getUserWithDoc(ref) {
+export async function getUserByDoc(ref) {
   const snapUser = await getDoc(ref)
   if (snapUser.exists()) {
     const snapUserData = await getDoc(doc(db, 'users_data', snapUser.id))
@@ -148,7 +148,7 @@ export async function deleteUserData() {
     throw new Error(error.message)
   })
 }
-export async function getUserWalletWithDoc(userDoc) {
+export async function getUserWalletByDoc(userDoc) {
   const snap = await getDoc(userDoc)
   if (snap.exists()) {
     return snap.data().tokenCount
@@ -156,7 +156,7 @@ export async function getUserWalletWithDoc(userDoc) {
     throw new Error('No such data!')
   }
 }
-export async function getUserWinMultiplierWithDoc(userDoc) {
+export async function getUserWinMultiplierByDoc(userDoc) {
   const snap = await getDoc(userDoc)
   if (snap.exists()) {
     return snap.data().winMultiplier
