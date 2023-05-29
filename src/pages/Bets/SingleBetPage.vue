@@ -238,8 +238,8 @@ export default {
             message: 'Code copié !',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -253,8 +253,8 @@ export default {
             message: 'Erreur lors de la copie du code',
             color: 'negative',
             icon: 'report_problem',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -293,8 +293,8 @@ export default {
             message: "Le pari n'existe pas, ou a été supprimé",
             color: 'negative',
             icon: 'report_problem',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -315,8 +315,8 @@ export default {
             message: 'Le pari a bien été supprimé',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -332,6 +332,7 @@ export default {
             message: translate().translateDeleteBetError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -351,8 +352,8 @@ export default {
             message: 'Vous avez quitté le pari',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -368,6 +369,7 @@ export default {
             message: translate().translateDeleteParticipationError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {

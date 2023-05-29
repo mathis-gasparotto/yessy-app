@@ -140,6 +140,7 @@ export default {
                 message: translate().translateSigninError(err),
                 color: 'negative',
                 icon: 'report_problem',
+                position: 'top',
                 timeout: 3000,
                 actions: [
                   {

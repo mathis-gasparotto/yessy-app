@@ -46,6 +46,7 @@ export default {
               message: 'Une erreur est survenue',
               color: 'negative',
               icon: 'report_problem',
+              position: 'top',
               timeout: 3000,
               actions: [
                 {

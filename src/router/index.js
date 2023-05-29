@@ -70,6 +70,7 @@ export default route(function () {
             message: 'Vous participez déjà à ce pari',
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -86,6 +87,7 @@ export default route(function () {
                 message: 'Vous ne pouvez pas participer à votre propre pari',
                 color: 'negative',
                 icon: 'report_problem',
+                position: 'top',
                 timeout: 3000,
                 actions: [
                   {
@@ -103,6 +105,7 @@ export default route(function () {
               message: 'Une erreur est survenue',
               color: 'negative',
               icon: 'report_problem',
+              position: 'top',
               timeout: 3000,
               actions: [
                 {
@@ -119,6 +122,7 @@ export default route(function () {
           message: 'Une erreur est survenue',
           color: 'negative',
           icon: 'report_problem',
+          position: 'top',
           timeout: 3000,
           actions: [
             {
@@ -137,6 +141,7 @@ export default route(function () {
               message: 'Vous na pas accès à cette page',
               color: 'negative',
               icon: 'report_problem',
+              position: 'top',
               timeout: 3000,
               actions: [
                 {
@@ -155,6 +160,7 @@ export default route(function () {
             message: 'Une erreur est survenue',
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {

@@ -85,8 +85,8 @@ export default {
             message: 'Vous avez défini le choix gagant de ce pari',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -102,6 +102,7 @@ export default {
             message: translate().translateSetWinnerChoiceError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
