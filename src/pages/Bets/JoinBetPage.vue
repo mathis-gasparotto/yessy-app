@@ -182,9 +182,10 @@ export default {
   &__choice {
     &-btn {
       width: 100%;
+      border: 1px solid transparent;
       &.chosen {
         transition: 0.2s ease-in-out;
-        border: 1px solid #fff;
+        border-color: #fff;
       }
     }
     &s {
