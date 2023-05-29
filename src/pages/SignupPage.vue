@@ -32,10 +32,10 @@
           (val) => {
             const date = new Date(val)
             const min = new Date()
-            min.setFullYear(min.getFullYear() - 16)
+            min.setFullYear(min.getFullYear() - 18)
             return (
               date < min ||
-              'Cette application est réservée aux personnes de plus de 16 ans'
+              'Cette application est réservée aux personnes majeures'
             )
           },
           (val) => {
@@ -152,7 +152,7 @@
       <p class="flex-end text-right signup-text">*Champ obligatoire</p>
       <q-toggle v-model="form.minAgeCheck" class="q-mb-md signup-toggle">
         <p>
-          Je certifie d'avoir plus de 14 ans. J'ai lu et j'accepte les
+          Je certifie d'avoir plus de 18 ans. J'ai lu et j'accepte les
           <span class="text-underline">conditions générales</span>.
         </p>
       </q-toggle>
