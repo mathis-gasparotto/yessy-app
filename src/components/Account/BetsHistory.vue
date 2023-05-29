@@ -4,15 +4,19 @@
       <q-btn
         square
         @click="component = 'ParticipationHistory'"
-        :class="`btn btn-secondary bets-history-main__btn ${component === 'ParticipationHistory' ? 'active' : ''}`"
-        color="secondary"
+        :class="`btn btn-secondary btn-bordered--thin bets-history-main__btn`"
+        :color="`${component === 'ParticipationHistory' ? 'secondary' : 'white'}`"
+        :text-color="`${component === 'ParticipationHistory' ? 'white' : 'secondary'}`"
+        size="1.1rem"
         >Participations</q-btn
       >
       <q-btn
         square
         @click="component = 'MyBets'"
-        :class="`btn btn-secondary bets-history-main__btn ${component === 'MyBets' ? 'active' : ''}`"
-        color="secondary"
+        :class="`btn btn-secondary btn-bordered--thin bets-history-main__btn`"
+        :color="`${component === 'MyBets' ? 'secondary' : 'white'}`"
+        :text-color="`${component === 'MyBets' ? 'white' : 'secondary'}`"
+        size="1.1rem"
         >Mes paris</q-btn
       >
     </div>
@@ -44,13 +48,9 @@ export default {
     width: 45%;
     border-radius: 5px;
     transition: 0.2s ease-in-out;
-    &.active {
-      font-size: 1.1rem;
-    }
     &s {
       &-container {
         width: 100%;
-        height: 50px;
       }
     }
   }
