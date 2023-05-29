@@ -171,18 +171,8 @@ export async function addBet(payload, choices, categoryId) {
 
   // add choices linked to the bet
   const choicesCreated = await choices.map((choice, index) => {
-    return addChoice(choice.label, doc(db, 'simple_bets', betCreated.id), index)
-      .then((ref) => {
-        return {
-          id: ref.id,
-          label: choice.label,
-          bet: doc(db, 'simple_bets', betCreated.id),
-          index
-        }
-      })
-      .catch((error) => {
-        throw new Error(error.message)
-      })
+    // return addChoice(choice.label, doc(db, 'simple_bets', betCreated.id), index)
+    return addChoice(choice.label, betCreated.id, index)
   })
 
   return Promise.all(choicesCreated).then(() => {
@@ -200,7 +190,7 @@ export async function deleteBet(id) {
       await updateDoc(doc(db, 'simple_bets', id), { disabled: true })
 
       // delete all choices
-      await deleteChoices(ref)
+      // await deleteChoices(ref)
 
       // delete all participations
       return deleteBetParticipations(ref)
@@ -221,12 +211,13 @@ export async function isAuthor(betId, betCollectionName = 'simple_bets') {
   }
 }
 export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simple_bets') {
-  const choiceRef = doc(db, 'bet_choices', choiceId)
+  // const choiceRef = doc(db, 'bet_choices', choiceId)
+  const choiceRef = doc(db, `${betCollectionName}/${betId}/choices`, choiceId)
   const betRef = doc(db, betCollectionName, betId)
-  const snap = await getDoc(choiceRef)
-  if (snap.data().bet.id !== betRef.id) {
-    throw new Error('Le choix ne correspond pas au pari')
-  }
+  // const snap = await getDoc(choiceRef)
+  // if (snap.data().bet.id !== betRef.id) {
+  //   throw new Error('Le choix ne correspond pas au pari')
+  // }
   await updateDoc(betRef, { winnerChoice: choiceRef })
   const participations = await getParticipations(betId, betCollectionName)
   participations.forEach(async (participation) => {

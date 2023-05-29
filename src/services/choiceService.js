@@ -8,7 +8,8 @@ import {
   addDoc,
   getFirestore,
   getDoc,
-  orderBy
+  orderBy,
+  setDoc
 } from 'firebase/firestore'
 import { app, auth } from 'src/boot/firebase'
 
@@ -31,11 +32,12 @@ export async function getBetChoiceByDoc(choiceDoc) {
   }
 }
 export async function getBetChoices(betId, collectionName = 'simple_bets') {
-  const ref = query(
-    collection(db, 'bet_choices'),
-    where('bet', '==', doc(db, collectionName, betId)),
-    orderBy('index', 'asc')
-  )
+  // const ref = query(
+  //   collection(db, 'bet_choices'),
+  //   where('bet', '==', doc(db, collectionName, betId)),
+  //   orderBy('index', 'asc')
+  // )
+  const ref = collection(db, `${collectionName}/${betId}/choices`)
   const snap = await getDocs(ref)
   const list = snap.docs.map((doc) => {
     return {
@@ -46,28 +48,29 @@ export async function getBetChoices(betId, collectionName = 'simple_bets') {
   console.log(list)
   return list
 }
-export async function getBetChoicesByDoc(betDoc) {
-  const ref = query(collection(db, 'bet_choices'), where('bet', '==', betDoc))
-  const snap = await getDocs(ref)
-  const list = snap.docs.map((doc) => {
-    return {
-      id: doc.id,
-      ...doc.data()
-    }
-  })
-  return list
-}
-export function addChoice(label, betDoc, index) {
-  return addDoc(collection(db, 'bet_choices'), {
-    label,
-    bet: betDoc,
-    index
-  })
-    .then((res) => {
+// export async function getBetChoicesByDoc(betDoc) {
+//   const ref = query(collection(db, 'bet_choices'), where('bet', '==', betDoc))
+//   const snap = await getDocs(ref)
+//   const list = snap.docs.map((doc) => {
+//     return {
+//       id: doc.id,
+//       ...doc.data()
+//     }
+//   })
+//   return list
+// }
+// export function addChoice(label, betDoc, index) {
+//   return addDoc(collection(db, 'bet_choices'), {
+//     label,
+//     bet: betDoc,
+//     index
+//   })
+export function addChoice(label, betId, index, collectionName = 'simple_bets') {
+  return setDoc(doc(db, `${collectionName}/${betId}/choices`, `bet_choice_${index+1}`), { label })
+    .then(() => {
       return {
-        id: res.id,
-        label,
-        index
+        id: `bet_choice_${index+1}`,
+        label
       }
     })
     .catch((error) => {

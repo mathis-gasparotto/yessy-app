@@ -49,11 +49,11 @@ export async function getMyTokenParticipation(betId, betCollectionName = 'simple
   const snap = await getDocs(ref)
   return snap.docs[0].data().tokenAmount
 }
-export async function participate(betId, choiceId, tokenAmount = null) {
+export async function participate(betId, choiceId, tokenAmount = null, betCollectionName = 'simple_bets') {
   const ref = query(
     collection(db, 'participations'),
     where('user', '==', doc(db, 'users', auth.currentUser.uid)),
-    where('bet', '==', doc(db, 'simple_bets', betId))
+    where('bet', '==', doc(db, betCollectionName, betId))
   )
   // const count = console.log(await getCountFromServer(ref))
   const snap = await getDocs(ref)
@@ -64,10 +64,16 @@ export async function participate(betId, choiceId, tokenAmount = null) {
   if (tokenAmount > currentWallet) {
     throw new Error("Vous n'avez pas assez de jetons")
   }
+  // let payload = {
+  //   user: doc(db, 'users', auth.currentUser.uid),
+  //   bet: doc(db, betCollectionName, betId),
+  //   choice: doc(db, 'bet_choices', choiceId),
+  //   date: new Date()
+  // }
   let payload = {
     user: doc(db, 'users', auth.currentUser.uid),
-    bet: doc(db, 'simple_bets', betId),
-    choice: doc(db, 'bet_choices', choiceId),
+    bet: doc(db, betCollectionName, betId),
+    choice: doc(db, `${betCollectionName}/${betId}/choices`, choiceId),
     date: new Date()
   }
   if (tokenAmount) {
