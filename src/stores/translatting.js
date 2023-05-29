@@ -103,5 +103,13 @@ export default () => ({
       default:
         return 'Une erreur est survenue'
     }
+  },
+  translateUpdateBetPrivacyError(error) {
+    switch (error.message) {
+      case "Vous ne pouvez pas modifier ce pari, vous n'en êtes pas l'auteur":
+        return error.message
+      default:
+        return 'Une erreur est survenue lors de la modification du pari'
+    }
   }
 })

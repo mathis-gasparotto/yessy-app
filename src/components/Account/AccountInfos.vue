@@ -260,19 +260,6 @@
     </div>
   </div>
   <div class="account__toggles-container flex column" v-if="user">
-    <!-- <q-toggle
-      v-model="user.private"
-      :label="`Compte ${user.private ? 'privé' : 'public'}`"
-      color="primary"
-      unchecked-icon="lock_open"
-      checked-icon="lock"
-      class="q-mb-md"
-      size="60px"
-      dense
-      @update:model-value="
-        handleUpdateAccount({ private: user.private })
-      "
-    /> -->
     <q-toggle
       v-model="user.newsletter"
       label="Recevoir la newsletter"
@@ -315,7 +302,6 @@ import { auth } from 'src/boot/firebase'
 import translate from '../../stores/translatting'
 import {
   // AuthCredential,
-  getAuth,
   signInWithEmailAndPassword,
   // reauthenticateWithCredential,
   // signInWithCustomToken,
