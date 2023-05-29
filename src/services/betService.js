@@ -1,5 +1,5 @@
 import { app, auth, defaultWinMultiplier } from 'src/boot/firebase'
-import { doc, getDoc, updateDoc, query, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, query, collection, getDocs, where, addDoc, getFirestore, orderBy } from 'firebase/firestore'
 import { getUserWinMultiplierByDoc, getUserByDoc } from './userService'
 import { getBetCategoryByDoc } from './categoryService'
 import { addChoice, deleteChoices } from './choiceService'
@@ -26,7 +26,7 @@ export async function getBets(type = 'all', privacy = 'public') {
   // if (type === 'active') {
   //   snap.docs = snap.docs.filter((item) => new Date(item.data().endAt.seconds * 1000) > now)
   // }
-  const list = await snap.docs.map((doc) => {
+  let list = await snap.docs.map((doc) => {
     return {
       id: doc.id,
       ...doc.data()
@@ -56,8 +56,11 @@ export async function getBets(type = 'all', privacy = 'public') {
     bet.category = category
   })
   if (type === 'active') {
-    return list.filter((item) => new Date(item.endAt.seconds * 1000) > now)
+    list = list.filter((item) => new Date(item.endAt.seconds * 1000) > now)
   }
+  list = list.sort((a, b) => {
+    return b.createdAt.seconds * 1000 - a.createdAt.seconds * 1000
+  })
   // return Promise.all(list).then((res) => {
   //   return res
   // })
@@ -156,13 +159,14 @@ export async function addBet(payload, choices, categoryId) {
     })
 
   // add choices linked to the bet
-  const choicesCreated = await choices.map((choice) => {
-    return addChoice(choice.label, doc(db, 'simple_bets', betCreated.id))
+  const choicesCreated = await choices.map((choice, index) => {
+    return addChoice(choice.label, doc(db, 'simple_bets', betCreated.id), index)
       .then((ref) => {
         return {
           id: ref.id,
           label: choice.label,
-          bet: doc(db, 'simple_bets', betCreated.id)
+          bet: doc(db, 'simple_bets', betCreated.id),
+          index
         }
       })
       .catch((error) => {

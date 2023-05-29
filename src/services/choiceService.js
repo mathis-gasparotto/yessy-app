@@ -1,10 +1,25 @@
-import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore, getDoc, updateDoc } from 'firebase/firestore'
+import {
+  doc,
+  query,
+  deleteDoc,
+  collection,
+  getDocs,
+  where,
+  addDoc,
+  getFirestore,
+  getDoc,
+  orderBy
+} from 'firebase/firestore'
 import { app, auth } from 'src/boot/firebase'
 
 const db = getFirestore(app)
 
 export async function getMyChoiceByBetId(betId, collectionName = 'simple_bets') {
-  const ref = query(collection(db, 'participations'), where('bet', '==', doc(db, collectionName, betId)), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
+  const ref = query(
+    collection(db, 'participations'),
+    where('bet', '==', doc(db, collectionName, betId)),
+    where('user', '==', doc(db, 'users', auth.currentUser.uid))
+  )
   const snap = await getDocs(ref)
   return getBetChoiceByDoc(snap.docs[0].data().choice)
 }
@@ -16,7 +31,11 @@ export async function getBetChoiceByDoc(choiceDoc) {
   }
 }
 export async function getBetChoices(betId, collectionName = 'simple_bets') {
-  const ref = query(collection(db, 'bet_choices'), where('bet', '==', doc(db, collectionName, betId)))
+  const ref = query(
+    collection(db, 'bet_choices'),
+    where('bet', '==', doc(db, collectionName, betId)),
+    orderBy('index', 'asc')
+  )
   const snap = await getDocs(ref)
   const list = snap.docs.map((doc) => {
     return {
@@ -24,6 +43,7 @@ export async function getBetChoices(betId, collectionName = 'simple_bets') {
       ...doc.data()
     }
   })
+  console.log(list)
   return list
 }
 export async function getBetChoicesByDoc(betDoc) {
@@ -37,15 +57,17 @@ export async function getBetChoicesByDoc(betDoc) {
   })
   return list
 }
-export function addChoice(label, betDoc) {
+export function addChoice(label, betDoc, index) {
   return addDoc(collection(db, 'bet_choices'), {
     label,
-    bet: betDoc
+    bet: betDoc,
+    index
   })
     .then((res) => {
       return {
         id: res.id,
-        label
+        label,
+        index
       }
     })
     .catch((error) => {
