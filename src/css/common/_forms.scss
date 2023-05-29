@@ -80,3 +80,9 @@
     width: 100%;
   }
 }
+
+.bg-input-white {
+  .q-field__control::before {
+    background: #fff;
+  }
+}

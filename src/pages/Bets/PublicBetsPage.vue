@@ -6,6 +6,28 @@
         <p class="public-bets__top-text">Paris public</p>
       </div>
       <div class="page-content">
+        <div class="public-bets__search-container flex justify-center q-mb-lg">
+          <q-input
+            name="betIdToSearch"
+            rounded
+            outlined
+            label="Code unique"
+            class="bg-input-white public-bets__search-input"
+            type="text"
+            v-model="betIdToSearch"
+            lazy-rules
+            :rules="[(val) => val.trim().length > 0 || 'Veullez renseigner ce champ']"
+            hide-bottom-space
+          ></q-input>
+          <q-btn
+            rounded
+            color="secondary"
+            text-color="white"
+            class="btn btn-secondary public-bets__search-btn"
+            icon="search"
+            @click="() => $router.push({ name: 'single-bet', params: { id: betIdToSearch } })"
+          ></q-btn>
+        </div>
         <BetList class="bet-list-component" />
         <q-btn
           class="public-bets__add-bet-btn q-mt-md q-ml-lg fixed"
@@ -29,12 +51,22 @@ export default {
   name: 'PublicBetsPage',
   components: {
     BetList
+  },
+  data() {
+    return {
+      betIdToSearch: ''
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .public-bets {
+  &__search {
+    &-container {
+      gap: 10px;
+    }
+  }
   &__top {
     &-container {
       width: 100%;
@@ -57,7 +89,6 @@ export default {
   }
 
   &__add-bet {
-
     &-btn {
       bottom: 10px;
       right: -50px;

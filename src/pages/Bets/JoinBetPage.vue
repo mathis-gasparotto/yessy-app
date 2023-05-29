@@ -34,7 +34,7 @@
               rounded
               outlined
               label="Smiles à mettre en jeu"
-              class="q-mb-lg global-input"
+              class="q-mb-lg global-input bg-input-white"
               mask="#"
               reverse-fill-mask
               v-model="tokenAmountToPlay"
