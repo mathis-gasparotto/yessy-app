@@ -1,5 +1,16 @@
 import { app, auth, defaultWinMultiplier } from 'src/boot/firebase'
-import { doc, getDoc, updateDoc, query, collection, getDocs, where, addDoc, getFirestore, orderBy } from 'firebase/firestore'
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  query,
+  collection,
+  getDocs,
+  where,
+  addDoc,
+  getFirestore,
+  orderBy
+} from 'firebase/firestore'
 import { getUserWinMultiplierByDoc, getUserByDoc } from './userService'
 import { getBetCategoryByDoc } from './categoryService'
 import { addChoice, deleteChoices } from './choiceService'
@@ -228,7 +239,11 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
   return true
 }
 export async function getMyBets() {
-  const ref = query(collection(db, 'simple_bets'), where('author', '==', doc(db, 'users', auth.currentUser.uid)), orderBy('createdAt', 'desc'))
+  const ref = query(
+    collection(db, 'simple_bets'),
+    where('author', '==', doc(db, 'users', auth.currentUser.uid)),
+    orderBy('createdAt', 'desc')
+  )
   const snap = await getDocs(ref)
   const list = await snap.docs.map((doc) => {
     return {
@@ -263,4 +278,22 @@ export async function getMyBets() {
   //   return res
   // })
   return Promise.all(list)
+}
+export async function updateBetPrivacy(betId, newPrivacy) {
+  const ref = doc(db, 'simple_bets', betId)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    if (snap.data().author.id === auth.currentUser.uid) {
+      await updateDoc(ref, { privacy: newPrivacy })
+      return {
+        id: snap.id,
+        ...snap.data(),
+        privacy: newPrivacy
+      }
+    } else {
+      throw new Error("Vous ne pouvez pas modifier ce pari, vous n'en êtes pas l'auteur")
+    }
+  } else {
+    throw new Error('No such data!')
+  }
 }

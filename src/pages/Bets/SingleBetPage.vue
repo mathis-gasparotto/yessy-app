@@ -1,6 +1,6 @@
 <template>
   <div class="page-container bg-2 bg-2--image single-bet">
-    <q-page class="page flex flex-center column">
+    <q-page class="page">
       <div class="single-bet__top-container">
         <q-icon class="single-bet__top-icon" name="fa fa-trophy" size="xl" color="white"></q-icon>
       </div>
@@ -77,6 +77,21 @@
             </p>
           </q-item>
         </q-list>
+        <q-toggle
+          v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()"
+          v-model="bet.privacy"
+          :label="`Pari ${bet.privacy === 'private' ? 'privé' : 'public'}`"
+          true-value="private"
+          false-value="public"
+          color="primary"
+          unchecked-icon="lock_open"
+          checked-icon="lock"
+          class="q-my-md single-bet__privacy-toggle"
+          size="60px"
+          dense
+          :disable="updatePrivacyLoading"
+          @update:model-value="handleUpdateBetPrivacy(bet.privacy)"
+        />
         <div class="single-bet__participants flex items-center justify-evenly q-my-md">
           <span class="single-bet__participants-text">
             <span class="single-bet__participants-count">{{ bet.participants }}</span>
@@ -194,7 +209,7 @@ import {
   getParticipationCount,
   iParticipate
 } from 'src/services/participationService'
-import { deleteBet, getBet } from 'src/services/betService'
+import { deleteBet, getBet, updateBetPrivacy } from 'src/services/betService'
 import { getMyChoiceByBetId } from 'src/services/choiceService'
 import { Share } from '@capacitor/share'
 import { Clipboard } from '@capacitor/clipboard'
@@ -216,7 +231,8 @@ export default {
       iParticipate: null,
       defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
       myTokenParticipation: null,
-      myChoice: null
+      myChoice: null,
+      updatePrivacyLoading: false
     }
   },
   created() {
@@ -229,6 +245,43 @@ export default {
     }
   },
   methods: {
+    handleUpdateBetPrivacy(newPrivacy) {
+      this.updatePrivacyLoading = true
+      updateBetPrivacy(this.route.params.id, newPrivacy)
+        .then(() => {
+          this.updatePrivacyLoading = false
+          Notify.create({
+            message: `Le pari est maintenant ${newPrivacy === 'private' ? 'privé' : 'public'}`,
+            color: 'positive',
+            icon: 'check_circle',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+        .catch((e) => {
+          this.bet.privacy = newPrivacy === 'private' ? 'public' : 'private'
+          this.updatePrivacyLoading = false
+          Notify.create({
+            message: translate().translateUpdateBetPrivacyError(e),
+            color: 'negative',
+            icon: 'report_problem',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+    },
     copy(code) {
       Clipboard.write({
         string: code
@@ -530,6 +583,25 @@ export default {
   &__delete-btn {
     width: 100%;
     font-size: 1.2rem;
+  }
+}
+</style>
+
+<style lang="scss">
+.single-bet {
+  &__privacy-toggle[aria-checked="false"] {
+    .q-toggle__track {
+      background-color: $secondary;
+    }
+    .q-toggle__thumb {
+      i.q-icon {
+        color: #fff;
+        opacity: 1;
+      }
+      &::after {
+        background-color: $secondary;
+      }
+    }
   }
 }
 </style>
