@@ -14,6 +14,3 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig)
 // const db = getFirestore(app)
 export const auth = getAuth(app)
-
-export const defaultWinMultiplier = 1.2
-export const defaultTokenAmount = 300

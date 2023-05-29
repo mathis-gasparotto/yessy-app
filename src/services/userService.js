@@ -1,8 +1,9 @@
-import { auth, app, defaultTokenAmount } from 'src/boot/firebase'
+import { auth, app } from 'src/boot/firebase'
 import { doc, getDoc, setDoc, updateDoc, query, deleteDoc, collection, getDocs, where, getFirestore } from 'firebase/firestore'
 import { deleteUser } from 'firebase/auth'
 import { deleteMyParticipations } from './participationService'
 import { addTokenTransaction } from './tokenTransactionService'
+import { uid } from 'quasar'
 
 const db = getFirestore(app)
 
@@ -51,7 +52,18 @@ export async function getUserByDoc(ref) {
     throw new Error('No such data!')
   }
 }
-export async function addUser(uid, payload, username) {
+export async function generateUniqueReferalCode(referalCode = uid().split('-')[0]) {
+  const q = query(collection(db, 'users'), where('myReferalCode', '==', referalCode))
+  const querySnapshot = await getDocs(q)
+  if (querySnapshot.size > 0) {
+    return generateUniqueReferalCode(uid().split('-')[0])
+  }
+  return referalCode
+}
+
+export async function addUser(userUid, payload, username) {
+  const myReferalCode = generateUniqueReferalCode()
+
   payload = {
     ...payload,
     createdAt: new Date(),
@@ -64,40 +76,41 @@ export async function addUser(uid, payload, username) {
     newsletter: payload.newsletter,
     disabled: false,
     winMultiplier: 1,
+    myReferalCode,
     createdAt: payload.createdAt,
     updatedAt: payload.updatedAt
   }
   if (payload.referralCode) {
     userPayload = {
       ...userPayload,
-      referralCode: payload.referralCode
+      referralCode: payload.referralCode.replace('#', '').toLowerCase()
     }
   }
 
   const toReturn = {
     ...payload,
     ...userPayload,
-    uid
+    uid: userUid
   }
 
-  await setDoc(doc(db, 'users_data', uid), {
+  await setDoc(doc(db, 'users_data', userUid), {
     birthday: payload.birthday,
     createdAt: payload.createdAt,
     updatedAt: payload.updatedAt
   })
 
-  const user = await setDoc(doc(db, 'users', uid), userPayload)
+  const user = await setDoc(doc(db, 'users', userUid), userPayload)
 
-  return addTokenTransaction(defaultTokenAmount, 'start', user.id).then(() => {
+  return addTokenTransaction(process.env.DEFAULT_TOKEN_AMOUNT, 'start', user.id).then(() => {
     return toReturn
   })
 }
-export function updateUserData(uid, payload) {
+export function updateUserData(userUid, payload) {
   payload = {
     ...payload,
     updatedAt: new Date()
   }
-  return updateDoc(doc(db, 'users_data', uid), payload)
+  return updateDoc(doc(db, 'users_data', userUid), payload)
     .then(() => {
       return payload
     })
@@ -105,8 +118,8 @@ export function updateUserData(uid, payload) {
       throw new Error(error.message)
     })
 }
-export function updateUser(uid, payload) {
-  return updateDoc(doc(db, 'users', uid), payload)
+export function updateUser(userUid, payload) {
+  return updateDoc(doc(db, 'users', userUid), payload)
     .then(() => {
       return payload
     })
@@ -114,7 +127,7 @@ export function updateUser(uid, payload) {
       throw new Error(error.message)
     })
 }
-export async function updateUserName(uid, username) {
+export async function updateUserName(userUid, username) {
   const q = query(collection(db, 'users'), where('username', '==', username.trim()), where('disabled', '==', false))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
@@ -124,7 +137,7 @@ export async function updateUserName(uid, username) {
     username: username.trim(),
     updatedAt: new Date()
   }
-  return updateDoc(doc(db, 'users', uid), payload)
+  return updateDoc(doc(db, 'users', userUid), payload)
     .then(() => {
       return payload
     })
@@ -133,7 +146,7 @@ export async function updateUserName(uid, username) {
     })
 }
 export async function deleteUserData() {
-  await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+  await updateDoc(doc(db, 'users', auth.currentUser.userUid), {
     disabled: true
   }).catch((error) => {
     throw new Error(error.message)
@@ -141,7 +154,7 @@ export async function deleteUserData() {
   await deleteMyParticipations().catch((error) => {
     throw new Error(error.message)
   })
-  await deleteDoc(doc(db, 'users_data', auth.currentUser.uid)).catch((error) => {
+  await deleteDoc(doc(db, 'users_data', auth.currentUser.userUid)).catch((error) => {
     throw new Error(error.message)
   })
   await deleteUser(auth.currentUser).catch((error) => {
