@@ -124,10 +124,10 @@
           rounded
           :to="`/bets/join/${route.params.id}`"
           padding="xs"
-          class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__leave-btn"
+          class="q-mb-md btn btn-secondary single-bet__leave-btn"
         />
         <q-btn
-          v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now() && !isAuthor"
+          v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now()"
           label="Quitter le pari"
           type="button"
           color="secondary"
@@ -148,8 +148,12 @@
           class="q-mb-md btn btn-secondary single-bet__delete-btn"
           v-if="isAuthor && bet.endAt.seconds * 1000 <= Date.now() && !bet.winnerChoice"
         />
+
+        <p v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()" class="text-center q-mb-md">
+          Code d'accès :&nbsp;<span class="text-bold">{{ bet.id }}</span>
+        </p>
         <q-btn
-          label="Supprimer le pari"
+          label="Annuler le pari"
           type="button"
           text-color="secondary"
           color="white"

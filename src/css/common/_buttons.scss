@@ -16,9 +16,10 @@
     color: $white;
     &.btn {
       &-bordered {
-        border: 4px solid $secondary;
+        border: 3px solid $secondary;
         &--thin {
-          border: 2px solid $secondary;
+          border: 1px solid $secondary;
+          font-weight: 500;
         }
       }
     }
