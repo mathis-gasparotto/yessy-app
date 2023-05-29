@@ -12,6 +12,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@capacitor/clipboard": "^5.0.2",
+    "@capacitor/share": "^5.0.2",
+    "@ionic/pwa-elements": "^3.1.1",
     "@quasar/extras": "^1.0.0",
     "firebase": "^9.22.0",
     "pinia": "^2.0.33",

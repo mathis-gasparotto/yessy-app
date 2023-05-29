@@ -150,8 +150,21 @@
         />
 
         <p v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()" class="text-center q-mb-md">
-          Code d'accès :&nbsp;<span class="text-bold">{{ bet.id }}</span>
+          Code d'accès :&nbsp;<span class="text-bold" @click="copy(bet.id)">{{ bet.id }}</span>
         </p>
+        <q-btn
+          label="Partager le pari"
+          type="button"
+          text-color="secondary"
+          color="white"
+          rounded
+          @click.prevent="share(bet.id)"
+          :loading="deleteLoading"
+          padding="xs"
+          class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn"
+          icon="share"
+          v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()"
+        />
         <q-btn
           label="Annuler le pari"
           type="button"
@@ -183,6 +196,8 @@ import {
 } from 'src/services/participationService'
 import { deleteBet, getBet } from 'src/services/betService'
 import { getMyChoiceByBetId } from 'src/services/choiceService'
+import { Share } from '@capacitor/share'
+import { Clipboard } from '@capacitor/clipboard'
 
 export default {
   setup() {
@@ -202,7 +217,6 @@ export default {
       defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
       myTokenParticipation: null,
       myChoice: null
-      // leaveLoading: false
     }
   },
   created() {
@@ -215,6 +229,50 @@ export default {
     }
   },
   methods: {
+    copy(code) {
+      Clipboard.write({
+        string: code
+      })
+        .then(() => {
+          Notify.create({
+            message: 'Code copié !',
+            color: 'positive',
+            icon: 'check_circle',
+            timeout: 3000,
+            position: 'top',
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+        .catch(() => {
+          Notify.create({
+            message: 'Erreur lors de la copie du code',
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            position: 'top',
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+    },
+    share(code) {
+      Share.share({
+        title: "Partage d'un pari sur Yessy",
+        text: `Rejoins mon pari sur Yessy ! Le code d'accès est : ${code}
+        Sinon, tu peux y accéder directement via ce lien :`,
+        url: `${process.env.SITE_URL}/#/bets/${code}`,
+        dialogTitle: 'Partage de pari'
+      })
+    },
     async reloadData() {
       this.iParticipate = await iParticipate(this.route.params.id)
       if (this.iParticipate) {
