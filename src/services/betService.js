@@ -1,9 +1,10 @@
 import { app, auth, defaultWinMultiplier } from 'src/boot/firebase'
 import { doc, getDoc, updateDoc, query, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
-import { getUserWinMultiplierWithDoc, getUserWithDoc, updateUserWalletWithDoc } from './userService'
+import { getUserWinMultiplierWithDoc, getUserWithDoc } from './userService'
 import { getBetCategoryWithDoc } from './categoryService'
 import { addChoice, deleteChoices } from './choiceService'
 import { deleteBetParticipations, getParticipations } from './participationService'
+import { addTokenTransaction } from './tokenTransactionServices'
 
 const db = getFirestore(app)
 
@@ -214,10 +215,10 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
   await updateDoc(betRef, { winnerChoice: choiceRef })
   const participations = await getParticipations(betId, betCollectionName)
   participations.forEach(async (participation) => {
-    if (participation.chosenChoice.id === choiceRef.id) {
+    if (participation.choice.id === choiceRef.id) {
       const userWinMultiplier = await getUserWinMultiplierWithDoc(participation.user)
       const amount = Math.round(participation.tokenAmount * defaultWinMultiplier * userWinMultiplier)
-      await updateUserWalletWithDoc(amount, participation.user)
+      await addTokenTransaction(amount, 'win', participation.user.id)
     }
   })
   return true

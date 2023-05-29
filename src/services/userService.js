@@ -1,7 +1,8 @@
-import { auth, app } from 'src/boot/firebase'
+import { auth, app, defaultTokenAmount } from 'src/boot/firebase'
 import { doc, getDoc, setDoc, updateDoc, query, deleteDoc, collection, getDocs, where, getFirestore } from 'firebase/firestore'
 import { deleteUser } from 'firebase/auth'
 import { deleteMyParticipations } from './participationService'
+import { addTokenTransaction } from './tokenTransactionServices'
 
 const db = getFirestore(app)
 
@@ -50,46 +51,46 @@ export async function getUserWithDoc(ref) {
     throw new Error('No such data!')
   }
 }
-export function addUser(uid, payload, username) {
+export async function addUser(uid, payload, username) {
   payload = {
     ...payload,
     createdAt: new Date(),
     updatedAt: new Date()
   }
+
+  let userPayload = {
+    username,
+    avatar: doc(db, 'avatars', process.env.DEFAULT_AVATAR_ID),
+    newsletter: payload.newsletter,
+    disabled: false,
+    winMultiplier: 1,
+    createdAt: payload.createdAt,
+    updatedAt: payload.updatedAt
+  }
+  if (payload.referralCode) {
+    userPayload = {
+      ...userPayload,
+      referralCode: payload.referralCode
+    }
+  }
+
   const toReturn = {
     ...payload,
-    private: false,
-    winMultiplier: 1,
-    uid,
-    username
+    ...userPayload,
+    uid
   }
-  return setDoc(doc(db, 'users_data', uid), {
+
+  await setDoc(doc(db, 'users_data', uid), {
     birthday: payload.birthday,
     createdAt: payload.createdAt,
     updatedAt: payload.updatedAt
   })
-    .then(() => {
-      return setDoc(doc(db, 'users', uid), {
-        username,
-        avatar: doc(db, 'avatars', process.env.DEFAULT_AVATAR_ID),
-        referralCode: payload.referralCode,
-        newsletter: payload.newsletter,
-        disabled: false,
-        private: false,
-        winMultiplier: 1,
-        createdAt: payload.createdAt,
-        updatedAt: payload.updatedAt
-      })
-        .then(() => {
-          return toReturn
-        })
-        .catch((error) => {
-          throw new Error(error.message)
-        })
-    })
-    .catch((error) => {
-      throw new Error(error.message)
-    })
+
+  const user = await setDoc(doc(db, 'users', uid), userPayload)
+
+  return addTokenTransaction(defaultTokenAmount, 'start', user.id).then(() => {
+    return toReturn
+  })
 }
 export function updateUserData(uid, payload) {
   payload = {
@@ -147,15 +148,6 @@ export async function deleteUserData() {
     throw new Error(error.message)
   })
 }
-export async function getMyWallet() {
-  const ref = doc(db, 'users', auth.currentUser.uid)
-  const snap = await getDoc(ref)
-  if (snap.exists()) {
-    return snap.data().tokenCount
-  } else {
-    throw new Error('No such data!')
-  }
-}
 export async function getUserWalletWithDoc(userDoc) {
   const snap = await getDoc(userDoc)
   if (snap.exists()) {
@@ -163,26 +155,6 @@ export async function getUserWalletWithDoc(userDoc) {
   } else {
     throw new Error('No such data!')
   }
-}
-export async function updateMyWallet(amount) {
-  const currentAmount = await getMyWallet()
-  return updateDoc(doc(db, 'users', auth.currentUser.uid), {tokenCount: currentAmount + amount})
-    .then(() => {
-      return currentAmount + amount
-    })
-    .catch((error) => {
-      throw new Error(error.message)
-    })
-}
-export async function updateUserWalletWithDoc(amount, userDoc) {
-  const currentAmount = await getUserWalletWithDoc(userDoc)
-  return updateDoc(userDoc, {tokenCount: currentAmount + amount})
-    .then(() => {
-      return currentAmount + amount
-    })
-    .catch((error) => {
-      throw new Error(error.message)
-    })
 }
 export async function getUserWinMultiplierWithDoc(userDoc) {
   const snap = await getDoc(userDoc)

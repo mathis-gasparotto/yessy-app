@@ -126,7 +126,7 @@
           class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__leave-btn"
         />
         <q-btn
-          v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now()"
+          v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now() && !isAuthor"
           label="Quitter le pari"
           type="button"
           color="secondary"
