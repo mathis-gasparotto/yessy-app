@@ -112,8 +112,8 @@ export default {
             message: 'Vous avez rejoint le pari',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -129,6 +129,7 @@ export default {
             message: translate().translateAddParticipationError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {

@@ -268,6 +268,7 @@ export default {
                 message: translate().translateSignupError(err),
                 color: 'negative',
                 icon: 'report_problem',
+                position: 'top',
                 timeout: 3000,
                 actions: [
                   {

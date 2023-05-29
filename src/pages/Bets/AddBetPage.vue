@@ -90,6 +90,7 @@ export default {
             message: translate().translateAddBetError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {

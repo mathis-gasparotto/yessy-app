@@ -373,6 +373,7 @@ export default {
             message: 'Vous avez bien été déconnecté',
             color: 'positive',
             icon: 'check_circle',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -388,6 +389,7 @@ export default {
             message: translate().translateLogoutError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -439,6 +441,7 @@ export default {
                 message: translate().translateDeleteUserError(err),
                 color: 'negative',
                 icon: 'report_problem',
+                position: 'top',
                 timeout: 3000,
                 actions: [
                   {
@@ -456,6 +459,7 @@ export default {
           //       message: 'Vous avez bien été déconnecté',
           //       color: 'positive',
           //       icon: 'check_circle',
+          //       position: 'top',
           //       timeout: 3000,
           //       actions: [
           //         {
@@ -471,6 +475,7 @@ export default {
           //       message: translate().translateLogoutError(err),
           //       color: 'negative',
           //       icon: 'report_problem',
+          //       position: 'top',
           //       timeout: 3000,
           //       actions: [
           //         {
@@ -494,6 +499,7 @@ export default {
             message: translate().translateUpdateUserError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -511,6 +517,7 @@ export default {
             message: translate().translateUpdateUserError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -528,6 +535,7 @@ export default {
             message: translate().translateUpdateUserError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -545,6 +553,7 @@ export default {
             message: translate().translateUpdateUserEmailError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -561,6 +570,7 @@ export default {
             message: translate().translateUpdateUserError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -578,6 +588,7 @@ export default {
             message: translate().translateUpdateUserError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -602,7 +613,6 @@ export default {
             color: 'positive',
             icon: 'check_circle',
             timeout: 3000,
-            position: 'top',
             actions: [
               {
                 icon: 'close',
@@ -616,6 +626,7 @@ export default {
             message: translate().translateGetUserError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
@@ -636,6 +647,7 @@ export default {
           message: translate().translateUpdatePasswordError(err),
           color: 'negative',
           icon: 'report_problem',
+          position: 'top',
           timeout: 3000,
           actions: [
             {
@@ -654,8 +666,8 @@ export default {
             message: 'Votre mot de passe a bien été mis à jour',
             color: 'positive',
             icon: 'check_circle',
-            timeout: 3000,
             position: 'top',
+            timeout: 3000,
             actions: [
               {
                 icon: 'close',
@@ -670,6 +682,7 @@ export default {
             message: translate().translateUpdatePasswordError(err),
             color: 'negative',
             icon: 'report_problem',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
