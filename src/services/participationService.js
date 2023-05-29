@@ -1,7 +1,7 @@
 import { app, auth } from 'src/boot/firebase'
 import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
 import { getBetWithDoc } from './betService'
-import { getMyWallet, updateMyWallet } from './userService'
+import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionServices'
 import { LocalStorage } from 'quasar'
 
 const db = getFirestore(app)
@@ -49,7 +49,7 @@ export async function getMyTokenParticipation(betId, betCollectionName = 'simple
   const snap = await getDocs(ref)
   return snap.docs[0].data().tokenAmount
 }
-export async function participate(betId, chosenChoiceId, tokenAmount = null) {
+export async function participate(betId, choiceId, tokenAmount = null) {
   const ref = query(
     collection(db, 'participations'),
     where('user', '==', doc(db, 'users', auth.currentUser.uid)),
@@ -67,7 +67,7 @@ export async function participate(betId, chosenChoiceId, tokenAmount = null) {
   let payload = {
     user: doc(db, 'users', auth.currentUser.uid),
     bet: doc(db, 'simple_bets', betId),
-    chosenChoice: doc(db, 'bet_choices', chosenChoiceId)
+    choice: doc(db, 'bet_choices', choiceId)
   }
   if (tokenAmount) {
     tokenAmount = parseInt(tokenAmount)
@@ -76,12 +76,12 @@ export async function participate(betId, chosenChoiceId, tokenAmount = null) {
       tokenAmount
     }
   }
-  await updateMyWallet(-tokenAmount).then((newTokenCount) => {
-    const user = LocalStorage.getItem('user')
-    LocalStorage.set('user', { ...user, tokenCount: newTokenCount })
-  })
+  const transaction = await addTokenTransaction(-tokenAmount, 'participation')
+
   return addDoc(collection(db, 'participations'), payload).catch((error) => {
-    throw new Error(error.message)
+    deleteTokenTransaction(transaction.id).then(() => {
+      throw new Error(error.message)
+    })
   })
 }
 export async function iParticipate(betId, betCollectionName = 'simple_bets') {
@@ -103,8 +103,16 @@ export async function deleteMyParticipations() {
 export async function deleteBetParticipations(betDoc) {
   const ref = query(collection(db, 'participations'), where('bet', '==', betDoc))
   const snap = await getDocs(ref)
-  snap.docs.forEach((singleDoc) => {
-    deleteDoc(doc(db, 'participations', singleDoc.id))
+  snap.docs.forEach(async (singleDoc) => {
+    // refund all participants
+    const refund = await addTokenTransaction(singleDoc.data().tokenAmount, 'refund', singleDoc.data().user.id)
+
+    deleteDoc(doc(db, 'participations', singleDoc.id)).catch((err) => {
+      // if error, delete the refund
+      deleteTokenTransaction(refund.id).then(() => {
+        throw new Error(err.message)
+      })
+    })
   })
 }
 export async function deleteParticipation(betId, betCollectionName = 'simple_bets') {
@@ -114,7 +122,7 @@ export async function deleteParticipation(betId, betCollectionName = 'simple_bet
     where('bet', '==', doc(db, betCollectionName, betId))
   )
   const snap = await getDocs(ref)
-  await updateMyWallet(snap.docs[0].data().tokenAmount).then((newTokenCount) => {
+  await addTokenTransaction(snap.docs[0].data().tokenAmount, 'refund').then((newTokenCount) => {
     const user = LocalStorage.getItem('user')
     LocalStorage.set('user', { ...user, tokenCount: newTokenCount })
   })

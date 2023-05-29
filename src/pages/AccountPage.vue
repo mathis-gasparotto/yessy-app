@@ -6,7 +6,7 @@
           <div class="account__avatar-container q-mb-md position-relative">
             <div class="account__token-count-container absolute flex flex-center column text-white">
               <div class="account_token-count">
-                {{ user.tokenCount }}
+                {{ userWallet }}
               </div>
               <q-icon name="fa fa-coins" size="lg"></q-icon>
             </div>
@@ -84,6 +84,7 @@ import { LocalStorage } from 'quasar'
 import { getUser, updateUserData, updateUserName } from 'src/services/userService'
 import { logout } from 'src/services/authService'
 import { auth } from 'src/boot/firebase'
+import { getMyWallet } from 'src/services/tokenTransactionServices'
 
 export default {
   name: 'AccountPage',
@@ -103,7 +104,8 @@ export default {
         }
       },
       choice: 'ParticipationHistory',
-      loadingUser: true
+      loadingUser: true,
+      userWallet: null
     }
   },
   created() {
@@ -131,11 +133,33 @@ export default {
       //   })
       //   throw new Error(err)
       // })
-      getUser(auth.currentUser.uid)
+      await getUser(auth.currentUser.uid)
         .then((user) => {
           LocalStorage.set('user', user)
           this.user = user
           this.loadingUser = false
+        })
+        .catch((e) => {
+          Notify.create({
+            message: 'Une erreur est survenue',
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          Loading.hide()
+          this.$router.push({ name: 'home' })
+          throw new Error(e.message)
+        })
+
+      getMyWallet()
+        .then((wallet) => {
+          this.userWallet = wallet
           Loading.hide()
         })
         .catch((e) => {

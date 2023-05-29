@@ -10,7 +10,7 @@
             <div class="home__user-username text-bold">{{ user.username }}</div>
             <div class="home__user-token-count text-bold text-secondary">
               <q-icon name="fa fa-coins"></q-icon>
-              {{ user.tokenCount }}
+              {{ userWallet }}
             </div>
           </div>
         </div>
@@ -28,6 +28,7 @@ import BetList from 'src/components/BetList.vue'
 import { Loading, LocalStorage, Notify } from 'quasar'
 import { getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
+import { getMyWallet } from 'src/services/tokenTransactionServices'
 
 export default {
   name: 'HomePage',
@@ -36,7 +37,8 @@ export default {
   },
   data () {
     return {
-      user: null
+      user: null,
+      userWallet: null
     }
   },
   created () {
@@ -45,10 +47,31 @@ export default {
   methods: {
     async reloadData() {
       Loading.show()
-      getUser(auth.currentUser.uid)
+      await getUser(auth.currentUser.uid)
         .then((user) => {
           LocalStorage.set('user', user)
           this.user = user
+        })
+        .catch((e) => {
+          Notify.create({
+            message: 'Une erreur est survenue',
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          Loading.hide()
+          throw new Error(e.message)
+        })
+
+      getMyWallet()
+        .then((wallet) => {
+          this.userWallet = wallet
           Loading.hide()
         })
         .catch((e) => {
