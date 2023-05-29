@@ -55,7 +55,7 @@
         </div>
         <div class="page-content">
           <AccountInfos :userData="user" v-if="!loadingUser && this.choice === 'AccountInfos'" />
-          <ParticipationHistory v-if="this.choice === 'ParticipationHistory'" />
+          <BetsHistory v-if="this.choice === 'BetsHistory'" />
           <div class="logout-btn-container" v-if="this.choice !== 'AccountInfos'">
             <q-btn label="Déconnexion" type="button" color="secondary" rounded @click.prevent="handleLogout()"
               :loading="logoutLoading" size="20px" padding="xs"
@@ -79,7 +79,7 @@ import {
   updateEmail,
 } from 'firebase/auth'
 import AccountInfos from 'src/components/Account/AccountInfos.vue'
-import ParticipationHistory from 'src/components/Account/ParticipationHistory.vue'
+import BetsHistory from 'src/components/Account/BetsHistory.vue'
 import { LocalStorage } from 'quasar'
 import { getUser, updateUserData, updateUserName } from 'src/services/userService'
 import { logout } from 'src/services/authService'
@@ -90,7 +90,7 @@ export default {
   name: 'AccountPage',
   components: {
     AccountInfos,
-    ParticipationHistory
+    BetsHistory
   },
   data() {
     return {
@@ -103,7 +103,7 @@ export default {
           value: ''
         }
       },
-      choice: 'ParticipationHistory',
+      choice: 'BetsHistory',
       loadingUser: true,
       userWallet: null
     }
