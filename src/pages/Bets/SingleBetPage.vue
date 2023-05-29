@@ -197,7 +197,7 @@ export default {
       iParticipate: null,
       defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
       myTokenParticipation: null,
-      myChoice: null,
+      myChoice: null
       // leaveLoading: false
     }
   },
@@ -227,6 +227,19 @@ export default {
         })
         .catch(() => {
           Loading.hide()
+          Notify.create({
+            message: "Le pari n'existe pas, ou a été supprimé",
+            color: 'negative',
+            icon: 'report_problem',
+            timeout: 3000,
+            position: 'top',
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
           this.$router.push({ name: 'public-bets' })
         })
     },
