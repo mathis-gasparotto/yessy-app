@@ -106,7 +106,8 @@
             </div>
           </span>
         </div>
-        <p v-if="iParticipate" class="text-center q-mb-md">Vous avez parier {{ myTokenParticipation }} Smiles 😊</p>
+        <p v-if="iParticipate" class="text-center q-mb-0">Vous avez parier {{ myTokenParticipation }} Smiles 😊</p>
+        <p v-if="iParticipate" class="text-center q-mb-md">Sur "{{ myChoice.label }}"</p>
         <p v-if="bet.winnerChoice" class="text-center q-mb-md">
           La bonne réponse était : "{{ bet.winnerChoice.label }}"
         </p>
@@ -177,6 +178,7 @@ import {
   iParticipate
 } from 'src/services/participationService'
 import { deleteBet, getBet } from 'src/services/betService'
+import { getMyChoiceByBetId } from 'src/services/choiceService'
 
 export default {
   setup() {
@@ -194,7 +196,8 @@ export default {
       createFormat: createFormat(),
       iParticipate: null,
       defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
-      myTokenParticipation: null
+      myTokenParticipation: null,
+      myChoice: null,
       // leaveLoading: false
     }
   },
@@ -212,6 +215,7 @@ export default {
       this.iParticipate = await iParticipate(this.route.params.id)
       if (this.iParticipate) {
         this.myTokenParticipation = await getMyTokenParticipation(this.route.params.id)
+        this.myChoice = await getMyChoiceByBetId(this.route.params.id)
       }
       getBet(this.route.params.id)
         .then((res) => {
