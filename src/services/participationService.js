@@ -1,7 +1,7 @@
 import { app, auth } from 'src/boot/firebase'
 import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
 import { getBetByDoc } from './betService'
-import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionServices'
+import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionService'
 import { LocalStorage } from 'quasar'
 
 const db = getFirestore(app)

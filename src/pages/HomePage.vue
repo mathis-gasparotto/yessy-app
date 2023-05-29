@@ -28,7 +28,7 @@ import BetList from 'src/components/BetList.vue'
 import { Loading, LocalStorage, Notify } from 'quasar'
 import { getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
-import { getMyWallet } from 'src/services/tokenTransactionServices'
+import { getMyWallet } from 'src/services/tokenTransactionService'
 
 export default {
   name: 'HomePage',

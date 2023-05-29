@@ -84,7 +84,7 @@ import { LocalStorage } from 'quasar'
 import { getUser, updateUserData, updateUserName } from 'src/services/userService'
 import { logout } from 'src/services/authService'
 import { auth } from 'src/boot/firebase'
-import { getMyWallet } from 'src/services/tokenTransactionServices'
+import { getMyWallet } from 'src/services/tokenTransactionService'
 
 export default {
   name: 'AccountPage',
