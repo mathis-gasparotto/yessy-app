@@ -4,7 +4,7 @@ import { getUserWinMultiplierByDoc, getUserByDoc } from './userService'
 import { getBetCategoryByDoc } from './categoryService'
 import { addChoice, deleteChoices } from './choiceService'
 import { deleteBetParticipations, getParticipations } from './participationService'
-import { addTokenTransaction } from './tokenTransactionServices'
+import { addTokenTransaction } from './tokenTransactionService'
 
 const db = getFirestore(app)
 

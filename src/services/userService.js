@@ -2,7 +2,7 @@ import { auth, app, defaultTokenAmount } from 'src/boot/firebase'
 import { doc, getDoc, setDoc, updateDoc, query, deleteDoc, collection, getDocs, where, getFirestore } from 'firebase/firestore'
 import { deleteUser } from 'firebase/auth'
 import { deleteMyParticipations } from './participationService'
-import { addTokenTransaction } from './tokenTransactionServices'
+import { addTokenTransaction } from './tokenTransactionService'
 
 const db = getFirestore(app)
 
