@@ -22,7 +22,7 @@ export async function getBets(type = 'all', privacy = 'public') {
     conditions.push(where('endAt', '<=', now))
   }
   const ref = query(collection(db, 'simple_bets'), ...conditions)
-  let snap = await getDocs(ref)
+  const snap = await getDocs(ref)
   // if (type === 'active') {
   //   snap.docs = snap.docs.filter((item) => new Date(item.data().endAt.seconds * 1000) > now)
   // }
@@ -32,20 +32,20 @@ export async function getBets(type = 'all', privacy = 'public') {
       ...doc.data()
     }
   })
-  list.forEach(async (bet) => {
-    const author = await getUserByDoc(bet.author)
-      .then((res) => {
-        return res
-      })
-      .catch((error) => {
-        return {
-          username: 'Utilisateur supprimé',
-          avatar: {
-            url: process.env.DEFAULT_AVATAR_URL
-          }
-        }
-      })
-    bet.author = author
+  await list.forEach(async (bet) => {
+    // const author = await getUserByDoc(bet.author)
+    //   .then((res) => {
+    //     return res
+    //   })
+    //   .catch(() => {
+    //     return {
+    //       username: 'Utilisateur supprimé',
+    //       avatar: {
+    //         url: process.env.DEFAULT_AVATAR_URL
+    //       }
+    //     }
+    //   })
+    // bet.author = author
     const category = await getBetCategoryByDoc(bet.category)
       .then((res) => {
         return res
@@ -226,4 +226,41 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
     }
   })
   return true
+}
+export async function getMyBets() {
+  const ref = query(collection(db, 'simple_bets'), where('author', '==', doc(db, 'users', auth.currentUser.uid)), orderBy('createdAt', 'desc'))
+  const snap = await getDocs(ref)
+  const list = await snap.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+  await list.forEach(async (bet) => {
+    // const author = await getUserByDoc(bet.author)
+    //   .then((res) => {
+    //     return res
+    //   })
+    //   .catch(() => {
+    //     return {
+    //       username: 'Utilisateur supprimé',
+    //       avatar: {
+    //         url: process.env.DEFAULT_AVATAR_URL
+    //       }
+    //     }
+    //   })
+    // bet.author = author
+    const category = await getBetCategoryByDoc(bet.category)
+      .then((res) => {
+        return res
+      })
+      .catch((error) => {
+        throw new Error(error.message)
+      })
+    bet.category = category
+  })
+  // return Promise.all(list).then((res) => {
+  //   return res
+  // })
+  return Promise.all(list)
 }

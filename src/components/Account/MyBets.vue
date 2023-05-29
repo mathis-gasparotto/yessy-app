@@ -1,12 +1,12 @@
 <template>
   <div class="history q-pb-xl">
     <div class="history__title q-mb-md">
-      <h2 class="text-h6">Historique des participtions</h2>
+      <h2 class="text-h6">Historique des paris</h2>
     </div>
     <LoadingSpinner v-if="loadingBets" />
     <div class="history__list" v-else>
       <BetList :bets="bets" v-if="bets && bets.length > 0"/>
-      <p class="text-center q-mt-lg" v-else-if="bets.length === 0">Vous n'avez pas encore participé à un pari</p>
+      <p class="text-center q-mt-lg" v-else-if="bets.length === 0">Vous n'avez pas encore créé de pari</p>
     </div>
   </div>
 </template>
@@ -15,10 +15,10 @@
 import { Notify } from 'quasar'
 import BetList from '../BetList.vue'
 import LoadingSpinner from '../LoadingSpinner.vue'
-import { getMyParticipations } from 'src/services/participationService'
+import { getMyBets } from 'src/services/betService'
 
 export default {
-  name: 'ParticipationHistory',
+  name: 'MyBets',
   components: {
     BetList,
     LoadingSpinner
@@ -35,10 +35,12 @@ export default {
   methods: {
     reloadData() {
       this.loadingBets = true
-      getMyParticipations()
+      getMyBets()
         .then((bets) => {
-          this.bets = bets
-          this.loadingBets = false
+          setTimeout(() => {
+            this.bets = bets
+            this.loadingBets = false
+          }, 700)
         })
         .catch((e) => {
           if (e.message !== 'No such data!') {
