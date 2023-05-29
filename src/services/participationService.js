@@ -1,5 +1,5 @@
 import { app, auth } from 'src/boot/firebase'
-import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore } from 'firebase/firestore'
+import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore, orderBy } from 'firebase/firestore'
 import { getBetByDoc } from './betService'
 import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionService'
 import { LocalStorage } from 'quasar'
@@ -7,7 +7,7 @@ import { LocalStorage } from 'quasar'
 const db = getFirestore(app)
 
 export async function getMyParticipations() {
-  const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
+  const ref = query(collection(db, 'participations'), where('user', '==', doc(db, 'users', auth.currentUser.uid)), orderBy('date', 'desc'))
   const snap = await getDocs(ref)
   let list = snap.docs.map((doc) => {
     return getBetByDoc(doc.data().bet)
@@ -67,7 +67,8 @@ export async function participate(betId, choiceId, tokenAmount = null) {
   let payload = {
     user: doc(db, 'users', auth.currentUser.uid),
     bet: doc(db, 'simple_bets', betId),
-    choice: doc(db, 'bet_choices', choiceId)
+    choice: doc(db, 'bet_choices', choiceId),
+    date: new Date()
   }
   if (tokenAmount) {
     tokenAmount = parseInt(tokenAmount)
@@ -78,7 +79,12 @@ export async function participate(betId, choiceId, tokenAmount = null) {
   }
   const transaction = await addTokenTransaction(-tokenAmount, 'participation')
 
-  return addDoc(collection(db, 'participations'), payload).catch((error) => {
+  return addDoc(collection(db, 'participations'), payload).then((doc) => {
+    return {
+      id: doc.id,
+      ...payload
+    }
+  }).catch((error) => {
     deleteTokenTransaction(transaction.id).then(() => {
       throw new Error(error.message)
     })
