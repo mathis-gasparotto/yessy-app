@@ -44,19 +44,6 @@ export async function getBets(type = 'all', privacy = 'public') {
     }
   })
   await list.forEach(async (bet) => {
-    // const author = await getUserByDoc(bet.author)
-    //   .then((res) => {
-    //     return res
-    //   })
-    //   .catch(() => {
-    //     return {
-    //       username: 'Utilisateur supprimé',
-    //       avatar: {
-    //         url: process.env.DEFAULT_AVATAR_URL
-    //       }
-    //     }
-    //   })
-    // bet.author = author
     const category = await getBetCategoryByDoc(bet.category)
       .then((res) => {
         return res
@@ -154,7 +141,6 @@ export async function addBet(payload, choices, categoryId) {
     category: doc(db, 'bet_categories', categoryId),
     author: doc(db, 'users', auth.currentUser.uid),
     disabled: false
-    // authorId: LocalStorage.getItem('user').uid
   })
     .then((ref) => {
       return {
@@ -162,7 +148,6 @@ export async function addBet(payload, choices, categoryId) {
         ...payload,
         category: doc(db, 'bet_categories', categoryId),
         author: doc(db, 'users', auth.currentUser.uid)
-        // authorId: LocalStorage.getItem('user').uid
       }
     })
     .catch((error) => {
@@ -243,19 +228,6 @@ export async function getMyBets() {
     }
   })
   await list.forEach(async (bet) => {
-    // const author = await getUserByDoc(bet.author)
-    //   .then((res) => {
-    //     return res
-    //   })
-    //   .catch(() => {
-    //     return {
-    //       username: 'Utilisateur supprimé',
-    //       avatar: {
-    //         url: process.env.DEFAULT_AVATAR_URL
-    //       }
-    //     }
-    //   })
-    // bet.author = author
     const category = await getBetCategoryByDoc(bet.category)
       .then((res) => {
         return res
