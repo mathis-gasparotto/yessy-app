@@ -1,4 +1,4 @@
-import { app, auth, defaultWinMultiplier } from 'src/boot/firebase'
+import { app, auth } from 'src/boot/firebase'
 import {
   doc,
   getDoc,
@@ -232,7 +232,7 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
   participations.forEach(async (participation) => {
     if (participation.choice.id === choiceRef.id) {
       const userWinMultiplier = await getUserWinMultiplierByDoc(participation.user)
-      const amount = Math.round(participation.tokenAmount * defaultWinMultiplier * userWinMultiplier)
+      const amount = Math.round(participation.tokenAmount * process.env.DEFAULT_WIN_MULTIPLIER * userWinMultiplier)
       await addTokenTransaction(amount, 'win', participation.user.id)
     }
   })

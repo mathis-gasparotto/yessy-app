@@ -13,7 +13,7 @@
             <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
           </div>
           <div class="account__username-container q-mt-md">
-            <q-form class="flex flex-center row form account-form" ref="updateEmailForm" v-if="forms.username.show"
+            <q-form class="flex flex-center row form account-form" ref="updateUsernameForm" v-if="forms.username.show"
               @submit.prevent="() => {
                   handleUpdateAccount({ username: forms.username.value.trim() }).then(() => {
                     forms.username.show = false
@@ -43,9 +43,10 @@
                 }
                 "></q-icon>
             </div>
+            <p class="account__my-referal-code q-mb-0 q-mt-md text-center text-bold text-primary" @click="copy(user.myReferalCode)">#{{ user.myReferalCode }}</p>
           </div>
         </div>
-        <div class="account__choices flex justify-between q-mt-lg q-mb-md">
+        <div class="account__choices flex justify-between q-mt-sm q-mb-md">
           <q-btn
             :class="`account__choice-btn ${this.choice === 'BetsHistory' ? 'account__choice-btn--active' : ''}`"
             @click="this.choice = 'BetsHistory'" icon="fa fa-trophy" size="1.5rem"></q-btn>
@@ -85,6 +86,7 @@ import { getUser, updateUserData, updateUserName } from 'src/services/userServic
 import { logout } from 'src/services/authService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
+import { Clipboard } from '@capacitor/clipboard'
 
 export default {
   name: 'AccountPage',
@@ -112,6 +114,41 @@ export default {
     this.reloadData()
   },
   methods: {
+    copy(str) {
+      Clipboard.write({
+        string: str
+      })
+        .then(() => {
+          Notify.create({
+            message: 'Code de parrainage copié !',
+            color: 'positive',
+            icon: 'check_circle',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+        .catch(() => {
+          Notify.create({
+            message: 'Erreur lors de la copie du code de parrainage',
+            color: 'negative',
+            icon: 'report_problem',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+        })
+    },
     async reloadData() {
       Loading.show()
       // await signInWithCustomToken(getAuth(), LocalStorage.getItem('token')).catch((err) => {

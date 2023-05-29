@@ -29,3 +29,11 @@ export async function addTokenTransaction(amount, type, userId = auth.currentUse
 export function deleteTokenTransaction(transactionId) {
   return deleteDoc(doc(db, 'token_transactions', transactionId))
 }
+export async function referralCodeInputedOnSignUp(newUserId, referralCode) {
+  const q = query(collection(db, 'users'), where('myReferralCode', '==', referralCode))
+  const snap = await getDocs(q)
+  if (snap.size > 0) {
+    addTokenTransaction(process.env.SPONSORSHIP_TOKEN_GAIN, 'referral', snap.docs[0].id)
+    addTokenTransaction(process.env.SPONSORSHIP_TOKEN_GAIN_NEW_USER, 'referral', newUserId)
+  }
+}
