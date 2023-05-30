@@ -13,9 +13,10 @@ import {
 } from 'firebase/firestore'
 import { getUserWinMultiplierByDoc, getUserByDoc } from './userService'
 import { getBetCategoryByDoc } from './categoryService'
-import { addChoice, deleteChoices } from './choiceService'
+import { addChoice/*, deleteChoices*/ } from './choiceService'
 import { deleteBetParticipations, getParticipations } from './participationService'
 import { addTokenTransaction } from './tokenTransactionService'
+import { DEFAULT_WIN_MULTIPLIER } from 'src/stores/constants'
 
 const db = getFirestore(app)
 
@@ -211,7 +212,7 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
   participations.forEach(async (participation) => {
     if (participation.choice.id === choiceRef.id) {
       const userWinMultiplier = await getUserWinMultiplierByDoc(participation.user)
-      const amount = Math.round(participation.tokenAmount * process.env.DEFAULT_WIN_MULTIPLIER * userWinMultiplier)
+      const amount = Math.round(participation.tokenAmount * DEFAULT_WIN_MULTIPLIER * userWinMultiplier)
       await addTokenTransaction(amount, 'win', participation.user.id)
     }
   })

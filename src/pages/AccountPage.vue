@@ -7,13 +7,15 @@
             <div class="account__token-count-container absolute flex flex-center column text-white">
               <q-spinner-gears size="3em" color="white" v-if="loadingWallet" />
               <span v-else>
-                <div class="account_token-count">
+                <div class="account_token-count text-center text-bold">
                   <span>{{ userWallet }}</span>
                 </div>
                 <q-icon name="fa fa-coins" size="lg"></q-icon>
               </span>
             </div>
-            <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
+            <q-avatar size="150px">
+              <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
+            </q-avatar>
           </div>
           <div class="account__username-container q-mt-md">
             <q-form class="flex flex-center row form account-form" ref="updateUsernameForm" v-if="forms.username.show"
@@ -405,10 +407,10 @@ export default {
       position: relative;
     }
 
-    &-img {
-      border-radius: 50%;
-      margin: auto;
-    }
+    // &-img {
+    //   border-radius: 50%;
+    //   margin: auto;
+    // }
   }
 
   &__username {
