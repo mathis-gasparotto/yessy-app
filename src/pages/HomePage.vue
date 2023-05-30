@@ -8,9 +8,10 @@
           </div>
           <div class="home__user-text">
             <div class="home__user-username text-bold">{{ user.username }}</div>
-            <div class="home__user-token-count text-bold text-secondary">
+            <div class="home__user-token-count text-bold text-secondary flex items-center">
               <q-icon name="fa fa-coins"></q-icon>
-              {{ userWallet }}
+              <q-spinner-gears size="1.5rem" color="secondary" v-if="loadingWallet" />
+              <span v-else>{{ userWallet }}</span>
             </div>
           </div>
         </div>
@@ -25,7 +26,7 @@
 
 <script>
 import BetList from 'src/components/BetList.vue'
-import { Loading, LocalStorage, Notify } from 'quasar'
+import { /*Loading,*/ LocalStorage, Notify } from 'quasar'
 import { getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
@@ -35,18 +36,20 @@ export default {
   components: {
     BetList
   },
-  data () {
+  data() {
     return {
       user: null,
-      userWallet: null
+      userWallet: null,
+      loadingWallet: true
     }
   },
-  created () {
+  created() {
     this.reloadData()
   },
   methods: {
     async reloadData() {
-      Loading.show()
+      // Loading.show()
+      this.loadingWallet = true
       await getUser(auth.currentUser.uid)
         .then((user) => {
           LocalStorage.set('user', user)
@@ -66,14 +69,16 @@ export default {
               }
             ]
           })
-          Loading.hide()
+          // Loading.hide()
+          this.loadingWallet = false
           throw new Error(e.message)
         })
 
       getMyWallet()
         .then((wallet) => {
           this.userWallet = wallet
-          Loading.hide()
+          // Loading.hide()
+          this.loadingWallet = false
         })
         .catch((e) => {
           Notify.create({
@@ -89,10 +94,11 @@ export default {
               }
             ]
           })
-          Loading.hide()
+          // Loading.hide()
+          this.loadingWallet = false
           throw new Error(e.message)
         })
-    },
+    }
   }
 }
 </script>
@@ -110,6 +116,9 @@ export default {
     &-avatar {
       width: 70px;
       height: 70px;
+    }
+    &-token-count {
+      gap: 3px;
     }
   }
   &-cat-title {

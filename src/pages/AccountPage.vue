@@ -5,10 +5,13 @@
         <div class="page-content">
           <div class="account__avatar-container q-mb-md position-relative">
             <div class="account__token-count-container absolute flex flex-center column text-white">
-              <div class="account_token-count">
-                {{ userWallet }}
-              </div>
-              <q-icon name="fa fa-coins" size="lg"></q-icon>
+              <q-spinner-gears size="3em" color="white" v-if="loadingWallet" />
+              <span v-else>
+                <div class="account_token-count">
+                  <span>{{ userWallet }}</span>
+                </div>
+                <q-icon name="fa fa-coins" size="lg"></q-icon>
+              </span>
             </div>
             <q-img :src="user.avatar.imgUrl" class="account__avatar-img" />
           </div>
@@ -107,7 +110,8 @@ export default {
       },
       choice: 'BetsHistory',
       loadingUser: true,
-      userWallet: null
+      userWallet: null,
+      loadingWallet: true
     }
   },
   created() {
@@ -150,7 +154,8 @@ export default {
         })
     },
     async reloadData() {
-      Loading.show()
+      // Loading.show()
+      this.loadingWallet = true
       // await signInWithCustomToken(getAuth(), LocalStorage.getItem('token')).catch((err) => {
       //   Loading.hide()
       //   this.$router.push({ name: 'welcome' })
@@ -191,7 +196,8 @@ export default {
               }
             ]
           })
-          Loading.hide()
+          // Loading.hide()
+          this.loadingWallet = false
           this.$router.push({ name: 'home' })
           throw new Error(e.message)
         })
@@ -199,7 +205,8 @@ export default {
       getMyWallet()
         .then((wallet) => {
           this.userWallet = wallet
-          Loading.hide()
+          // Loading.hide()
+          this.loadingWallet = false
         })
         .catch((e) => {
           Notify.create({
@@ -215,7 +222,8 @@ export default {
               }
             ]
           })
-          Loading.hide()
+          // Loading.hide()
+          this.loadingWallet = false
           this.$router.push({ name: 'home' })
           throw new Error(e.message)
         })
