@@ -5,7 +5,9 @@
         <q-icon class="single-bet__top-icon" name="fa fa-trophy" size="xl" color="white"></q-icon>
       </div>
       <div class="page-content" v-if="bet">
-        <q-img :src="bet.author.avatar.imgUrl || defaultAvatarUrl" class="single-bet__author-avatar q-mb-md"></q-img>
+        <q-avatar size="50px" class="single-bet__author-avatar q-mb-md">
+          <q-img :src="bet.author.avatar.imgUrl || defaultAvatarUrl"></q-img>
+        </q-avatar>
         <div class="single-bet__title-container">
           <q-icon
             :class="`single-bet__privacy single-bet__privacy--${bet.privacy}`"
@@ -322,7 +324,7 @@ export default {
         title: "Partage d'un pari sur Yessy",
         text: `Rejoins mon pari sur Yessy ! Le code d'accès est : ${code}
         Sinon, tu peux y accéder directement via ce lien :`,
-        url: `${process.env.SITE_URL}/#/bets/${code}`,
+        url: `${process.env.APP_URL}/#/bets/${code}`,
         dialogTitle: 'Partage de pari'
       })
     },
@@ -470,9 +472,9 @@ export default {
     font-weight: 700;
 
     &-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      // width: 50px;
+      // height: 50px;
+      // border-radius: 50%;
       margin-top: -45px;
     }
   }

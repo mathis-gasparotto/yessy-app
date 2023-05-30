@@ -11,6 +11,7 @@ import createFormat from '../stores/formatting'
 import { LocalStorage } from 'quasar'
 import { addUser, getUser } from './userService'
 import { referralCodeInputedOnSignUp } from './tokenTransactionService'
+import { dailyLogin } from './dailyLoginService'
 
 const db = getFirestore(app)
 
@@ -27,14 +28,16 @@ export async function signup(email, password, username, birthday, referralCode, 
         email: userCredential.user.email.trim(),
         birthday: createFormat().dateTimeFormatToBDD(birthday),
         newsletter,
-        referralCode: referralCode ? referralCode.trim() : ''
+        referralCode: referralCode ? referralCode.trim() : '',
+        lastLoginAt: new Date(),
+        loginStreak: 1,
       }
       return addUser(userCredential.user.uid, payload, username.trim())
         .then((res) => {
           LocalStorage.set('token', userCredential.user.refreshToken)
           LocalStorage.set('user', {
             ...payload,
-            lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
+            // lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
             // birthday: new Date(res.birthday.seconds * 1000),
             // createdAt: new Date(res.createdAt.seconds * 1000),
             // updatedAt: new Date(res.updatedAt.seconds * 1000),
@@ -58,15 +61,17 @@ export async function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       return getUser(userCredential.user.uid)
-        .then((res) => {
+        .then(async (res) => {
+          const dailyLoginData = await dailyLogin(new Date (res.lastLoginAt.seconds * 1000))
           LocalStorage.set('token', userCredential.user.refreshToken)
           LocalStorage.set('user', {
             ...res,
-            lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
+            // lastLoginAt: new Date(parseInt(userCredential.user.metadata.lastLoginAt)),
             // birthday: new Date(res.birthday.seconds * 1000),
             // createdAt: new Date(res.createdAt.seconds * 1000),
             // updatedAt: new Date(res.updatedAt.seconds * 1000),
-            uid: userCredential.user.uid
+            uid: userCredential.user.uid,
+            ...dailyLoginData
           })
         })
         .catch((error) => {

@@ -4,6 +4,7 @@ import { deleteUser } from 'firebase/auth'
 import { deleteMyParticipations } from './participationService'
 import { addTokenTransaction } from './tokenTransactionService'
 import { uid } from 'quasar'
+import { DEFAULT_TOKEN_AMOUNT } from 'src/stores/constants'
 
 const db = getFirestore(app)
 
@@ -101,7 +102,7 @@ export async function addUser(userUid, payload, username) {
 
   const user = await setDoc(doc(db, 'users', userUid), userPayload)
 
-  return addTokenTransaction(process.env.DEFAULT_TOKEN_AMOUNT, 'start', user.id).then(() => {
+  return addTokenTransaction(DEFAULT_TOKEN_AMOUNT, 'start', user.id).then(() => {
     return toReturn
   })
 }

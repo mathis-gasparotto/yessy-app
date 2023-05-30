@@ -3,9 +3,9 @@
     <q-page class="flex flex-center column page" v-if="user">
       <div class="page-content">
         <div class="home__user-container flex q-my-md">
-          <div class="home__user-avatar-container">
+          <q-avatar class="home__user-avatar-container" size="70px">
             <q-img class="home__user-avatar" :src="user.avatar.imgUrl" />
-          </div>
+          </q-avatar>
           <div class="home__user-text">
             <div class="home__user-username text-bold">{{ user.username }}</div>
             <div class="home__user-token-count text-bold text-secondary flex items-center">
@@ -113,10 +113,10 @@ export default {
     &-container {
       gap: 10px;
     }
-    &-avatar {
-      width: 70px;
-      height: 70px;
-    }
+    // &-avatar {
+    //   width: 70px;
+    //   height: 70px;
+    // }
     &-token-count {
       gap: 3px;
     }

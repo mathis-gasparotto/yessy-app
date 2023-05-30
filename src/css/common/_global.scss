@@ -96,6 +96,9 @@ a {
 
 .q {
   &-m {
+    &-auto {
+      margin: auto;
+    }
     &-0 {
       margin: 0;
     }
@@ -153,4 +156,8 @@ a {
   &-small {
     font-size: 12px;
   }
+}
+
+.no-scroll {
+  overflow: hidden !important;
 }
