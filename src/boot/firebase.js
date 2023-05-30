@@ -14,3 +14,12 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig)
 // const db = getFirestore(app)
 export const auth = getAuth(app)
+
+export function getCurrentUser () {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      unsubscribe()
+      resolve(user)
+    }, reject)
+  })
+}

@@ -2,7 +2,7 @@ import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
 // import { LocalStorage } from 'quasar'
-import { auth } from 'src/boot/firebase'
+import { auth, getCurrentUser } from 'src/boot/firebase'
 import { LocalStorage, Notify } from 'quasar'
 import { iParticipate } from 'src/services/participationService'
 import { isAuthor } from 'src/services/betService'
@@ -16,8 +16,7 @@ import { isAuthor } from 'src/services/betService'
  * with the Router instance.
  */
 
-// export default route(function ({ store, ssrContext }) {
-export default route(function () {
+export default route(function (/*{ store, ssrContext }*/ { store }) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === 'history'
@@ -34,16 +33,17 @@ export default route(function () {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  Router.beforeEach((to, from, next) => {
-    if (auth.currentUser) {
+  Router.beforeEach(async(to, from, next) => {
+    const currentUser = await getCurrentUser()
+
+    if (currentUser) {
       const now = new Date()
-      const expirationDate = new Date(auth.currentUser.stsTokenManager.expirationTime)
+      const expirationDate = new Date(currentUser.stsTokenManager.expirationTime)
       if (expirationDate < now) {
-        auth.currentUser.getIdToken(true)
+        currentUser.getIdToken(true)
       }
     }
-    let isAuthenticated = auth.currentUser && LocalStorage.has('user')
-    // if (!auth.currentUser && LocalStorage.has('user') && LocalStorage.has('token')) {
+    // if (!currentUser && LocalStorage.has('user') && LocalStorage.has('token')) {
     //   auth.verifyIdToken(LocalStorage.getItem('token'))
     //     .then(() => {
     //       isAuthenticated = true
@@ -52,7 +52,8 @@ export default route(function () {
     //       LocalStorage.remove('user')
     //     })
     // }
-    if (auth.currentUser && !LocalStorage.has('user')) {
+    let isAuthenticated = currentUser && LocalStorage.has('user')
+    if (currentUser && !LocalStorage.has('user')) {
       auth.signOut()
     }
     if (!isAuthenticated && to.name !== 'login' && to.name !== 'signup' && to.name !== 'welcome') {
