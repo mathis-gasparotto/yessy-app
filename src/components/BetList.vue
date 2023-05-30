@@ -29,11 +29,20 @@ export default {
       type: Array,
       required: false
     },
+    categoryId: {
+      type: String,
+      required: false
+    }
   },
   data() {
     return {
       betList: [],
       loadingBets: true
+    }
+  },
+  watch: {
+    categoryId () {
+      this.reloadData()
     }
   },
   created () {
@@ -47,7 +56,7 @@ export default {
   methods: {
     reloadData () {
       this.loadingBets = true
-      getBets('active').then((response) => {
+      getBets('active', this.categoryId).then((response) => {
         // Timeout is required to avoid a bug with loading categories icons
         setTimeout(() => {
           this.betList = response
@@ -81,6 +90,10 @@ export default {
   margin: auto;
 }
 .q-list--separator > .q-item-type {
-  border-color: white;
+  // border-color: #fff;
+  border-top: 2px solid #fff;
+  &:first-child {
+    border-top: none;
+  }
 }
 </style>
