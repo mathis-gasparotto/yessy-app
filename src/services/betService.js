@@ -19,7 +19,7 @@ import { addTokenTransaction } from './tokenTransactionService'
 
 const db = getFirestore(app)
 
-export async function getBets(type = 'all', privacy = 'public') {
+export async function getBets(type = 'all', categoryId = null, privacy = 'public') {
   const now = new Date()
   const conditions = [where('privacy', '==', privacy), where('disabled', '==', false)]
   if (type === 'future') {
@@ -31,6 +31,9 @@ export async function getBets(type = 'all', privacy = 'public') {
     )
   } else if (type === 'ended') {
     conditions.push(where('endAt', '<=', now))
+  }
+  if (categoryId) {
+    conditions.push(where('category', '==', doc(db, 'bet_categories', categoryId)))
   }
   const ref = query(collection(db, 'simple_bets'), ...conditions)
   const snap = await getDocs(ref)

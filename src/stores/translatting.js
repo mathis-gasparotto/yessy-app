@@ -111,5 +111,11 @@ export default () => ({
       default:
         return 'Une erreur est survenue lors de la modification du pari'
     }
+  },
+  translateGetBetCategoriesError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue lors du chargement des catégories'
+    }
   }
 })
