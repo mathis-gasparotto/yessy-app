@@ -1,7 +1,6 @@
 const routes = [
   {
-    path: '/',
-    middleware: 'guest',
+    path: '/welcome',
     component: () => import('layouts/WelcomeLayout.vue'),
     children: [
       {
@@ -23,7 +22,6 @@ const routes = [
   },
   {
     path: '/',
-    middleware: 'auth',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
