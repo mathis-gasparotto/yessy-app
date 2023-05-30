@@ -43,7 +43,7 @@
                 }
                 "></q-icon>
             </div>
-            <p class="account__my-referal-code q-mb-0 q-mt-md text-center text-bold text-primary" @click="copy(user.myReferalCode)">#{{ user.myReferalCode }}</p>
+            <p class="account__my-referal-code q-mb-0 q-mt-md text-center text-bold text-primary" @click="copy(user.myReferalCode)">#{{ user.myReferralCode }}</p>
           </div>
         </div>
         <div class="account__choices flex justify-between q-mt-sm q-mb-md">
