@@ -12,50 +12,50 @@
       <router-view />
     </q-page-container>
 
-    <div class="daily-login__container fixed-full" @click="showDailyLoginProgress = false" v-if="showDailyLoginProgress">
-      <div class="daily-login__wrapper flex column items-center">
-        <q-btn
-          rounded
-          class="daily-login__close-btn absolute"
-          icon="close"
+    <div class="daily-login__container fixed-full" @click="showDailyLoginProgress = false" v-if="showDailyLoginProgress"></div>
+    <div class="daily-login__wrapper flex column items-center fixed" v-if="showDailyLoginProgress">
+      <q-btn
+        rounded
+        class="daily-login__close-btn absolute"
+        icon="close"
+        color="secondary"
+        text-color="white"
+        @click-prevent="showDailyLoginProgress = false"
+        size="13px"
+        @click="showDailyLoginProgress = false"
+      ></q-btn>
+      <div class="daily-login__token-count-container flex flex-center column text-white">
+        <span class="daily-login_token-count text-center text-bold text-h6">{{ tokenGain }}</span>
+        <q-icon name="fa fa-coins" size="md"></q-icon>
+      </div>
+      <p class="text-h6 text-white q-mb-0">Récompense de connexion</p>
+      <p class="text-white text-small q-mb-lg">Série de {{ loginStreak }} jours de connexion</p>
+      <div class="daily-login__graph-container">
+        <q-linear-progress
           color="secondary"
-          text-color="white"
-          @click-prevent="showDailyLoginProgress = false"
-          size="13px"
-        ></q-btn>
-        <div class="daily-login__token-count-container flex flex-center column text-white">
-          <span class="daily-login_token-count text-center text-bold text-h6">{{ tokenGain }}</span>
-          <q-icon name="fa fa-coins" size="md"></q-icon>
+          size="10px"
+          :value="dailyLoginLinearProgress"
+          rounded
+          track-color="white"
+          class="daily-login__graph"
+        >
+        </q-linear-progress>
+        <div class="daily-login__graph-steps-container">
+          <div class=" flex items-center justify-between">
+            <span :class="`daily-login__graph-steps ${loginStreak >= 1 ? 'btn-secondary' : 'btn-white'} flex flex-center`">1</span>
+            <span :class="`daily-login__graph-steps ${loginStreak >= 7 ? 'btn-secondary' : 'btn-white'} flex flex-center`">7</span>
+            <span :class="`daily-login__graph-steps ${loginStreak >= 14 ? 'btn-secondary' : 'btn-white'} flex flex-center`">14</span>
+            <span :class="`daily-login__graph-steps ${loginStreak >= 30 ? 'btn-secondary' : 'btn-white'} flex flex-center`">30</span>
+          </div>
+          <div class="flex items-center justify-between daily-login__graph-steps-label-container">
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDay }} smiles/jour</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter7Days }} smiles/jour</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter14Days }} smiles/jour</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter30Days }} smiles/{{ tokenGainFrequencyAfter30Days }} jours</span>
+          </div>
         </div>
-        <p class="text-h6 text-white q-mb-0">Récompense de connexion</p>
-        <p class="text-white text-small q-mb-lg">Série de {{ loginStreak }} jours de connexion</p>
-        <div class="daily-login__graph-container">
-          <q-linear-progress
-            color="secondary"
-            size="10px"
-            :value="dailyLoginLinearProgress"
-            rounded
-            track-color="white"
-            class="daily-login__graph"
-          >
-          </q-linear-progress>
-          <div class="daily-login__graph-steps-container">
-            <div class=" flex items-center justify-between">
-              <span :class="`daily-login__graph-steps ${loginStreak >= 1 ? 'btn-secondary' : 'btn-white'} flex flex-center`">1</span>
-              <span :class="`daily-login__graph-steps ${loginStreak >= 7 ? 'btn-secondary' : 'btn-white'} flex flex-center`">7</span>
-              <span :class="`daily-login__graph-steps ${loginStreak >= 14 ? 'btn-secondary' : 'btn-white'} flex flex-center`">14</span>
-              <span :class="`daily-login__graph-steps ${loginStreak >= 30 ? 'btn-secondary' : 'btn-white'} flex flex-center`">30</span>
-            </div>
-            <div class="flex items-center justify-between daily-login__graph-steps-label-container">
-              <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDay }} smiles/jour</span>
-              <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter7Days }} smiles/jour</span>
-              <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter14Days }} smiles/jour</span>
-              <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter30Days }} smiles/{{ tokenGainFrequencyAfter30Days }}jours</span>
-            </div>
-          </div>
-          <div class="absolute flex flex-center daily-login__graph-progress-value" :style="`--daily-login-progress: ${dailyLoginLinearProgress}`">
-            <q-badge color="secondary" text-color="white" :label="loginStreak" />
-          </div>
+        <div class="absolute flex flex-center daily-login__graph-progress-value" :style="`--daily-login-progress: ${dailyLoginLinearProgress}`">
+          <q-badge color="secondary" text-color="white" :label="loginStreak" />
         </div>
       </div>
     </div>
@@ -145,12 +145,14 @@ export default {
     z-index: 100;
     display: flex;
     align-items: flex-end;
-    padding-bottom: 43px;
   }
   &__wrapper {
     z-index: 105;
-    position: relative;
+    // position: relative;
+    bottom: 0;
+    left: 0;
     width: 100%;
+    margin-bottom: 43px;
     background: url('src/assets/daily-login-bg.png') no-repeat center top/cover;
     padding: 20px 30px 40px 30px;
   }

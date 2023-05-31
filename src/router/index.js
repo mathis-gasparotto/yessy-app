@@ -167,7 +167,7 @@ export default route(function (/*{ store, ssrContext }*/ { store }) {
       }
       const bet = await getJustBet(to.params.id).catch(() => {
         Notify.create({
-          message: 'Une erreur est survenue',
+          message: 'Une erreur est survenue lors de la récupération du pari',
           color: 'negative',
           icon: 'report_problem',
           position: 'top',
@@ -211,6 +211,57 @@ export default route(function (/*{ store, ssrContext }*/ { store }) {
           ]
         })
         return next({ name: 'single-bet', params: { id: to.params.id } })
+      } else {
+        return next()
+      }
+    } else if (isAuthenticated && to.name === 'join-hebdo-bet') {
+      const bet = await getJustBet(to.params.id, 'hebdo_bets').catch(() => {
+        Notify.create({
+          message: 'Une erreur est survenue lors de la récupération du pari',
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
+        return next({ name: 'home' })
+      })
+      const now = new Date()
+      if (bet.endAt.seconds * 1000 <= now.getTime()) {
+        Notify.create({
+          message: 'Ce pari est déjà terminé',
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
+        return next({ name: 'home' })
+      } else if (bet.startAt.seconds * 1000 > now.getTime()) {
+        Notify.create({
+          message: 'Ce pari n\'a pas encore commencé',
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
+        return next({ name: 'home' })
       } else {
         return next()
       }

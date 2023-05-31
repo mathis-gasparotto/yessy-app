@@ -45,7 +45,6 @@ export async function getBetChoices(betId, collectionName = 'simple_bets') {
       ...doc.data()
     }
   })
-  console.log(list)
   return list
 }
 // export async function getBetChoicesByDoc(betDoc) {
@@ -66,7 +65,7 @@ export async function getBetChoices(betId, collectionName = 'simple_bets') {
 //     index
 //   })
 export function addChoice(label, betId, index, collectionName = 'simple_bets') {
-  return setDoc(doc(db, `${collectionName}/${betId}/choices`, `bet_choice_${index+1}`), { label })
+  return setDoc(doc(db, `${collectionName}/${betId}/choices`, `bet_choice_${index+1 < 10 ? '0' : ''}${index+1}`), { label })
     .then(() => {
       return {
         id: `bet_choice_${index+1}`,

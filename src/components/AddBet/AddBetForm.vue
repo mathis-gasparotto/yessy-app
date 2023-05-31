@@ -275,6 +275,8 @@
 </template>
 
 <script>
+import { Notify } from 'quasar'
+
 // import createFormat from '../../stores/formatting'
 
 export default {
@@ -346,6 +348,21 @@ export default {
       }
     },
     addChoice() {
+      if (this.form.choices >= 20) {
+        return Notify.create({
+            message: 'Vous ne pouvez pas ajouter plus de 20 choix',
+            color: 'negative',
+            icon: 'report_problem',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+      }
       this.form.choices.push({
         label: ''
       })

@@ -1,7 +1,8 @@
 <template>
-  <div class="page-container bg-primary bg-primary--image define-winner-choice">
+  <div class="page-container define-winner-choice" :style="`--bg-img: url('${bet.category.imgUrl}')`" v-if="bet">
+    <div class="sub-bg-dark absolute-full"></div>
     <q-page class="page scroll">
-      <div class="page-content flex items-center justify-between column" v-if="bet">
+      <div class="page-content flex items-center justify-between column">
         <q-card class="define-winner-choice__title-container bg-primary--dark">
           <q-card-section class="define-winner-choice__category-section bg-primary">
             <div class="text-white text-bold text-center define-winner-choice__category">{{ bet.category.label }}</div>
@@ -30,7 +31,7 @@
           <q-btn
             label="Définir le choix gagnant"
             type="submit"
-            :class="`text-bold form-btn btn btn-${this.idChoiceChosen !== null ? 'secondary' : 'disabled'}`"
+            :class="`q-mb-lg text-bold form-btn btn btn-${this.idChoiceChosen !== null ? 'secondary' : 'disabled'}`"
             :disable="this.idChoiceChosen === null"
             rounded
             @click.prevent="onSubmit()"
@@ -42,7 +43,7 @@
       </div>
     </q-page>
   </div>
-  <div class="nav-bar-bg"></div>
+  <!-- <div class="nav-bar-bg"></div> -->
 </template>
 
 <script>
@@ -133,11 +134,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.page-container {
+  background: var(--bg-img) no-repeat center center/cover fixed !important;
+  padding-bottom: 30px;
+  margin-bottom: -30px;
+  .sub-bg-dark {
+    background-color: rgba($color: #000, $alpha: 0.6);
+    overflow: hidden;
+  }
+}
 .define-winner-choice {
   .page {
-    background-color: rgba($color: #000, $alpha: 0.3);
     &-content {
       gap: 50px;
+      flex-wrap: nowrap;
+      min-height: calc(100vh - 72px);
     }
   }
   &__title {
@@ -155,20 +167,22 @@ export default {
   &__choice {
     &-btn {
       width: 100%;
+      border: 1px solid transparent;
       &.chosen {
         transition: 0.2s ease-in-out;
-        border: 1px solid #fff;
+        border-color: #fff;
       }
     }
     &s {
       &-container {
         width: 90%;
         gap: 30px;
+        flex-wrap: nowrap;
       }
     }
   }
 }
-.nav-bar-bg {
-  background-color: color-mix(in srgb, $primary 70%, #000 30%) !important;
-}
+// .nav-bar-bg {
+//   background-color: color-mix(in srgb, $primary 70%, #000 30%) !important;
+// }
 </style>

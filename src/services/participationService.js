@@ -1,5 +1,5 @@
 import { app, auth } from 'src/boot/firebase'
-import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore, orderBy } from 'firebase/firestore'
+import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore, orderBy, updateDoc, getDoc } from 'firebase/firestore'
 import { getBetByDoc } from './betService'
 import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionService'
 import { LocalStorage } from 'quasar'
@@ -43,6 +43,39 @@ export async function getParticipations(betId, betCollectionName = 'simple_bets'
     }
   })
   return list
+}
+export async function getMyParticipation(betId, betCollectionName = 'simple_bets') {
+  const ref = query(collection(db, 'participations'), where('bet', '==', doc(db, betCollectionName, betId)), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
+  const snap = await getDocs(ref)
+  if (snap.docs.length === 0) {
+    return null
+  }
+  return {
+    id: snap.docs[0].id,
+    ...snap.docs[0].data()
+  }
+}
+export async function updateParticipation(participationId, betId, betCollectionName, newChoiceId = null, newTokenAmount = null) {
+  let payload = {}
+  if (newChoiceId && betId && betCollectionName) {
+    payload.choice = doc(db, `${betCollectionName}/${betId}/choices`, newChoiceId)
+  }
+  if (newTokenAmount) {
+    payload.tokenAmount = newTokenAmount
+  }
+  const betRef = doc(db, betCollectionName, betId)
+  const betSnap = await getDoc(betRef)
+  const bet = {
+    id: betSnap.id,
+    ...betSnap.data()
+  }
+  if (bet.disabled) {
+    throw new Error('Vous ne pouvez pas modifier votre participation à un pari annulé')
+  } else if (bet.endAt.seconds * 1000 < new Date().getTime()) {
+    throw new Error('Vous ne pouvez pas modifier votre participation à un pari terminé')
+  }
+  const ref = doc(db, 'participations', participationId)
+  return await updateDoc(ref, payload)
 }
 export async function getMyTokenParticipation(betId, betCollectionName = 'simple_bets') {
   const ref = query(collection(db, 'participations'), where('bet', '==', doc(db, betCollectionName, betId)), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
