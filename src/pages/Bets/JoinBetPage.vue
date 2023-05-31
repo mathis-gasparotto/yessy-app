@@ -2,6 +2,13 @@
   <div class="page-container join-bet" :style="`--bg-img: url('${bet.category.imgUrl}')`" v-if="bet">
     <div class="sub-bg-dark absolute-full"></div>
     <q-page class="page scroll">
+      <q-btn
+        class="absolute join-bet__close-btn btn-secondary"
+        icon="close"
+        rounded
+        @click="$router.push({ name: 'single-bet', params: { id: bet.id } })"
+        size="12px"
+      ></q-btn>
       <div class="page-content flex items-center justify-between column">
         <q-card class="join-bet__title-container bg-primary--dark">
           <q-card-section class="join-bet__category-section bg-primary">
@@ -171,6 +178,13 @@ export default {
   }
 }
 .join-bet {
+  &__close-btn {
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 31px;
+    height: 31px;
+  }
   .page {
     &-content {
       gap: 50px;
