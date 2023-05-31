@@ -5,13 +5,14 @@ import {
   collection,
   getDocs,
   where,
-  addDoc,
+  // addDoc,
   getFirestore,
   getDoc,
-  orderBy,
+  // orderBy,
   setDoc
 } from 'firebase/firestore'
 import { app, auth } from 'src/boot/firebase'
+import { getParticipationCount, getParticipationCountByChoiceId } from './participationService'
 
 const db = getFirestore(app)
 
@@ -82,4 +83,18 @@ export async function deleteChoices(betDoc) {
   snap.docs.forEach((singleDoc) => {
     deleteDoc(doc(db, 'bet_choices', singleDoc.id))
   })
+}
+export async function getBetChoiceCount(betId, betCollectionName = 'simple_bets') {
+  const betChoices = await getBetChoices(betId, betCollectionName)
+  return betChoices.length
+}
+export async function getChoiceOdd(choiceId, betId, betCollectionName = 'simple_bets') {
+  const participationCountByChoice = await getParticipationCountByChoiceId(choiceId, betId, betCollectionName)
+  const participationCount = await getParticipationCount(betId, betCollectionName)
+  // const betChoiceCount = await getBetChoiceCount(betId, betCollectionName)
+  // let result = 1 + 1 - (participationCountByChoice / (participationCount / betChoiceCount))
+  // if (result < 1) {
+  //   result = 1
+  // }
+  return 1 + 1 - (participationCountByChoice / participationCount)
 }

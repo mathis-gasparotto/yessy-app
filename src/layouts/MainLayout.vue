@@ -99,6 +99,15 @@ export default {
       }
     }
   },
+  async created() {
+    const dailyLoginData = await dailyLogin()
+    if (dailyLoginData.loginStreak && dailyLoginData.tokenGain) {
+      this.tokenGain = dailyLoginData.tokenGain
+      this.loginStreak = dailyLoginData.loginStreak
+      this.showDailyLoginProgress = true
+      document.body.style.overflow = 'hidden'
+    }
+  },
   computed: {
     dailyLoginLinearProgress() {
       if (this.loginStreak === 1) {
@@ -112,15 +121,6 @@ export default {
       } else {
         return 1
       }
-    }
-  },
-  async created() {
-    const dailyLoginData = await dailyLogin()
-    if (dailyLoginData.loginStreak && dailyLoginData.tokenGain) {
-      this.tokenGain = dailyLoginData.tokenGain
-      this.loginStreak = dailyLoginData.loginStreak
-      this.showDailyLoginProgress = true
-      document.body.style.overflow = 'hidden'
     }
   }
 }

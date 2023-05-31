@@ -33,6 +33,13 @@ export async function getParticipationCount(betId, betCollectionName = 'simple_b
   // const snap = await getCountFromServer(ref)
   // return snap.data().count
 }
+export async function getParticipationCountByChoiceId(choiceId, betId, betCollectionName = 'simple_bets') {
+  const ref = query(collection(db, 'participations'), where('choice', '==', doc(db, `${betCollectionName}/${betId}/choices/`, choiceId)))
+  const snap = await getDocs(ref)
+  return snap.docs.length
+  // const snap = await getCountFromServer(ref)
+  // return snap.data().count
+}
 export async function getParticipations(betId, betCollectionName = 'simple_bets') {
   const ref = query(collection(db, 'participations'), where('bet', '==', doc(db, betCollectionName, betId)))
   const snap = await getDocs(ref)
