@@ -51,7 +51,7 @@
             <q-btn
               label="Valider le choix"
               type="submit"
-              :class="`text-bold form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
+              :class="`q-mb-lg text-bold form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
               :disable="!validate"
               rounded
               @click.prevent="joinBet()"
@@ -162,11 +162,11 @@ export default {
 
 <style lang="scss" scoped>
 .page-container {
-  background: var(--bg-img) no-repeat center center fixed !important;
+  background: var(--bg-img) no-repeat center center/cover fixed !important;
   padding-bottom: 30px;
   margin-bottom: -30px;
   .sub-bg-dark {
-    background-color: rgba($color: #000, $alpha: 0.3);
+    background-color: rgba($color: #000, $alpha: 0.6);
     overflow: hidden;
   }
 }
@@ -174,6 +174,8 @@ export default {
   .page {
     &-content {
       gap: 50px;
+      flex-wrap: nowrap;
+      min-height: calc(100vh - 72px);
     }
   }
   &__title {
@@ -201,11 +203,12 @@ export default {
       &-container {
         width: 90%;
         gap: 30px;
+        flex-wrap: nowrap;
       }
     }
   }
 }
-.nav-bar-bg {
-  background-color: color-mix(in srgb, $primary 70%, #000 30%) !important;
-}
+// .nav-bar-bg {
+//   background-color: color-mix(in srgb, $primary 70%, #000 30%) !important;
+// }
 </style>

@@ -15,7 +15,11 @@
             </div>
           </div>
         </div>
-        <div class="home-cat-title q-my-lg">
+        <div class="home__hebdo-bet-container bg-primary q-my-md q-py-sm q-px-md" v-if="hebdoBet" @click="$router.push({ name: 'join-hebdo-bet', params: {id : this.hebdoBet.id} })">
+          <p class="home__hebdo-bet-title text-white text-h6 text-bold q-mb-0">Pronostic de la semaine :</p>
+          <p class="home__hebdo-bet-label text-white q-mb-0">{{ hebdoBet.label }}</p>
+        </div>
+        <div class="home__cat-title q-my-lg">
           <h2 class="text-h6">Chauffe toi sur ces paris</h2>
         </div>
         <BetList class="bet-list-component" />
@@ -30,6 +34,7 @@ import { /*Loading,*/ LocalStorage, Notify } from 'quasar'
 import { getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
+import { getHebdoBet } from 'src/services/betService'
 
 export default {
   name: 'HomePage',
@@ -40,7 +45,8 @@ export default {
     return {
       user: null,
       userWallet: null,
-      loadingWallet: true
+      loadingWallet: true,
+      hebdoBet: null
     }
   },
   created() {
@@ -74,7 +80,7 @@ export default {
           throw new Error(e.message)
         })
 
-      getMyWallet()
+      await getMyWallet()
         .then((wallet) => {
           this.userWallet = wallet
           // Loading.hide()
@@ -98,6 +104,8 @@ export default {
           this.loadingWallet = false
           throw new Error(e.message)
         })
+
+        this.hebdoBet = await getHebdoBet()
     }
   }
 }
@@ -121,7 +129,19 @@ export default {
       gap: 3px;
     }
   }
-  &-cat-title {
+  &__hebdo-bet {
+    &-container {
+      border-radius: 10px;
+    }
+    &-title {
+      line-height: 1.5;
+    }
+    &-label {
+      font-size: .9rem;
+      font-weight: 300;
+    }
+  }
+  &__cat-title {
     position: relative;
     text-align: center;
 

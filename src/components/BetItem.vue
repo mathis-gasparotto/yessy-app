@@ -40,7 +40,7 @@ export default {
 
 <style lang="scss" scoped>
 $spacing: 10px;
-$icon-spacing: 16px;
+$icon-spacing: 12px;
 $height: 76px;
 
 .bet {

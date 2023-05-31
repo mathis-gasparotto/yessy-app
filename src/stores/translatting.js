@@ -74,6 +74,8 @@ export default () => ({
         return error.message
       case 'Veuillez renseigner au moins deux choix':
         return error.message
+      case 'Vous ne pouvez pas ajouter plus de 20 choix':
+        return error.message
       default:
         return 'Une erreur est survenue'
     }
@@ -116,6 +118,28 @@ export default () => ({
     switch (error.message) {
       default:
         return 'Une erreur est survenue lors du chargement des catégories'
+    }
+  },
+  translateGetHebdoBetsError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue lors du chargement du pari hebdomadaire'
+    }
+  },
+  translateGetParticipationError(error) {
+    switch (error.message) {
+      default:
+        return 'Une erreur est survenue lors de la récupération de votre participation au pari'
+    }
+  },
+  translateUpdateParticipationError(error) {
+    switch (error.message) {
+      case 'Vous ne pouvez pas modifier votre participation à un pari annulé':
+        return error.message
+      case 'Vous ne pouvez pas modifier votre participation à un pari terminé':
+        return error.message
+      default:
+        return 'Une erreur est survenue lors de la modification de votre participation au pari'
     }
   }
 })

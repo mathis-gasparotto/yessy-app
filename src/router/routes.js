@@ -54,6 +54,11 @@ const routes = [
             component: () => import('src/pages/Bets/JoinBetPage.vue')
           },
           {
+            path: 'join-hebdo-bet/:id',
+            name: 'join-hebdo-bet',
+            component: () => import('src/pages/Bets/JoinHebdoBetPage.vue')
+          },
+          {
             path: 'define-winner-choice/:id',
             name: 'define-winner-choice',
             component: () => import('src/pages/Bets/DefineWinnerChoicePage.vue')

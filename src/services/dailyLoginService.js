@@ -81,11 +81,10 @@ function getDailyTokenGain(loginStreak) {
 }
 
 function updateLocalStoreUser(payload) {
-  LocalStorage.getItem('user').then((user) => {
-    LocalStorage.set('user', {
-      ...user,
-      ...payload
-    })
+  const user = LocalStorage.getItem('user')
+  LocalStorage.set('user', {
+    ...user,
+    ...payload
   })
 }
 // dailyLogin()

@@ -20,6 +20,33 @@ import { DEFAULT_WIN_MULTIPLIER } from 'src/stores/constants'
 
 const db = getFirestore(app)
 
+export async function getHebdoBet() {
+  const now = new Date()
+  const ref = query(collection(db, 'hebdo_bets'), where('endAt', '>', now), where('disabled', '==', false))
+  const snap = await getDocs(ref)
+  let list = await snap.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    }
+  })
+  list = list.filter((item) => new Date(item.startAt.seconds * 1000) <= now)
+  return list[0]
+}
+export async function getHebdoBetById(id) {
+  const ref = doc(db, 'hebdo_bets', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    const category = await getBetCategoryByDoc(snap.data().category)
+    return {
+      id: snap.id,
+      ...snap.data(),
+      category
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
 export async function getBets(type = 'all', categoryId = null, privacy = 'public') {
   const now = new Date()
   const conditions = [where('privacy', '==', privacy), where('disabled', '==', false)]
@@ -131,8 +158,8 @@ export async function getBetByDoc(ref) {
     throw new Error('No such data!')
   }
 }
-export async function getJustBet(id) {
-  const ref = doc(db, 'simple_bets', id)
+export async function getJustBet(id, collectionName = 'simple_bets') {
+  const ref = doc(db, collectionName, id)
   const snap = await getDoc(ref)
   if (snap.exists()) {
     return {
@@ -162,6 +189,8 @@ export async function addBet(payload, choices, categoryId) {
   }
   if (choices.length < 2) {
     throw new Error('Veuillez renseigner au moins deux choix')
+  } else if (choices.length > 20) {
+    throw new Error('Vous ne pouvez pas ajouter plus de 20 choix')
   }
   const betCreated = await addDoc(collection(db, 'simple_bets'), {
     ...payload,
