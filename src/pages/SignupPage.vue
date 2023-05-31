@@ -34,7 +34,7 @@
             const min = new Date()
             min.setFullYear(min.getFullYear() - 18)
             return (
-              date < min ||
+              date <= min ||
               'Cette application est réservée aux personnes majeures'
             )
           },
@@ -175,7 +175,7 @@
     </q-form>
     <p class="q-mt-lg">
       Tu as déjà un compte ?
-      <router-link to="/login" class="text-underline text-bold"
+      <router-link :to="{name: 'login'}" class="text-underline text-bold"
         >Connecte toi</router-link
       >
     </p>
