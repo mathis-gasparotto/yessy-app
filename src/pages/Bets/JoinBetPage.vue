@@ -1,7 +1,8 @@
 <template>
-  <div class="page-container bg-primary bg-primary--image join-bet">
+  <div class="page-container join-bet" :style="`--bg-img: url('${bet.category.imgUrl}')`" v-if="bet">
+    <div class="sub-bg-dark absolute-full"></div>
     <q-page class="page scroll">
-      <div class="page-content flex items-center justify-between column" v-if="bet">
+      <div class="page-content flex items-center justify-between column">
         <q-card class="join-bet__title-container bg-primary--dark">
           <q-card-section class="join-bet__category-section bg-primary">
             <div class="text-white text-bold text-center join-bet__category">{{ bet.category.label }}</div>
@@ -63,7 +64,7 @@
       </div>
     </q-page>
   </div>
-  <div class="nav-bar-bg"></div>
+  <!-- <div class="nav-bar-bg"></div> -->
 </template>
 
 <script>
@@ -160,9 +161,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-container {
+  background: var(--bg-img) no-repeat center center fixed !important;
+  padding-bottom: 30px;
+  margin-bottom: -30px;
+  .sub-bg-dark {
+    background-color: rgba($color: #000, $alpha: 0.3);
+    overflow: hidden;
+  }
+}
 .join-bet {
   .page {
-    background-color: rgba($color: #000, $alpha: 0.3);
     &-content {
       gap: 50px;
     }

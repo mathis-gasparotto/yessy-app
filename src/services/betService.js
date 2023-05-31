@@ -131,6 +131,29 @@ export async function getBetByDoc(ref) {
     throw new Error('No such data!')
   }
 }
+export async function getJustBet(id) {
+  const ref = doc(db, 'simple_bets', id)
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return {
+      id: snap.id,
+      ...snap.data()
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
+export async function getJustBetByDoc(ref) {
+  const snap = await getDoc(ref)
+  if (snap.exists()) {
+    return {
+      id: snap.id,
+      ...snap.data()
+    }
+  } else {
+    throw new Error('No such data!')
+  }
+}
 export async function addBet(payload, choices, categoryId) {
   if (payload.customCost || payload.customReward) {
     if (!payload.customCost || !payload.customReward) {
@@ -208,14 +231,17 @@ export async function setWinnerChoice(betId, choiceId, betCollectionName = 'simp
   //   throw new Error('Le choix ne correspond pas au pari')
   // }
   await updateDoc(betRef, { winnerChoice: choiceRef })
-  const participations = await getParticipations(betId, betCollectionName)
-  participations.forEach(async (participation) => {
-    if (participation.choice.id === choiceRef.id) {
-      const userWinMultiplier = await getUserWinMultiplierByDoc(participation.user)
-      const amount = Math.round(participation.tokenAmount * DEFAULT_WIN_MULTIPLIER * userWinMultiplier)
-      await addTokenTransaction(amount, 'win', participation.user.id)
-    }
-  })
+  const bet = await getJustBetByDoc(betRef)
+  if (!bet.customCost && !bet.customReward) {
+    const participations = await getParticipations(betId, betCollectionName)
+    participations.forEach(async (participation) => {
+      if (participation.choice.id === choiceRef.id) {
+        const userWinMultiplier = await getUserWinMultiplierByDoc(participation.user)
+        const amount = Math.round(participation.tokenAmount * DEFAULT_WIN_MULTIPLIER * userWinMultiplier)
+        await addTokenTransaction(amount, 'win', participation.user.id)
+      }
+    })
+  }
   return true
 }
 export async function getMyBets() {
