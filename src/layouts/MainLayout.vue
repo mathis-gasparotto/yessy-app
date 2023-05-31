@@ -41,10 +41,10 @@
           </q-linear-progress>
           <div class="daily-login__graph-steps-container">
             <div class=" flex items-center justify-between">
-              <span class="daily-login__graph-steps text-white bg-secondary flex flex-center">1</span>
-              <span class="daily-login__graph-steps text-white bg-secondary flex flex-center">7</span>
-              <span class="daily-login__graph-steps text-white bg-secondary flex flex-center">14</span>
-              <span class="daily-login__graph-steps text-white bg-secondary flex flex-center">30</span>
+              <span :class="`daily-login__graph-steps ${loginStreak >= 1 ? 'btn-secondary' : 'btn-white'} flex flex-center`">1</span>
+              <span :class="`daily-login__graph-steps ${loginStreak >= 7 ? 'btn-secondary' : 'btn-white'} flex flex-center`">7</span>
+              <span :class="`daily-login__graph-steps ${loginStreak >= 14 ? 'btn-secondary' : 'btn-white'} flex flex-center`">14</span>
+              <span :class="`daily-login__graph-steps ${loginStreak >= 30 ? 'btn-secondary' : 'btn-white'} flex flex-center`">30</span>
             </div>
             <div class="flex items-center justify-between daily-login__graph-steps-label-container">
               <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDay }} smiles/jour</span>
@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="absolute flex flex-center daily-login__graph-progress-value" :style="`--daily-login-progress: ${dailyLoginLinearProgress}`">
-            <q-badge color="white" text-color="secondary" :label="loginStreak" />
+            <q-badge color="secondary" text-color="white" :label="loginStreak" />
           </div>
         </div>
       </div>
@@ -188,7 +188,6 @@ export default {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background-color: #fff;
         margin: auto;
         font-size: 12px;
         font-weight: 500;
