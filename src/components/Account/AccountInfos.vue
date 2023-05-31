@@ -135,7 +135,7 @@
           "
         />
       </q-form>
-      <p class="account_detail__value" v-else>{{ user.email }}</p>
+      <p class="account_detail__value" v-else>{{ formatting.maxStringLenght(user.email, 32) }}</p>
     </div>
     <div class="account_detail">
       <div class="account_detail__label text-h6 flex items-center">
@@ -310,6 +310,7 @@ import {
 } from 'firebase/auth'
 import { deleteUserData, getUser, updateUser, updateUserData } from 'src/services/userService'
 import { logout } from 'src/services/authService'
+import formatting from '../../stores/formatting'
 
 export default {
   name: 'AccountInfos',
@@ -325,6 +326,7 @@ export default {
       format: createFormat(),
       logoutLoading: false,
       deleteLoading: false,
+      formatting: formatting(),
       forms: {
         birthday: {
           show: false,
@@ -386,7 +388,7 @@ export default {
           })
         })
     },
-    async handleDeleteAccount() {
+    handleDeleteAccount() {
       Dialog.create({
         title: 'Supprimer le compte',
         message: 'Êtes-vous sûr de vouloir supprimer votre compte ?',
@@ -402,9 +404,9 @@ export default {
           unelevated: true
         }
       })
-        .onOk(async () => {
+        .onOk(/*async*/ () => {
           this.deleteLoading = true
-          await deleteUserData()
+          /*await */deleteUserData()
             .then(() => {
               this.$router.push({ name: 'welcome' })
               Notify.create({
@@ -422,6 +424,7 @@ export default {
               })
             })
             .catch((err) => {
+              console.log(err)
               this.deleteLoading = false
               Notify.create({
                 message: translate().translateDeleteUserError(err),

@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc, updateDoc, query, deleteDoc, collection, getDocs, 
 import { deleteUser } from 'firebase/auth'
 import { deleteMyParticipations } from './participationService'
 import { addTokenTransaction } from './tokenTransactionService'
-import { uid } from 'quasar'
+import { LocalStorage, uid } from 'quasar'
 import { DEFAULT_TOKEN_AMOUNT } from 'src/stores/constants'
 
 const db = getFirestore(app)
@@ -53,17 +53,17 @@ export async function getUserByDoc(ref) {
     throw new Error('No such data!')
   }
 }
-export async function generateUniqueReferalCode(referalCode = uid().split('-')[0]) {
+export async function generateUniqueReferalCode(referalCode = uid().split('-')[0].toLowerCase()) {
   const q = query(collection(db, 'users'), where('myReferalCode', '==', referalCode))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
-    return generateUniqueReferalCode(uid().split('-')[0])
+    return generateUniqueReferalCode(uid().split('-')[0].toLowerCase())
   }
   return referalCode
 }
 
 export async function addUser(userUid, payload, username) {
-  const myReferalCode = generateUniqueReferalCode()
+  const myReferralCode = await generateUniqueReferalCode()
 
   payload = {
     ...payload,
@@ -77,7 +77,7 @@ export async function addUser(userUid, payload, username) {
     newsletter: payload.newsletter,
     disabled: false,
     winMultiplier: 1,
-    myReferalCode,
+    myReferralCode,
     createdAt: payload.createdAt,
     updatedAt: payload.updatedAt
   }
@@ -97,12 +97,13 @@ export async function addUser(userUid, payload, username) {
   await setDoc(doc(db, 'users_data', userUid), {
     birthday: payload.birthday,
     createdAt: payload.createdAt,
-    updatedAt: payload.updatedAt
+    updatedAt: payload.updatedAt,
+    email: payload.email
   })
 
-  const user = await setDoc(doc(db, 'users', userUid), userPayload)
+  await setDoc(doc(db, 'users', userUid), userPayload)
 
-  return addTokenTransaction(DEFAULT_TOKEN_AMOUNT, 'start', user.id).then(() => {
+  return addTokenTransaction(DEFAULT_TOKEN_AMOUNT, 'start', userUid).then(() => {
     return toReturn
   })
 }
@@ -147,7 +148,8 @@ export async function updateUserName(userUid, username) {
     })
 }
 export async function deleteUserData() {
-  await updateDoc(doc(db, 'users', auth.currentUser.userUid), {
+  console.log(auth.currentUser.uid)
+  await updateDoc(doc(db, 'users', auth.currentUser.uid), {
     disabled: true
   }).catch((error) => {
     throw new Error(error.message)
@@ -155,12 +157,14 @@ export async function deleteUserData() {
   await deleteMyParticipations().catch((error) => {
     throw new Error(error.message)
   })
-  await deleteDoc(doc(db, 'users_data', auth.currentUser.userUid)).catch((error) => {
+  await deleteDoc(doc(db, 'users_data', auth.currentUser.uid)).catch((error) => {
     throw new Error(error.message)
   })
   await deleteUser(auth.currentUser).catch((error) => {
     throw new Error(error.message)
   })
+  LocalStorage.remove('user')
+  LocalStorage.remove('token')
 }
 export async function getUserWalletByDoc(userDoc) {
   const snap = await getDoc(userDoc)

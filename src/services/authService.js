@@ -3,9 +3,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   setPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  deleteUser
 } from 'firebase/auth'
-import { collection, query, where, getDocs, getFirestore } from 'firebase/firestore'
+import { collection, query, where, getDocs, getFirestore, deleteDoc, doc } from 'firebase/firestore'
 import { app, auth } from 'src/boot/firebase'
 import createFormat from '../stores/formatting'
 import { LocalStorage } from 'quasar'
@@ -16,21 +17,23 @@ import { referralCodeInputedOnSignUp } from './tokenTransactionService'
 const db = getFirestore(app)
 
 export async function signup(email, password, username, birthday, referralCode, newsletter) {
-  const q = query(collection(db, 'users'), where('username', '==', username.trim()))
+  const q = query(collection(db, 'users'), where('username', '==', username.trim()), where('disabled', '==', false))
   const querySnapshot = await getDocs(q)
   if (querySnapshot.size > 0) {
     throw new Error("Nom d'utilisateur déjà utilisé")
   }
   await setPersistence(auth, browserLocalPersistence)
-  const user = await createUserWithEmailAndPassword(auth, email, password)
+  const user = await createUserWithEmailAndPassword(auth, email.trim(), password.trim())
     .then(async (userCredential) => {
-      const payload = {
-        email: userCredential.user.email.trim(),
+      let payload = {
+        email: userCredential.user.email,
         birthday: createFormat().dateTimeFormatToBDD(birthday),
         newsletter,
-        referralCode: referralCode ? referralCode.trim() : '',
         lastLoginAt: new Date(),
         loginStreak: 1,
+      }
+      if (referralCode) {
+        payload.referralCode = referralCode.trim().toLowerCase()
       }
       return addUser(userCredential.user.uid, payload, username.trim())
         .then((res) => {
@@ -46,6 +49,7 @@ export async function signup(email, password, username, birthday, referralCode, 
           return res
         })
         .catch((error) => {
+          cancelSignup(userCredential.user.uid)
           throw new Error(error.message)
         })
     })
@@ -53,9 +57,10 @@ export async function signup(email, password, username, birthday, referralCode, 
       throw new Error(error.message)
     })
   if (referralCode) {
-    referralCodeInputedOnSignUp(user.uid, referralCode.trim())
+    referralCodeInputedOnSignUp(user.uid, referralCode.trim().toLowerCase())
   }
 }
+
 export async function login(email, password) {
   await setPersistence(auth, browserLocalPersistence)
   return signInWithEmailAndPassword(auth, email, password)
@@ -82,15 +87,30 @@ export async function login(email, password) {
       throw new Error(error.message)
     })
 }
+
 export function logout() {
   const auth = getAuth(app)
   return auth
     .signOut()
     .then(() => {
-      // LocalStorage.remove('token')
+      LocalStorage.remove('token')
       LocalStorage.remove('user')
     })
     .catch((error) => {
       throw new Error(error.message)
     })
+}
+
+export async function cancelSignup(userId) {
+  await deleteDoc(doc(db, 'users', userId)).catch((error) => {
+    throw new Error(error.message)
+  })
+  await deleteDoc(doc(db, 'users_data', userId)).catch((error) => {
+    throw new Error(error.message)
+  })
+  if (auth.currentUser) {
+    await deleteUser(auth.currentUser).catch((error) => {
+      throw new Error(error.message)
+    })
+  }
 }
