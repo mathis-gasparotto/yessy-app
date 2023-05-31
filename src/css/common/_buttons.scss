@@ -34,4 +34,8 @@
   &-full-width {
     width: 100%;
   }
+  &-white {
+    background-color: #fff;
+    color: $secondary;
+  }
 }

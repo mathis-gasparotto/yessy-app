@@ -11,7 +11,7 @@ import createFormat from '../stores/formatting'
 import { LocalStorage } from 'quasar'
 import { addUser, getUser } from './userService'
 import { referralCodeInputedOnSignUp } from './tokenTransactionService'
-import { dailyLogin } from './dailyLoginService'
+// import { dailyLogin } from './dailyLoginService'
 
 const db = getFirestore(app)
 
@@ -61,8 +61,8 @@ export async function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       return getUser(userCredential.user.uid)
-        .then(async (res) => {
-          const dailyLoginData = await dailyLogin(new Date (res.lastLoginAt.seconds * 1000))
+        .then((res) => {
+          // const dailyLoginData = await dailyLogin(new Date (res.lastLoginAt.seconds * 1000))
           LocalStorage.set('token', userCredential.user.refreshToken)
           LocalStorage.set('user', {
             ...res,
@@ -71,7 +71,7 @@ export async function login(email, password) {
             // createdAt: new Date(res.createdAt.seconds * 1000),
             // updatedAt: new Date(res.updatedAt.seconds * 1000),
             uid: userCredential.user.uid,
-            ...dailyLoginData
+            // ...dailyLoginData
           })
         })
         .catch((error) => {

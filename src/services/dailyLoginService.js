@@ -8,6 +8,7 @@ import {
   DAILY_TOKEN_GAIN_AFTER_7_DAYS,
   DAILY_TOKEN_GAIN_FREQUENCY_AFTER_30_DAYS
 } from 'src/stores/constants'
+import { LocalStorage } from 'quasar'
 // import { getCurrentUser } from 'src/boot/firebase'
 
 const db = getFirestore(app)
@@ -34,6 +35,10 @@ export async function dailyLogin(lastLogin = null) {
       loginStreak: newLoginStreak
     })
     const tokenTransaction = await addTokenTransaction(getDailyTokenGain(newLoginStreak), 'daily_login')
+    updateLocalStoreUser({
+      loginStreak: newLoginStreak,
+      lastLoginAt: now
+    })
     return {
       loginStreak: newLoginStreak,
       lastLoginAt: now,
@@ -45,12 +50,19 @@ export async function dailyLogin(lastLogin = null) {
       loginStreak: newLoginStreak
     })
     const tokenTransaction = await addTokenTransaction(getDailyTokenGain(newLoginStreak), 'daily_login')
+    updateLocalStoreUser({
+      loginStreak: newLoginStreak,
+      lastLoginAt: now
+    })
     return {
       loginStreak: newLoginStreak,
       lastLoginAt: now,
       tokenGain: tokenTransaction.amount
     }
   }
+  updateLocalStoreUser({
+    lastLoginAt: now
+  })
   return {
     lastLoginAt: now
   }
@@ -68,4 +80,12 @@ function getDailyTokenGain(loginStreak) {
   }
 }
 
+function updateLocalStoreUser(payload) {
+  LocalStorage.getItem('user').then((user) => {
+    LocalStorage.set('user', {
+      ...user,
+      ...payload
+    })
+  })
+}
 // dailyLogin()
