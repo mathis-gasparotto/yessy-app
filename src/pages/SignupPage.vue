@@ -239,11 +239,11 @@ export default {
       this.$refs.signupForm.validate().then((success) => {
         if (success) {
           signup(
-            this.form.email,
-            this.form.password,
-            this.form.username,
+            this.form.email.trim(),
+            this.form.password.trim(),
+            this.form.username.trim(),
             this.form.birthday,
-            this.form.referralCode,
+            this.form.referralCode.trim(),
             this.form.newsletterCheck
           )
             .then(() => {
@@ -264,6 +264,7 @@ export default {
             })
             .catch((err) => {
               this.loading = false
+              console.log(err)
               Notify.create({
                 message: translate().translateSignupError(err),
                 color: 'negative',

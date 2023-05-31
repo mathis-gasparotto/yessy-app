@@ -40,7 +40,7 @@
             </q-form>
             <div class="text-h6 text-center account__username-content" v-else>
               <p class="account__username q-mr-xs text-bold">
-                {{ user.username }}
+                {{ formatting.maxStringLenght(user.username, 20) }}
               </p>
               <q-icon name="edit" color="secondary" @click="() => {
                   forms.username.show = true
@@ -92,6 +92,7 @@ import { logout } from 'src/services/authService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
 import { Clipboard } from '@capacitor/clipboard'
+import formatting from '../stores/formatting'
 
 export default {
   name: 'AccountPage',
@@ -113,7 +114,8 @@ export default {
       choice: 'BetsHistory',
       loadingUser: true,
       userWallet: null,
-      loadingWallet: true
+      loadingWallet: true,
+      formatting: formatting()
     }
   },
   created() {

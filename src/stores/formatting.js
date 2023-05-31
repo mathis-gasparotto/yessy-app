@@ -31,5 +31,8 @@ export default () => ({
   },
   dateTimeFormatToBDD(date) {
     return new Date(date)
+  },
+  maxStringLenght(str, max) {
+    return str.length > max ? str.substring(0, max) + '...' : str
   }
 })

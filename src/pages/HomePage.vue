@@ -7,7 +7,7 @@
             <q-img class="home__user-avatar" :src="user.avatar.imgUrl" />
           </q-avatar>
           <div class="home__user-text">
-            <div class="home__user-username text-bold">{{ user.username }}</div>
+            <div class="home__user-username text-bold">{{ formatting.maxStringLenght(user.username, 20) }}</div>
             <div class="home__user-token-count text-bold text-secondary flex items-center">
               <q-icon name="fa fa-coins"></q-icon>
               <q-spinner-gears size="1.5rem" color="secondary" v-if="loadingWallet" />
@@ -35,6 +35,7 @@ import { getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
 import { getHebdoBet } from 'src/services/betService'
+import formatting from 'src/stores/formatting'
 
 export default {
   name: 'HomePage',
@@ -46,7 +47,8 @@ export default {
       user: null,
       userWallet: null,
       loadingWallet: true,
-      hebdoBet: null
+      hebdoBet: null,
+      formatting: formatting()
     }
   },
   created() {
