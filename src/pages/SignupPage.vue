@@ -151,17 +151,18 @@
       ></q-input>
 
       <p class="flex-end text-right signup-text">*Champ obligatoire</p>
-      <q-toggle v-model="form.minAgeCheck" class="q-mb-md signup-toggle">
-        <p>
+      <div class="q-mb-md signup-toggle flex items-center ">
+        <q-toggle v-model="form.minAgeCheck" class="">
+        </q-toggle>
+        <p class="q-mb-0">
           Je certifie d'avoir plus de 18 ans. J'ai lu et j'accepte les
-          <span class="text-underline">conditions générales</span>.
+          <span class="text-underline" @click="openURL(`${siteUrl}`)">conditions générales</span>.
         </p>
-      </q-toggle>
-      <q-toggle
-        v-model="form.newsletterCheck"
-        label="J'accepte de recevoir le bonus d'inscription, les offres spéciales et les informations de la part de Yessy."
-        class="q-mb-lg signup-toggle"
-      />
+      </div>
+      <div class="q-mb-md signup-toggle flex items-center ">
+        <q-toggle v-model="form.newsletterCheck"/>
+        <p class="q-mb-0">J'accepte de recevoir le bonus d'inscription, les offres spéciales et les informations de la part de Yessy.</p>
+      </div>
 
       <q-btn
         label="S'inscrire"
@@ -187,7 +188,7 @@
 // import { cp } from "fs"
 import { signup } from 'src/services/authService'
 import translate from '../stores/translatting'
-import { Notify } from 'quasar'
+import { Notify, openURL } from 'quasar'
 
 export default {
   name: 'SignupPage',
@@ -206,7 +207,8 @@ export default {
       loading: false,
       validate: false,
       showPassword: false,
-      showConfirmPassword: false
+      showConfirmPassword: false,
+      siteUrl: process.env.SITE_URL
     }
   },
   watch: {
@@ -235,6 +237,9 @@ export default {
     }
   },
   methods: {
+    openURL(url) {
+      openURL(url)
+    },
     onsubmit() {
       this.loading = true
       this.$refs.signupForm.validate().then((success) => {
@@ -294,5 +299,8 @@ export default {
   width: 75%;
   color: white;
   border-radius: 15px;
+}
+.signup-toggle {
+  flex-wrap: nowrap;
 }
 </style>
