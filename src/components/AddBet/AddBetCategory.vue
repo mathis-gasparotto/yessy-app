@@ -108,7 +108,7 @@ export default {
       &:nth-of-type(3n) {
         height: 150px;
         .add-bet-category__card-section {
-          gap: 20px;
+          gap: 10px;
         }
       }
       // big cards

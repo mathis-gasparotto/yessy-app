@@ -13,7 +13,7 @@
             outlined
             label="Code unique du pari"
             class="bg-input-white public-bets__search-input"
-            type="text"
+            type="search"
             v-model="betIdToSearch"
             lazy-rules
             :rules="[(val) => val.trim().length > 0 || 'Veullez renseigner ce champ']"

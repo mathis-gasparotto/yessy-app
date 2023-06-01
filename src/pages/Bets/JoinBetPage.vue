@@ -44,6 +44,8 @@
               label="Smiles à mettre en jeu"
               class="q-mb-lg global-input bg-input-white"
               mask="#"
+              type="number"
+              @update:model-value="tokenAmountToPlay.replace('.', '')"
               reverse-fill-mask
               v-model="tokenAmountToPlay"
               lazy-rules
@@ -170,8 +172,6 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   background: var(--bg-img) no-repeat center center/cover fixed !important;
-  padding-bottom: 30px;
-  margin-bottom: -30px;
   .sub-bg-dark {
     background-color: rgba($color: #000, $alpha: 0.6);
     overflow: hidden;

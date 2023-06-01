@@ -13,11 +13,9 @@
         </div>
       </div>
       <div class="add-bet__component">
-        <component :is="component"
-          @choosePrivacy="(privacy) => choosePrivacy(privacy)"
-          @chooseCategory="(categoryId) => chooseCategory(categoryId)"
-          @submitForm="(data, choices) => submitForm(data, choices)"
-        />
+        <AddBetPrivacy v-if="component === 'AddBetPrivacy'" @choosePrivacy="(privacy) => choosePrivacy(privacy)" />
+        <AddBetCategory v-if="component === 'AddBetCategory'"  @chooseCategory="(categoryId) => chooseCategory(categoryId)" />
+        <AddBetForm v-if="component === 'AddBetForm'" @submitForm="(data, choices) => submitForm(data, choices)" :privacy="privacy" />
       </div>
     </q-page>
   </div>

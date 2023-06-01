@@ -37,6 +37,7 @@ import { getMyWallet } from 'src/services/tokenTransactionService'
 import { getHebdoBet } from 'src/services/betService'
 import formatting from 'src/stores/formatting'
 
+
 export default {
   name: 'HomePage',
   components: {

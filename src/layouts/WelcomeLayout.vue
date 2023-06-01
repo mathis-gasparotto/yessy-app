@@ -16,7 +16,7 @@
               :style="{ textTransform: 'unset', lineHeight: '1rem' }"
               class="text-h6"
               padding="0"
-              @click="openURL('https://yessy.fr')"
+              @click="openURL(`${siteUrl}`)"
               >yessy.fr</q-btn
             >
           </div>
@@ -25,7 +25,7 @@
               unelevated
               :style="{ textTransform: 'unset', lineHeight: '1rem' }"
               padding="0"
-              @click="openURL('https://yessy.fr')"
+              @click="openURL(`${siteUrl}`)"
               >Mentions légales</q-btn
             >
             /
@@ -33,7 +33,7 @@
               unelevated
               :style="{ textTransform: 'unset', lineHeight: '1rem' }"
               padding="0"
-              @click="openURL('https://yessy.fr')"
+              @click="openURL(`${siteUrl}`)"
               >RGPD</q-btn
             >
             /
@@ -41,7 +41,7 @@
               unelevated
               :style="{ textTransform: 'unset', lineHeight: '1rem' }"
               padding="0"
-              @click="openURL('https://yessy.fr')"
+              @click="openURL(`${siteUrl}`)"
               >FAQ</q-btn
             >
           </div>
@@ -55,6 +55,11 @@
 import { openURL } from 'quasar'
 export default {
   name: 'WelcomeLayout',
+  data() {
+    return {
+      siteUrl: process.env.SITE_URL
+    }
+  },
   created() {
     console.log()
   },

@@ -60,7 +60,6 @@ export default {
         // Timeout is required to avoid a bug with loading categories icons
         setTimeout(() => {
           this.betList = response
-          console.log(this.betList)
           this.loadingBets = false
         }, 700)
       }).catch((e) => {

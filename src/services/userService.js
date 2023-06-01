@@ -68,7 +68,8 @@ export async function addUser(userUid, payload, username) {
   payload = {
     ...payload,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
+    lastLoginAt: new Date()
   }
 
   let userPayload = {
@@ -79,7 +80,8 @@ export async function addUser(userUid, payload, username) {
     winMultiplier: 1,
     myReferralCode,
     createdAt: payload.createdAt,
-    updatedAt: payload.updatedAt
+    updatedAt: payload.updatedAt,
+    lastLoginAt: payload.lastLoginAt
   }
   if (payload.referralCode) {
     userPayload = {
