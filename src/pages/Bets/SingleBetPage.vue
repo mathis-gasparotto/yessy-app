@@ -15,7 +15,7 @@
             color="white"
           ></q-icon>
           <div class="single-bet__title-text">
-            <h1 class="single-bet__title text-h6">{{ bet.label }}</h1>
+            <h1 class="single-bet__title text-h6">{{ formatting.maxStringLenght(bet.label, 100) }}</h1>
           </div>
         </div>
         <p class="single-bet__subtitle">
@@ -166,7 +166,7 @@
           v-if="isAuthor && bet.endAt.seconds * 1000 <= Date.now() && !bet.winnerChoice"
         />
 
-        <p v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()" class="text-center q-mb-md">
+        <p v-if="(isAuthor || bet.privacy === 'public') && bet.endAt.seconds * 1000 > Date.now()" class="text-center q-mb-md">
           Code d'accès :&nbsp;<span class="text-bold" @click="copy(bet.id)">{{ bet.id }}</span>
         </p>
         <q-btn
@@ -180,7 +180,7 @@
           padding="xs"
           class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn"
           icon="share"
-          v-if="isAuthor && bet.endAt.seconds * 1000 > Date.now()"
+          v-if="(isAuthor || bet.privacy === 'public') && bet.endAt.seconds * 1000 > Date.now()"
         />
         <q-btn
           label="Annuler le pari"
@@ -213,15 +213,21 @@ import {
 } from 'src/services/participationService'
 import { deleteBet, getBet, updateBetPrivacy } from 'src/services/betService'
 import { getMyChoiceByBetId } from 'src/services/choiceService'
-import { Share } from '@capacitor/share'
-import { Clipboard } from '@capacitor/clipboard'
+import formatting from 'src/stores/formatting'
+// import { Share } from '@capacitor/share'
+// import { Clipboard } from '@capacitor/clipboard'
+import { Plugins } from '@capacitor/core'
+
+const { Share } = Plugins
+const { Clipboard } = Plugins
 
 export default {
   setup() {
     const route = useRoute()
 
     return {
-      route
+      route,
+      formatting: formatting()
     }
   },
   name: 'SingleBetPage',
@@ -324,7 +330,7 @@ export default {
         title: "Partage d'un pari sur Yessy",
         text: `Rejoins mon pari sur Yessy ! Le code d'accès est : ${code}
         Sinon, tu peux y accéder directement via ce lien :`,
-        url: `${process.env.APP_URL}#/bets/${code}`,
+        url: `${process.env.APP_URL}/#/bets/${code}`,
         dialogTitle: 'Partage de pari'
       })
     },
@@ -482,7 +488,7 @@ export default {
   &__title {
     &-container {
       display: flex;
-      width: 75%;
+      max-width: 90%;
       gap: 10px;
     }
 

@@ -17,7 +17,7 @@
         label="Adresse mail"
         autofocus
         class="q-mb-md login-input"
-        type="text"
+        type="email"
         v-model="form.email"
         :rules="[
           (val, rules) =>
@@ -60,7 +60,7 @@
     <q-card flat>
       <q-card-section>
         <p class="q-my-xs text-center">
-          <router-link to="#">Mot de passe oublié ?</router-link>
+          <!-- <router-link to="#">Mot de passe oublié ?</router-link> -->
         </p>
       </q-card-section>
       <q-separator spaced size="2px" color="white" rounded />

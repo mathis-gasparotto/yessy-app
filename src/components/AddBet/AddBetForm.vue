@@ -29,6 +29,7 @@
         type="text"
         v-model="choice.label"
         lazy-rules
+        :autofocus="choicesAutofocus[index]"
         :rules="[(val) => val.trim().length > 2 || 'Veullez renseigner minimum 3 caractères']"
         hide-bottom-space
       >
@@ -118,13 +119,13 @@
       <q-input
         rounded
         outlined
+        name="startAt"
         v-model="form.startAt"
+        type="datetime-local"
         lazy-rules
         :rules="[
-          (val) =>
-            /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) ||
-            val.length === 0 ||
-            'Veullez renseigner une date valide',
+          // (val) =>
+          //   /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) || 'Veullez renseigner une date valide',
           (val) => {
             const date = new Date(val)
             const now = new Date()
@@ -139,7 +140,7 @@
         <template v-slot:prepend>
           <q-icon name="calendar_month" color="secondary" size="xs"></q-icon>
         </template>
-        <template v-slot:append>
+        <!-- <template v-slot:append>
           <q-icon
             name="event"
             class="cursor-pointer"
@@ -183,21 +184,29 @@
               </q-time>
             </q-dialog>
           </q-icon>
-        </template>
+        </template> -->
       </q-input>
       <p class="text-small">Laissez vide pour un début immédiat 🚀</p>
       <q-input
         rounded
         outlined
+        name="endAt"
         v-model="form.endAt"
         mask="datetime"
+        type="datetime-local"
         lazy-rules
         :rules="[
-          (val) => /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) || 'Veullez renseigner une date valide',
+          // (val) => /^-?\d\d\d\d\/[0-1]\d\/[0-3]\d\s\d\d:[0-5][0-9]$/.test(val) || 'Veullez renseigner une date valide',
           (val) => {
             const date = new Date(val)
             const now = new Date()
-            return now < date || 'Veuillez renseigner une date supérieure à maintenant'
+            now.setHours(now.getHours()+1)
+            return now < date || privacy === 'private' || 'Veuillez définir une date de fin pour dans plus d\'une heure'
+          },
+          (val) => {
+            const date = new Date(val)
+            const now = new Date()
+            return now < date || privacy === 'public' || 'Veuillez renseigner une date supérieure à maintenan'
           },
           (val) => {
             const date = new Date(val)
@@ -212,7 +221,7 @@
         <template v-slot:prepend>
           <q-icon name="sports_score" color="secondary" size="xs"> </q-icon>
         </template>
-        <template v-slot:append>
+        <!-- <template v-slot:append>
           <q-icon
             name="event"
             class="cursor-pointer"
@@ -256,7 +265,7 @@
               </q-time>
             </q-dialog>
           </q-icon>
-        </template>
+        </template> -->
       </q-input>
 
       <q-btn
@@ -281,6 +290,11 @@ import { Notify } from 'quasar'
 
 export default {
   name: 'AddBetForm',
+  props: {
+    privacy: {
+      type: String
+    }
+  },
   data() {
     return {
       form: {
@@ -301,6 +315,7 @@ export default {
           }
         ]
       },
+      choicesAutofocus: [false, false],
       validate: false,
       showPassword: false,
       loading: false,
@@ -363,6 +378,10 @@ export default {
             ]
           })
       }
+      this.choicesAutofocus.forEach((item) => {
+        item = false
+      })
+      this.choicesAutofocus.push(true)
       this.form.choices.push({
         label: ''
       })

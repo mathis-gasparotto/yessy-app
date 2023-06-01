@@ -10,7 +10,7 @@
         outlined
         label="Nom d'utilisateur*"
         autofocus
-        class="q-mb-md signup-input bg-white"
+        class="q-mb-md signup-input bg-input-white"
         type="text"
         v-model="form.username"
         lazy-rules
@@ -23,12 +23,13 @@
         rounded
         outlined
         v-model="form.birthday"
+        type="datetime-local"
         mask="date"
         lazy-rules
         :rules="[
-          (val) =>
-            /^-?[\d]+\/[0-1]\d\/[0-3]\d$/.test(val) ||
-            'Veullez renseigner une date valide',
+          // (val) =>
+          //   /^-?[\d]+\/[0-1]\d\/[0-3]\d$/.test(val) ||
+          //   'Veullez renseigner une date valide',
           (val) => {
             const date = new Date(val)
             const min = new Date()
@@ -48,10 +49,10 @@
           }
         ]"
         label="Date d'anniversaire*"
-        class="q-mb-md signup-input bg-white"
+        class="q-mb-md signup-input bg-input-white"
         hide-bottom-space
       >
-        <template v-slot:append>
+        <!-- <template v-slot:append>
           <q-icon name="event" class="cursor-pointer" color="secondary">
             <q-popup-proxy
               cover
@@ -68,15 +69,15 @@
               </q-date>
             </q-popup-proxy>
           </q-icon>
-        </template>
+        </template> -->
       </q-input>
       <q-input
         name="email"
         rounded
         outlined
         label="Addresse email*"
-        class="q-mb-md signup-input bg-white"
-        type="text"
+        class="q-mb-md signup-input bg-input-white"
+        type="email"
         v-model="form.email"
         lazy-rules
         :rules="[
@@ -90,7 +91,7 @@
         rounded
         outlined
         label="Mot de passe*"
-        class="q-mb-md signup-input bg-white"
+        class="q-mb-md signup-input bg-input-white"
         :type="showPassword ? 'text' : 'password'"
         v-model="form.password"
         lazy-rules
@@ -118,7 +119,7 @@
         rounded
         outlined
         label="Confirmation du mot de passe*"
-        class="q-mb-md signup-input bg-white"
+        class="q-mb-md signup-input bg-input-white"
         :type="showConfirmPassword ? 'text' : 'password'"
         v-model="form.confirmPassword"
         lazy-rules
@@ -143,7 +144,7 @@
         rounded
         outlined
         label="Code de parrainage"
-        class="q-mb-md signup-input bg-white"
+        class="q-mb-md signup-input bg-input-white"
         type="text"
         v-model="form.referralCode"
         hide-bottom-space

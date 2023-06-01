@@ -23,5 +23,3 @@ export function getCurrentUser () {
     }, reject)
   })
 }
-
-console.log(getCurrentUser())

@@ -129,7 +129,7 @@ export default {
         .then(() => {
           this.joinBetLoading = false
           Notify.create({
-            message: 'Vous avez rejoint le pari',
+            message: 'Votre participation au pari hebdomadaire a bien été enregistrée',
             color: 'positive',
             icon: 'check_circle',
             position: 'top',

@@ -6,7 +6,7 @@
 
     <div class="bet-card-section bet-card-section--text flex justify-center column">
       <q-item-label class="bet-card-pre-title">{{ cardLabel }}</q-item-label>
-      <q-item-label class="bet-card-title">{{ item.label }}</q-item-label>
+      <q-item-label class="bet-card-title">{{ formatting.maxStringLenght(item.label, 30) }}</q-item-label>
     </div>
 
     <div class="bet-card-section bet-card-section--next flex flex-center">
@@ -16,10 +16,17 @@
 </template>
 
 <script>
+import formatting from 'src/stores/formatting'
+
 export default {
   name: 'BetItem',
   props: {
     item: Object
+  },
+  data() {
+    return {
+      formatting: formatting()
+    }
   },
   computed: {
     cardLabel() {
