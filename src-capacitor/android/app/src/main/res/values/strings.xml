@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Yessy</string>
+    <string name="title_activity_main">Yessy</string>
+    <string name="package_name">yessy.app</string>
+    <string name="custom_url_scheme">yessy.app</string>
+</resources>
