@@ -41,7 +41,7 @@
               unelevated
               :style="{ textTransform: 'unset', lineHeight: '1rem' }"
               padding="0"
-              @click="openURL(`${siteUrl}`)"
+              @click="openURL(`${siteUrl}/#faq`)"
               >FAQ</q-btn
             >
           </div>
