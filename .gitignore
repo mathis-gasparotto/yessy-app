@@ -29,7 +29,3 @@ yarn-error.log*
 *.sln
 
 .env.local
-
-# Builder directories
-src-cordova/*
-src-capacitor/*

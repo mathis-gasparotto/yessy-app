@@ -1,0 +1,13 @@
+{
+  "name": "yessy-quasar-app",
+  "version": "0.2.0",
+  "description": "A mobile betting app with friends",
+  "author": "Mathis Gasparotto <mathis.gasparotto@hotmail.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^2.5.0",
+    "@capacitor/cli": "^2.0.0",
+    "@capacitor/core": "^2.0.0",
+    "@capacitor/ios": "^2.5.0"
+  }
+}
