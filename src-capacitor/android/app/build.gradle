@@ -7,7 +7,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "yessy.app"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 33
     defaultConfig {
         applicationId "yessy.app"
         minSdkVersion rootProject.ext.minSdkVersion
