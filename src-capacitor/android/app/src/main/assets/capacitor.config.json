@@ -6,18 +6,15 @@
 	"webDir": "www",
 	"plugins": {
 		"SplashScreen": {
-			"launchShowDuration": 3000,
+			"launchShowDuration": 60000,
 			"launchAutoHide": true,
 			"launchFadeOutDuration": 500,
 			"backgroundColor": "#3805c6",
 			"androidSplashResourceName": "splash",
-			"androidScaleType": "CENTER_CROP",
-			"splashFullScreen": true,
-			"splashImmersive": true
+			"androidScaleType": "CENTER_CROP"
 		}
 	},
 	"server": {
-		"androidScheme": "https",
 		"url": "http://192.168.164.147:9500"
 	}
 }

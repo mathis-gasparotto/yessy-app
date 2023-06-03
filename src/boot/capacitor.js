@@ -8,7 +8,7 @@ async function checkDeviceType () {
   const info = await Device.getInfo()
 
   if (info.platform !== 'ios' && info.platform !== 'android') {
-    window.location.replace('https://www.yessy.fr')
+    window.location.replace(`${process.env.SITE_URL}`)
   }
 }
 
