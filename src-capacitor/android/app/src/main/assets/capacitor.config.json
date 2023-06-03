@@ -1,18 +1,23 @@
 {
-  "appId": "yessy.app",
-  "appName": "Yessy",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 3000,
-      "launchAutoHide": true,
-      "backgroundColor": "#3805c6",
-      "androidSplashResourceName": "splash",
-      "androidScaleType": "CENTER_CROP",
-      "splashFullScreen": true,
-      "splashImmersive": true
-    }
-  }
+	"appId": "yessy.app",
+	"appName": "Yessy",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 3000,
+			"launchAutoHide": true,
+			"launchFadeOutDuration": 500,
+			"backgroundColor": "#3805c6",
+			"androidSplashResourceName": "splash",
+			"androidScaleType": "CENTER_CROP",
+			"splashFullScreen": true,
+			"splashImmersive": true
+		}
+	},
+	"server": {
+		"androidScheme": "https",
+		"url": "http://192.168.164.147:9500"
+	}
 }

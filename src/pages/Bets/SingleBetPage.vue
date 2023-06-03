@@ -214,12 +214,12 @@ import {
 import { deleteBet, getBet, updateBetPrivacy } from 'src/services/betService'
 import { getMyChoiceByBetId } from 'src/services/choiceService'
 import formatting from 'src/stores/formatting'
-// import { Share } from '@capacitor/share'
-// import { Clipboard } from '@capacitor/clipboard'
-import { Plugins } from '@capacitor/core'
+import { Share } from '@capacitor/share'
+import { Clipboard } from '@capacitor/clipboard'
+// import { Plugins } from '@capacitor/core'
 
-const { Share } = Plugins
-const { Clipboard } = Plugins
+// const { Share } = Plugins
+// const { Clipboard } = Plugins
 
 export default {
   setup() {
