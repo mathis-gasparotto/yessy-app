@@ -13,8 +13,5 @@
 			"androidSplashResourceName": "splash",
 			"androidScaleType": "CENTER_CROP"
 		}
-	},
-	"server": {
-		"url": "http://192.168.164.147:9500"
 	}
 }
