@@ -23,7 +23,7 @@
         rounded
         outlined
         v-model="form.birthday"
-        type="datetime-local"
+        type="date"
         mask="date"
         lazy-rules
         :rules="[

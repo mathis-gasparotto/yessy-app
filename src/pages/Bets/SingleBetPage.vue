@@ -123,8 +123,13 @@
             </div>
           </span>
         </div>
-        <p v-if="iParticipate" class="text-center q-mb-0">Vous avez parier {{ myTokenParticipation }} Smiles 😊</p>
-        <p v-if="iParticipate" class="text-center q-mb-md">Sur "{{ myChoice.label }}"</p>
+        <div v-if="iParticipate && !bet.customCost && !bet.customReward" class="q-mb-md">
+          <p class="text-center q-mb-0">Vous avez parié {{ myTokenParticipation }} Smiles 😊</p>
+          <p class="text-center q-mb-0">Sur "{{ myChoice.label }}"</p>
+        </div>
+        <div v-if="iParticipate && bet.customCost && bet.customReward" class="q-mb-md">
+          <p class="text-center q-mb-0">Vous avez parié sur "{{ myChoice.label }}"</p>
+        </div>
         <p v-if="bet.winnerChoice" class="text-center q-mb-md">
           La bonne réponse était : "{{ bet.winnerChoice.label }}"
         </p>
