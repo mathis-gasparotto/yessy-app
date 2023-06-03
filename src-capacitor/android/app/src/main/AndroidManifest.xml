@@ -30,7 +30,7 @@
 
                 <data
                     android:scheme="https"
-                    android:host="yessy-app-wlcay.ondigitalocean.app" />
+                    android:host="yessy.app" />
             </intent-filter>
 
         </activity>
