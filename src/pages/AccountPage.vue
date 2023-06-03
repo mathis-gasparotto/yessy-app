@@ -91,11 +91,11 @@ import { getUser, updateUserData, updateUserName } from 'src/services/userServic
 import { logout } from 'src/services/authService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
-// import { Clipboard } from '@capacitor/clipboard'
+import { Clipboard } from '@capacitor/clipboard'
 import formatting from '../stores/formatting'
-import { Plugins } from '@capacitor/core'
+// import { Plugins } from '@capacitor/core'
 
-const { Clipboard } = Plugins
+// const { Clipboard } = Plugins
 
 export default {
   name: 'AccountPage',

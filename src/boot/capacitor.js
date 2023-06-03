@@ -1,8 +1,8 @@
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
-// import { Device } from '@capacitor/device'
-import { Plugins } from '@capacitor/core'
+import { Device } from '@capacitor/device'
+// import { Plugins } from '@capacitor/core'
 
-const { Device } = Plugins
+// const { Device } = Plugins
 
 async function checkDeviceType () {
   const info = await Device.getInfo()
