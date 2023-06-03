@@ -330,7 +330,7 @@ export default {
         title: "Partage d'un pari sur Yessy",
         text: `Rejoins mon pari sur Yessy ! Le code d'accès est : ${code}
         Sinon, tu peux y accéder directement via ce lien :`,
-        url: `${process.env.APP_URL}/#/bets/${code}`,
+        url: `https://yessy.app/#/bets/${code}`,
         dialogTitle: 'Partage de pari'
       })
     },

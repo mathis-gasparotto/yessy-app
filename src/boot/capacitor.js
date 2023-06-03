@@ -1,18 +1,18 @@
 import { defineCustomElements } from '@ionic/pwa-elements/loader'
-import { Device } from '@capacitor/device'
+// import { Device } from '@capacitor/device'
 // import { Plugins } from '@capacitor/core'
 
 // const { Device } = Plugins
 
-async function checkDeviceType () {
-  const info = await Device.getInfo()
+// async function checkDeviceType () {
+//   const info = await Device.getInfo()
 
-  if (info.platform !== 'ios' && info.platform !== 'android') {
-    window.location.replace(`${process.env.SITE_URL}`)
-  }
-}
+//   if (info.platform !== 'ios' && info.platform !== 'android') {
+//     window.location.replace(`${process.env.SITE_URL}`)
+//   }
+// }
 
-checkDeviceType()
+// checkDeviceType()
 
 export default () => {
   defineCustomElements(window)
