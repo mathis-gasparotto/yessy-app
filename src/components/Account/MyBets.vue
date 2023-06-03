@@ -1,7 +1,7 @@
 <template>
   <div class="history q-pb-xl">
     <div class="history__title q-mb-md">
-      <h2 class="text-h6">Historique des paris</h2>
+      <h2 class="text-h6">Historique de mes paris</h2>
     </div>
     <LoadingSpinner v-if="loadingBets" />
     <div class="history__list" v-else>

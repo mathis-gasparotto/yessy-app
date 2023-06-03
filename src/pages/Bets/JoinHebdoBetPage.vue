@@ -47,7 +47,7 @@
             size="20px"
           />
           <p class="text-white text-small q-mb-0">Ce pari vous permettra de gagner {{ bet.tokenReward }} smiles 😊</p>
-          <p class="text-white text-small q-mb-0">(si vous le gagner 😉)</p>
+          <p class="text-white text-small q-mb-0">(si vous le gagnez 😉)</p>
         </div>
       </div>
     </q-page>

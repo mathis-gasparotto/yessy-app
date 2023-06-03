@@ -31,6 +31,7 @@ export async function signup(email, password, username, birthday, referralCode, 
         newsletter,
         lastLoginAt: new Date(),
         loginStreak: 1,
+        winMultiplier: 1
       }
       if (referralCode) {
         payload.referralCode = referralCode.trim().toLowerCase()
