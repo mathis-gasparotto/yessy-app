@@ -13,5 +13,9 @@
 			"androidSplashResourceName": "splash",
 			"androidScaleType": "CENTER_CROP"
 		}
+	},
+	"server": {
+		"androidScheme": "https",
+		"hostname": "yessy.app"
 	}
 }

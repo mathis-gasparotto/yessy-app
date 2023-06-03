@@ -17,7 +17,7 @@
               class="text-h6"
               padding="0"
               @click="openURL(`${siteUrl}`)"
-              >yessy.fr</q-btn
+              >yessy.app</q-btn
             >
           </div>
           <div>

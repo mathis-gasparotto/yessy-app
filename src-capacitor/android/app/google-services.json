@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "603717871825",
+    "project_id": "yessy-796e1",
+    "storage_bucket": "yessy-796e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603717871825:android:6691da0b7f8708bb627df0",
+        "android_client_info": {
+          "package_name": "yessy.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "603717871825-4c8nak5lm0fah5koi9dshlbm4ovaj911.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8X0-CLMGmY2K3KMt8t-IYw1vH1EUBPIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "603717871825-4c8nak5lm0fah5koi9dshlbm4ovaj911.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@capacitor/clipboard": "^5.0.2",
-    "@capacitor/device": "^5.0.2",
     "@capacitor/share": "^5.0.2",
     "@ionic/pwa-elements": "^3.1.1",
     "@quasar/extras": "^1.0.0",
