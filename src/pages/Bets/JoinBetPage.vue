@@ -37,7 +37,7 @@
         <div class="join-bet__submit-container">
           <q-form class="join-bet__form flex flex-center column form" ref="joinBetForm">
             <q-input
-              v-if="!bet.customCost"
+              v-if="!bet.customCost && !bet.customReward"
               name="tokenAmount"
               rounded
               outlined
@@ -45,11 +45,14 @@
               class="q-mb-lg global-input bg-input-white"
               mask="#"
               type="number"
-              @update:model-value="tokenAmountToPlay.replace('.', '')"
               reverse-fill-mask
+              inputmode="numeric"
               v-model="tokenAmountToPlay"
               lazy-rules
-              :rules="[(val) => val > 0 || 'Veullez renseigner un montant de smiles valide']"
+              :rules="[
+                (val) => val > 0 || 'Veullez renseigner un montant de smiles valide',
+                (val) => val % 1 === 0 || 'Veullez renseigner un montant de smiles entier'
+              ]"
               hide-bottom-space
             >
               <template v-slot:prepend>
@@ -58,7 +61,7 @@
             </q-input>
 
             <q-btn
-              label="Valider le choix"
+              label="Valider la participation"
               type="submit"
               :class="`q-mb-lg text-bold form-btn btn btn-${validate ? 'secondary' : 'disabled'}`"
               :disable="!validate"
@@ -80,7 +83,7 @@
 import { Loading, Notify } from 'quasar'
 import { useRoute } from 'vue-router'
 import translate from '../../stores/translatting'
-import { participate } from 'src/services/participationService'
+import { getMyParticipation, participate, updateParticipation } from 'src/services/participationService'
 import { getBetWithoutAuthor } from 'src/services/betService'
 import { getBetChoices } from 'src/services/choiceService'
 import format from '../../stores/formatting'
@@ -101,7 +104,8 @@ export default {
       idChoiceChosen: null,
       format: format(),
       tokenAmountToPlay: null,
-      joinBetLoading: false
+      joinBetLoading: false,
+      participationId: null
     }
   },
   created() {
@@ -109,12 +113,49 @@ export default {
   },
   computed: {
     validate() {
-      return this.idChoiceChosen && (this.tokenAmountToPlay > 0 || this.bet.customCost)
+      return this.idChoiceChosen && ((this.tokenAmountToPlay > 0 && this.tokenAmountToPlay % 1 === 0) || (this.bet.customCost && this.bet.customReward))
     }
   },
   methods: {
     joinBet() {
+      if (!this.validate) return
       this.joinBetLoading = true
+      if (this.participationId) {
+        return updateParticipation(this.participationId, this.route.params.id, 'simple_bets', this.idChoiceChosen, this.tokenAmountToPlay)
+          .then(() => {
+            this.joinBetLoading = false
+            Notify.create({
+              message: 'Votre participation au pari a bien été modifiée',
+              color: 'positive',
+              icon: 'check_circle',
+              position: 'top',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+            return this.$router.push({ name: 'single-bet', params: { id: this.route.params.id } })
+          })
+          .catch((err) => {
+            this.joinBetLoading = false
+            Notify.create({
+              message: translate().translateUpdateParticipationError(err),
+              color: 'negative',
+              icon: 'report_problem',
+              position: 'top',
+              timeout: 3000,
+              actions: [
+                {
+                  icon: 'close',
+                  color: 'white'
+                }
+              ]
+            })
+          })
+      }
       participate(this.route.params.id, this.idChoiceChosen, this.tokenAmountToPlay)
         .then(() => {
           this.joinBetLoading = false
@@ -150,20 +191,65 @@ export default {
           })
         })
     },
-    reloadData() {
+    async reloadData() {
       Loading.show()
-      getBetWithoutAuthor(this.route.params.id)
-        .then((res) => {
-          this.bet = res
-          getBetChoices(this.route.params.id).then((res) => {
-            this.bet.choices = res
-          })
-          Loading.hide()
+      this.bet = await getBetWithoutAuthor(this.route.params.id).catch((err) => {
+        Loading.hide()
+        Notify.create({
+          message: 'Une erreur est survenue lors du chargement du pari',
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
         })
-        .catch(() => {
-          Loading.hide()
-          this.$router.push({ name: 'single-bet', params: { id: this.route.params.id } })
+        return this.$router.push({ name: 'single-bet', params: { id: this.route.params.id } })
+      })
+
+      this.bet.choices = await getBetChoices(this.route.params.id).catch((err) => {
+        Loading.hide()
+        Notify.create({
+          message: 'Une erreur est survenue lors du chargement des choix du pari',
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
         })
+        return this.$router.push({ name: 'single-bet', params: { id: this.route.params.id } })
+      })
+
+      const participation = await getMyParticipation(this.route.params.id, 'simple_bets').catch((err) => {
+        Loading.hide()
+        Notify.create({
+          message: translate().translateGetParticipationError(err),
+          color: 'negative',
+          icon: 'report_problem',
+          position: 'top',
+          timeout: 3000,
+          actions: [
+            {
+              icon: 'close',
+              color: 'white'
+            }
+          ]
+        })
+        return this.$router.push({ name: 'single-bet', params: { id: this.route.params.id } })
+      })
+      this.participationId = participation ? participation.id : null
+      this.idChoiceChosen = participation ? participation.choice.id : null
+      this.tokenAmountToPlay = participation ? (participation.tokenAmount ? participation.tokenAmount : null) : null
+      Loading.hide()
     }
   }
 }

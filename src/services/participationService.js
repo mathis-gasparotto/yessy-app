@@ -1,7 +1,7 @@
 import { app, auth } from 'src/boot/firebase'
 import { doc, query, deleteDoc, collection, getDocs, where, addDoc, getFirestore, orderBy, updateDoc, getDoc } from 'firebase/firestore'
 import { getBetByDoc } from './betService'
-import { getMyWallet, addTokenTransaction, deleteTokenTransaction } from './tokenTransactionService'
+import { getMyWallet, addTokenTransaction, deleteTokenTransaction, updateTokenTransactionByDoc, deleteTokenTransactionByDoc } from './tokenTransactionService'
 import { LocalStorage } from 'quasar'
 
 const db = getFirestore(app)
@@ -65,10 +65,16 @@ export async function getMyParticipation(betId, betCollectionName = 'simple_bets
 export async function updateParticipation(participationId, betId, betCollectionName, newChoiceId = null, newTokenAmount = null) {
   let payload = {}
   if (newChoiceId && betId && betCollectionName) {
-    payload.choice = doc(db, `${betCollectionName}/${betId}/choices`, newChoiceId)
+    payload = {
+      ...payload,
+      choice: doc(db, `${betCollectionName}/${betId}/choices`, newChoiceId)
+    }
   }
   if (newTokenAmount) {
-    payload.tokenAmount = newTokenAmount
+    payload = {
+      ...payload,
+      tokenAmount: parseInt(newTokenAmount)
+    }
   }
   const betRef = doc(db, betCollectionName, betId)
   const betSnap = await getDoc(betRef)
@@ -82,7 +88,12 @@ export async function updateParticipation(participationId, betId, betCollectionN
     throw new Error('Vous ne pouvez pas modifier votre participation à un pari terminé')
   }
   const ref = doc(db, 'participations', participationId)
-  return await updateDoc(ref, payload)
+  await updateDoc(ref, payload)
+  if (newTokenAmount) {
+    const snap = await getDoc(ref)
+    console.log(snap.data())
+    return updateTokenTransactionByDoc(snap.data().transaction, {amount: parseInt(-newTokenAmount)})
+  }
 }
 export async function getMyTokenParticipation(betId, betCollectionName = 'simple_bets') {
   const ref = query(collection(db, 'participations'), where('bet', '==', doc(db, betCollectionName, betId)), where('user', '==', doc(db, 'users', auth.currentUser.uid)))
@@ -100,10 +111,7 @@ export async function participate(betId, choiceId, tokenAmount = null, betCollec
   if (snap.docs.length > 0) {
     throw new Error('Vous participez déjà à ce pari')
   }
-  const currentWallet = await getMyWallet()
-  if (tokenAmount > currentWallet) {
-    throw new Error("Vous n'avez pas assez de jetons")
-  }
+
   // let payload = {
   //   user: doc(db, 'users', auth.currentUser.uid),
   //   bet: doc(db, betCollectionName, betId),
@@ -116,24 +124,39 @@ export async function participate(betId, choiceId, tokenAmount = null, betCollec
     choice: doc(db, `${betCollectionName}/${betId}/choices`, choiceId),
     date: new Date()
   }
+
   if (tokenAmount) {
     tokenAmount = parseInt(tokenAmount)
+    const currentWallet = await getMyWallet()
+    if (tokenAmount > currentWallet) {
+      throw new Error("Vous n'avez pas assez de jetons")
+    }
+
+    const transaction = await addTokenTransaction(-tokenAmount, 'participation')
+
     payload = {
       ...payload,
-      tokenAmount
+      tokenAmount,
+      transaction: doc(db, 'token_transactions', transaction.id)
     }
-  }
-  const transaction = await addTokenTransaction(-tokenAmount, 'participation')
 
-  return addDoc(collection(db, 'participations'), payload).then((doc) => {
+    return addDoc(collection(db, 'participations'), payload).then((participationDoc) => {
+      return {
+        id: participationDoc.id,
+        transaction: doc(db, 'token_transactions', transaction.id),
+        ...payload
+      }
+    }).catch((error) => {
+      deleteTokenTransaction(transaction.id).then(() => {
+        throw new Error(error.message)
+      })
+    })
+  }
+  return addDoc(collection(db, 'participations'), payload).then((participationDoc) => {
     return {
-      id: doc.id,
+      id: participationDoc.id,
       ...payload
     }
-  }).catch((error) => {
-    deleteTokenTransaction(transaction.id).then(() => {
-      throw new Error(error.message)
-    })
   })
 }
 export async function iParticipate(betId, betCollectionName = 'simple_bets') {
@@ -174,9 +197,10 @@ export async function deleteParticipation(betId, betCollectionName = 'simple_bet
     where('bet', '==', doc(db, betCollectionName, betId))
   )
   const snap = await getDocs(ref)
-  await addTokenTransaction(snap.docs[0].data().tokenAmount, 'refund').then((newTokenCount) => {
-    const user = LocalStorage.getItem('user')
-    LocalStorage.set('user', { ...user, tokenCount: newTokenCount })
-  })
+  await deleteTokenTransactionByDoc(snap.docs[0].data().transaction)
+  // await addTokenTransaction(snap.docs[0].data().tokenAmount, 'refund').then((newTokenCount) => {
+  //   const user = LocalStorage.getItem('user')
+  //   LocalStorage.set('user', { ...user, tokenCount: newTokenCount })
+  // })
   return deleteDoc(doc(db, 'participations', snap.docs[0].id))
 }
