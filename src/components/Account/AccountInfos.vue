@@ -9,13 +9,13 @@
           @click="
             () => {
               forms.birthday.show = true
-              forms.birthday.value = format.dateToDisplay(user.birthday)
+              forms.birthday.value = format.dateToInput(user.birthday)
             }
           "
         ></q-icon>
       </div>
       <q-form
-        class="flex flex-center row form account-form bg-white"
+        class="flex flex-center row form account-form"
         ref="updateBirthdayForm"
         v-if="forms.birthday.show"
         @submit.prevent="
@@ -34,13 +34,15 @@
           v-model="forms.birthday.value"
           autofocus
           lazy-rules
+          name="birthday"
+          type="date"
           :rules="[
-            (val) => /^-?[0-3]\d\/[0-1]\d\/\d\d\d\d$/.test(val) || 'Veullez renseigner une date valide',
+            // (val) => /^-?[0-3]\d\/[0-1]\d\/\d\d\d\d$/.test(val) || 'Veullez renseigner une date valide',
             (val) => {
               const date = new Date(val)
               const min = new Date()
-              min.setFullYear(min.getFullYear() - 16)
-              return date < min || 'Cette application est réservée aux personnes de plus de 16 ans'
+              min.setFullYear(min.getFullYear() - 18)
+              return date < min || 'Cette application est réservée aux personnes de plus de 18 ans'
             },
             (val) => {
               const date = new Date(val)
@@ -49,10 +51,10 @@
               return date >= max || 'Veuillez renseigner votre vrai date de naissance'
             }
           ]"
-          class="account-input bg-white"
+          class="account-input bg-input-white"
           hide-bottom-space
         >
-          <template v-slot:append>
+          <!-- <template v-slot:append>
             <q-icon name="event" class="cursor-pointer" color="secondary">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                 <q-date v-model="forms.birthday.value" navigation-max-year-month="2023/01" mask="DD/MM/YYYY">
@@ -62,7 +64,7 @@
                 </q-date>
               </q-popup-proxy>
             </q-icon>
-          </template>
+          </template> -->
         </q-input>
         <q-btn icon="save" type="submit" class="form-btn btn btn-primary account-submit" padding="md" />
         <q-btn
@@ -114,8 +116,8 @@
           name="email"
           outlined
           autofocus
-          class="account-input bg-white"
-          type="text"
+          class="account-input bg-input-white"
+          type="email"
           v-model="forms.email.value"
           lazy-rules
           :rules="[(val, rules) => rules.email(val) || 'Veullez rensigner une addresse email valide']"
@@ -135,7 +137,7 @@
           "
         />
       </q-form>
-      <p class="account_detail__value" v-else>{{ formatting.maxStringLenght(user.email, 32) }}</p>
+      <p class="account_detail__value" v-else>{{ format.maxStringLenght(user.email, 32) }}</p>
     </div>
     <div class="account_detail">
       <div class="account_detail__label text-h6 flex items-center">
@@ -166,7 +168,7 @@
           name="password"
           outlined
           label="Ancien mot de passe"
-          class="q-mb-md account-input bg-white"
+          class="q-mb-md account-input bg-input-white"
           :type="forms.password.showCurrentPassword ? 'text' : 'password'"
           v-model="forms.password.current"
           lazy-rules
@@ -187,7 +189,7 @@
           name="password"
           outlined
           label="Nouveau mot de passe"
-          class="q-mb-md account-input bg-white"
+          class="q-mb-md account-input bg-input-white"
           :type="forms.password.showNewPassword ? 'text' : 'password'"
           v-model="forms.password.new"
           lazy-rules
@@ -214,7 +216,7 @@
           name="confirmPassword"
           outlined
           label="Confirmation du nouveau mot de passe"
-          class="q-mb-md account-input bg-white"
+          class="q-mb-md account-input bg-input-white"
           :type="forms.password.showConfirmPassword ? 'text' : 'password'"
           v-model="forms.password.confirm"
           lazy-rules
@@ -297,7 +299,6 @@
 
 <script>
 import { Dialog, Loading, Notify } from 'quasar'
-import createFormat from '../../stores/formatting'
 import { auth } from 'src/boot/firebase'
 import translate from '../../stores/translatting'
 import {
@@ -313,6 +314,11 @@ import { logout } from 'src/services/authService'
 import formatting from '../../stores/formatting'
 
 export default {
+  setup () {
+    return {
+      format: formatting()
+    }
+  },
   name: 'AccountInfos',
   props: {
     userData: {
@@ -323,10 +329,8 @@ export default {
   data() {
     return {
       user: null,
-      format: createFormat(),
       logoutLoading: false,
       deleteLoading: false,
-      formatting: formatting(),
       forms: {
         birthday: {
           show: false,
