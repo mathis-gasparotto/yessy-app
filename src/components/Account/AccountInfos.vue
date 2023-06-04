@@ -601,6 +601,7 @@ export default {
             message: 'Votre compte a bien été mis à jour',
             color: 'positive',
             icon: 'check_circle',
+            position: 'top',
             timeout: 3000,
             actions: [
               {
