@@ -63,7 +63,7 @@
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
               {{
                 (new Date(bet.startAt.seconds * 1000) > new Date() ? 'Débute le ' : 'A débuté le ') +
-                createFormat.dateTimeToDisplay(bet.startAt.seconds * 1000)
+                formatting.dateTimeToDisplay(bet.startAt.seconds * 1000)
               }}
             </p>
           </q-item>
@@ -74,7 +74,7 @@
             <p class="single-bet__prop-text q-mb-0 flex flex-center">
               {{
                 (new Date(bet.endAt.seconds * 1000) > new Date() ? 'Se termine le ' : 'Est terminé depuis le ') +
-                createFormat.dateTimeToDisplay(bet.endAt.seconds * 1000)
+                formatting.dateTimeToDisplay(bet.endAt.seconds * 1000)
               }}
             </p>
           </q-item>
@@ -134,13 +134,8 @@
           La bonne réponse était : "{{ bet.winnerChoice.label }}"
         </p>
         <q-btn
-          v-if="
-            iParticipate === false &&
-            bet.startAt.seconds * 1000 < Date.now() &&
-            bet.endAt.seconds * 1000 >= Date.now() &&
-            !isAuthor
-          "
-          label="Rejoindre le pari"
+          v-if="bet.startAt.seconds * 1000 < Date.now() && bet.endAt.seconds * 1000 >= Date.now() && !isAuthor"
+          :label="iParticipate === false ? 'Rejoindre le pari' : 'Modifier ma participation'"
           type="button"
           color="secondary"
           rounded
@@ -149,7 +144,7 @@
           class="q-mb-md btn btn-secondary single-bet__leave-btn"
         />
         <q-btn
-          v-else-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now()"
+          v-if="iParticipate === true && bet.endAt.seconds * 1000 >= Date.now()"
           label="Quitter le pari"
           type="button"
           color="secondary"
@@ -171,7 +166,10 @@
           v-if="isAuthor && bet.endAt.seconds * 1000 <= Date.now() && !bet.winnerChoice"
         />
 
-        <p v-if="(isAuthor || bet.privacy === 'public') && bet.endAt.seconds * 1000 > Date.now()" class="text-center q-mb-md">
+        <p
+          v-if="(isAuthor || bet.privacy === 'public') && bet.endAt.seconds * 1000 > Date.now()"
+          class="text-center q-mb-md"
+        >
           Code d'accès :&nbsp;<span class="text-bold" @click="copy(bet.id)">{{ bet.id }}</span>
         </p>
         <q-btn
@@ -207,7 +205,6 @@
 <script>
 import { Loading, Notify } from 'quasar'
 import { useRoute } from 'vue-router'
-import createFormat from '../../stores/formatting'
 import translate from '../../stores/translatting'
 import { auth } from 'src/boot/firebase'
 import {
@@ -240,7 +237,6 @@ export default {
     return {
       bet: null,
       deleteLoading: false,
-      createFormat: createFormat(),
       iParticipate: null,
       defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
       myTokenParticipation: null,
@@ -602,7 +598,7 @@ export default {
 
 <style lang="scss">
 .single-bet {
-  &__privacy-toggle[aria-checked="false"] {
+  &__privacy-toggle[aria-checked='false'] {
     .q-toggle__track {
       background-color: $secondary;
     }

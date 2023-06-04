@@ -87,6 +87,7 @@ export default {
   },
   methods: {
     joinBet() {
+      if (!this.idChoiceChosen) return
       this.joinBetLoading = true
       if (this.participationId) {
         return updateParticipation(this.participationId, this.route.params.id, 'hebdo_bets', this.idChoiceChosen)
@@ -122,7 +123,6 @@ export default {
                 }
               ]
             })
-            console.log(err)
           })
       }
       participate(this.route.params.id, this.idChoiceChosen, 0, 'hebdo_bets')

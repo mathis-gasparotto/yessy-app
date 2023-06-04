@@ -64,74 +64,74 @@ export default route(function (/*{ store, ssrContext }*/ { store }) {
       next({
         name: from.name === 'login' || from.name === 'signup' || from.name === 'welcome' ? 'home' : from.name
       })
-    } else if (isAuthenticated && to.name === 'join-bet') {
-      const iParticipateRes = await iParticipate(to.params.id).catch(() => {
-        Notify.create({
-          message: 'Une erreur est survenue',
-          color: 'negative',
-          icon: 'report_problem',
-          position: 'top',
-          timeout: 3000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
-        })
-        return next({ name: 'single-bet', params: { id: to.params.id } })
-      })
-      if (iParticipateRes) {
-        Notify.create({
-          message: 'Vous participez déjà à ce pari',
-          color: 'negative',
-          icon: 'report_problem',
-          position: 'top',
-          timeout: 3000,
-          actions: [
-            {
-              icon: 'close',
-              color: 'white'
-            }
-          ]
-        })
-        return next({ name: 'single-bet', params: { id: to.params.id } })
-      } else {
-        const isAuthorRes = await isAuthor(to.params.id).catch(() => {
-          Notify.create({
-            message: 'Une erreur est survenue',
-            color: 'negative',
-            icon: 'report_problem',
-            position: 'top',
-            timeout: 3000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-          return next({ name: 'single-bet', params: { id: to.params.id } })
-        })
-        if (isAuthorRes) {
-          Notify.create({
-            message: 'Vous ne pouvez pas participer à votre propre pari',
-            color: 'negative',
-            icon: 'report_problem',
-            position: 'top',
-            timeout: 3000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
-          return next({ name: 'single-bet', params: { id: to.params.id } })
-        } else {
-          return next()
-        }
-      }
+    // } else if (isAuthenticated && to.name === 'join-bet') {
+    //   const iParticipateRes = await iParticipate(to.params.id).catch(() => {
+    //     Notify.create({
+    //       message: 'Une erreur est survenue',
+    //       color: 'negative',
+    //       icon: 'report_problem',
+    //       position: 'top',
+    //       timeout: 3000,
+    //       actions: [
+    //         {
+    //           icon: 'close',
+    //           color: 'white'
+    //         }
+    //       ]
+    //     })
+    //     return next({ name: 'single-bet', params: { id: to.params.id } })
+    //   })
+    //   if (iParticipateRes) {
+    //     Notify.create({
+    //       message: 'Vous participez déjà à ce pari',
+    //       color: 'negative',
+    //       icon: 'report_problem',
+    //       position: 'top',
+    //       timeout: 3000,
+    //       actions: [
+    //         {
+    //           icon: 'close',
+    //           color: 'white'
+    //         }
+    //       ]
+    //     })
+    //     return next({ name: 'single-bet', params: { id: to.params.id } })
+    //   } else {
+    //     const isAuthorRes = await isAuthor(to.params.id).catch(() => {
+    //       Notify.create({
+    //         message: 'Une erreur est survenue',
+    //         color: 'negative',
+    //         icon: 'report_problem',
+    //         position: 'top',
+    //         timeout: 3000,
+    //         actions: [
+    //           {
+    //             icon: 'close',
+    //             color: 'white'
+    //           }
+    //         ]
+    //       })
+    //       return next({ name: 'single-bet', params: { id: to.params.id } })
+    //     })
+    //     if (isAuthorRes) {
+    //       Notify.create({
+    //         message: 'Vous ne pouvez pas participer à votre propre pari',
+    //         color: 'negative',
+    //         icon: 'report_problem',
+    //         position: 'top',
+    //         timeout: 3000,
+    //         actions: [
+    //           {
+    //             icon: 'close',
+    //             color: 'white'
+    //           }
+    //         ]
+    //       })
+    //       return next({ name: 'single-bet', params: { id: to.params.id } })
+    //     } else {
+    //       return next()
+    //     }
+    //   }
     } else if (isAuthenticated && to.name === 'define-winner-choice') {
       const isAuthroRes = await isAuthor(to.params.id).catch(() => {
         Notify.create({

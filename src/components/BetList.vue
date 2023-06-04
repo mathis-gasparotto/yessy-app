@@ -84,10 +84,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bet-list {
-  width: 90%;
-  margin: auto;
-}
 .q-list--separator > .q-item-type {
   // border-color: #fff;
   border-top: 2px solid #fff;
