@@ -1,4 +1,4 @@
-# Yessy (yessy-quasar-app)
+# Yessy (yessy-app)
 
 A mobile betting app with friends
 
