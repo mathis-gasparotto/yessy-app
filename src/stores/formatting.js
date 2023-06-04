@@ -29,6 +29,10 @@ export default () => ({
     let d = new Date(date)
     return `${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()}/${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}/${d.getFullYear()}`
   },
+  dateToInput(date) {
+    let d = new Date(date)
+    return `${d.getFullYear()}-${(d.getMonth() + 1) >= 10 ? (d.getMonth() + 1) : '0' + (d.getMonth() + 1)}-${d.getDate() >= 10 ? d.getDate() : '0' + d.getDate()}`
+  },
   dateTimeFormatToBDD(date) {
     return new Date(date)
   },
