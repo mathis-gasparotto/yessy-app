@@ -54,7 +54,7 @@
         <div class="account__choices flex justify-between q-mt-sm q-mb-md">
           <q-btn
             :class="`account__choice-btn ${this.choice === 'BetsHistory' ? 'account__choice-btn--active' : ''}`"
-            @click="this.choice = 'BetsHistory'" icon="fa fa-trophy" size="1.5rem"></q-btn>
+            @click="this.choice = 'BetsHistory'" icon="fa fa-clock-rotate-left" size="1.5rem"></q-btn>
           <!-- <q-btn :class="`account__choice-btn ${this.choice === 'Shop' ? 'account__choice-btn--active' : ''}`" @click="this.choice = 'Shop'" icon="fa fa-coins" size="1.5rem"></q-btn> -->
           <q-btn :class="`account__choice-btn ${this.choice === 'AccountInfos' ? 'account__choice-btn--active' : ''}`"
             @click="this.choice = 'AccountInfos'" icon="settings" size="1.5rem"></q-btn>
