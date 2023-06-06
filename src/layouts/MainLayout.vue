@@ -9,21 +9,15 @@
     </q-header> -->
 
     <q-page-container>
-      <router-view />
+      <router-view :userWalletReload="userWalletReload" @clearUserWalletReload="this.userWalletReload = false"
+        :userLoginStreakReload="userLoginStreakReload" @clearUserLoginStreakReload="this.userLoginStreakReload = false" />
     </q-page-container>
 
-    <div class="daily-login__container fixed-full" @click="showDailyLoginProgress = false" v-if="showDailyLoginProgress"></div>
+    <div class="daily-login__container fixed-full" @click="showDailyLoginProgress = false" v-if="showDailyLoginProgress">
+    </div>
     <div class="daily-login__wrapper flex column items-center fixed" v-if="showDailyLoginProgress">
-      <q-btn
-        rounded
-        class="daily-login__close-btn absolute"
-        icon="close"
-        color="secondary"
-        text-color="white"
-        @click-prevent="showDailyLoginProgress = false"
-        size="13px"
-        @click="showDailyLoginProgress = false"
-      ></q-btn>
+      <q-btn rounded class="daily-login__close-btn absolute" icon="close" color="secondary" text-color="white"
+        @click-prevent="showDailyLoginProgress = false" size="13px" @click="showDailyLoginProgress = false"></q-btn>
       <div class="daily-login__token-count-container flex flex-center column text-white">
         <span class="daily-login_token-count text-center text-bold text-h6">{{ tokenGain }}</span>
         <q-icon name="fa fa-coins" size="md"></q-icon>
@@ -31,30 +25,33 @@
       <p class="text-h6 text-white q-mb-0">Récompense de connexion</p>
       <p class="text-white text-small q-mb-lg">Série de {{ loginStreak }} jours de connexion</p>
       <div class="daily-login__graph-container">
-        <q-linear-progress
-          color="secondary"
-          size="10px"
-          :value="dailyLoginLinearProgress"
-          rounded
-          track-color="white"
-          class="daily-login__graph"
-        >
+        <q-linear-progress color="secondary" size="10px" :value="dailyLoginLinearProgress" rounded track-color="white"
+          class="daily-login__graph">
         </q-linear-progress>
         <div class="daily-login__graph-steps-container">
           <div class=" flex items-center justify-between">
-            <span :class="`daily-login__graph-steps ${loginStreak >= 1 ? 'btn-secondary' : 'btn-white'} flex flex-center`">1</span>
-            <span :class="`daily-login__graph-steps ${loginStreak >= 7 ? 'btn-secondary' : 'btn-white'} flex flex-center`">7</span>
-            <span :class="`daily-login__graph-steps ${loginStreak >= 14 ? 'btn-secondary' : 'btn-white'} flex flex-center`">14</span>
-            <span :class="`daily-login__graph-steps ${loginStreak >= 30 ? 'btn-secondary' : 'btn-white'} flex flex-center`">30</span>
+            <span
+              :class="`daily-login__graph-steps ${loginStreak >= 1 ? 'btn-secondary' : 'btn-white'} flex flex-center`">1</span>
+            <span
+              :class="`daily-login__graph-steps ${loginStreak >= 7 ? 'btn-secondary' : 'btn-white'} flex flex-center`">7</span>
+            <span
+              :class="`daily-login__graph-steps ${loginStreak >= 14 ? 'btn-secondary' : 'btn-white'} flex flex-center`">14</span>
+            <span
+              :class="`daily-login__graph-steps ${loginStreak >= 30 ? 'btn-secondary' : 'btn-white'} flex flex-center`">30</span>
           </div>
           <div class="flex items-center justify-between daily-login__graph-steps-label-container">
-            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDay }} smiles/jour</span>
-            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter7Days }} smiles/jour</span>
-            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter14Days }} smiles/jour</span>
-            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter30Days }} smiles/{{ tokenGainFrequencyAfter30Days }} jours</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDay }}
+              smiles/jour</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter7Days }}
+              smiles/jour</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter14Days }}
+              smiles/jour</span>
+            <span class="daily-login__graph-steps-label text-white text-small q-mb-0">{{ tokenGainPerDayAfter30Days }}
+              smiles/{{ tokenGainFrequencyAfter30Days }} jours</span>
           </div>
         </div>
-        <div class="absolute flex flex-center daily-login__graph-progress-value" :style="`--daily-login-progress: ${dailyLoginLinearProgress}`">
+        <div class="absolute flex flex-center daily-login__graph-progress-value"
+          :style="`--daily-login-progress: ${dailyLoginLinearProgress}`">
           <q-badge color="secondary" text-color="white" :label="loginStreak" />
         </div>
       </div>
@@ -87,7 +84,9 @@ export default {
       tokenGainPerDayAfter7Days: DAILY_TOKEN_GAIN_AFTER_7_DAYS,
       tokenGainPerDayAfter14Days: DAILY_TOKEN_GAIN_AFTER_14_DAYS,
       tokenGainPerDayAfter30Days: DAILY_TOKEN_GAIN_AFTER_30_DAYS,
-      tokenGainFrequencyAfter30Days: DAILY_TOKEN_GAIN_FREQUENCY_AFTER_30_DAYS
+      tokenGainFrequencyAfter30Days: DAILY_TOKEN_GAIN_FREQUENCY_AFTER_30_DAYS,
+      userWalletReload: false,
+      userLoginStreakReload: false
     }
   },
   watch: {
@@ -102,6 +101,8 @@ export default {
   async created() {
     const dailyLoginData = await dailyLogin()
     if (dailyLoginData.loginStreak && dailyLoginData.tokenGain) {
+      this.userWalletReload = true
+      this.userLoginStreakReload = true
       this.tokenGain = dailyLoginData.tokenGain
       this.loginStreak = dailyLoginData.loginStreak
       this.showDailyLoginProgress = true
@@ -129,10 +130,13 @@ export default {
 <style lang="scss" scoped>
 .nav-bar {
   border-radius: 20px 20px 0 0;
+
   &-container {
     background-color: transparent;
+
     .q-tab {
       flex: 1 1 auto;
+
       &__label {
         font-size: 16px;
         font-weight: 300;
@@ -140,12 +144,14 @@ export default {
     }
   }
 }
+
 .daily-login {
   &__container {
     z-index: 100;
     display: flex;
     align-items: flex-end;
   }
+
   &__wrapper {
     z-index: 105;
     // position: relative;
@@ -156,12 +162,14 @@ export default {
     background: url('src/assets/daily-login-bg.png') no-repeat center top/cover;
     padding: 20px 30px 40px 30px;
   }
+
   &__close-btn {
     top: 10px;
     right: 15%;
     width: 34px;
     height: 34px;
   }
+
   &__token-count {
     &-container {
       padding: 10px;
@@ -171,21 +179,25 @@ export default {
       background: url('/src/assets/token-bg.svg') no-repeat center center/cover;
     }
   }
+
   &__graph {
     width: calc(100% - 30px);
     margin: auto;
     border-radius: 5000px;
+
     &-container {
       width: 100%;
       position: relative;
       // padding-bottom: 30px;
     }
+
     &-progress-value {
       position: absolute;
       left: calc(var(--daily-login-progress) * calc(100% - 30px) - 12.5px + 15px);
       top: -8px;
       width: 25px;
       height: 25px;
+
       .q-badge {
         width: 100%;
         height: 100%;
@@ -195,16 +207,19 @@ export default {
         font-weight: 500;
       }
     }
+
     &-steps {
       width: 30px;
       height: 30px;
       border-radius: 50%;
       border: 1px solid #fff;
+
       &-container {
         margin-top: -20px;
         z-index: 1;
         position: relative;
       }
+
       &-label {
         &-container {
           margin-top: 5px;

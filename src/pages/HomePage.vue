@@ -8,10 +8,17 @@
           </q-avatar>
           <div class="home__user-text">
             <div class="home__user-username text-bold">{{ formatting.maxStringLenght(user.username, 20) }}</div>
-            <div class="home__user-token-count text-bold text-secondary flex items-center">
-              <q-icon name="fa fa-coins"></q-icon>
-              <q-spinner-gears size="1.5rem" color="secondary" v-if="loadingWallet" />
-              <span v-else>{{ userWallet }}</span>
+            <div class="flex">
+              <div class="home__user-token-count text-bold text-secondary flex items-center q-mr-sm">
+                <q-icon name="fa fa-coins"></q-icon>
+                <q-spinner-gears size="1.5rem" color="secondary" v-if="loadingWallet" />
+                <span v-else>{{ userWallet }}</span>
+              </div>
+              <div class="home__user-login-streak-count text-bold text-secondary flex items-center">
+                <q-icon name="fa fa-fire-flame-curved"></q-icon>
+                <q-spinner-gears size="1.5rem" color="secondary" v-if="loadingLoginStreak" />
+                <span v-else>{{ user.loginStreak }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -31,7 +38,7 @@
 <script>
 import BetList from 'src/components/BetList.vue'
 import { /*Loading,*/ LocalStorage, Notify } from 'quasar'
-import { getUser } from 'src/services/userService'
+import { getMyLoginStreak, getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
 import { getHebdoBet } from 'src/services/betService'
@@ -43,13 +50,86 @@ export default {
   components: {
     BetList
   },
+  props: {
+    userWalletReload: {
+      type: Boolean,
+      required: false
+    },
+    userLoginStreakReload: {
+      type: Boolean,
+      required: false
+    }
+  },
   data() {
     return {
       user: null,
       userWallet: null,
       loadingWallet: true,
+      loadingLoginStreak: false,
       hebdoBet: null,
       formatting: formatting()
+    }
+  },
+  watch: {
+    userWalletReload() {
+      this.loadingWallet = true
+      getMyWallet()
+        .then((wallet) => {
+          this.userWallet = wallet
+          // Loading.hide()
+          this.loadingWallet = false
+        })
+        .catch((e) => {
+          Notify.create({
+            message: 'Une erreur est survenue',
+            color: 'negative',
+            icon: 'report_problem',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          // Loading.hide()
+          this.loadingWallet = false
+          throw new Error(e.message)
+        })
+      this.$emit('clearUserWalletReload')
+    },
+    userLoginStreakReload() {
+      this.loadingLoginStreak = true
+      getMyLoginStreak()
+        .then((loginStreak) => {
+          LocalStorage.set('user', {
+            ...this.user,
+            loginStreak: loginStreak
+          })
+          this.user.loginStreak = loginStreak
+          // Loading.hide()
+          this.loadingLoginStreak = false
+        })
+        .catch((e) => {
+          Notify.create({
+            message: 'Une erreur est survenue',
+            color: 'negative',
+            icon: 'report_problem',
+            position: 'top',
+            timeout: 3000,
+            actions: [
+              {
+                icon: 'close',
+                color: 'white'
+              }
+            ]
+          })
+          // Loading.hide()
+          this.loadingLoginStreak = false
+          throw new Error(e.message)
+        })
+      this.$emit('clearUserLoginStreakReload')
     }
   },
   created() {
@@ -83,6 +163,12 @@ export default {
           throw new Error(e.message)
         })
 
+      // if (this.reloadUserWallet) {
+      //   this.userWallet = this.userWalletProps
+      //   // Loading.hide()
+      //   this.loadingWallet = false
+      //   return this.$emit('clearUserWalletProp')
+      // }
       await getMyWallet()
         .then((wallet) => {
           this.userWallet = wallet
@@ -128,7 +214,7 @@ export default {
     //   width: 70px;
     //   height: 70px;
     // }
-    &-token-count {
+    &-token-count, &-login-streak-count {
       gap: 3px;
     }
   }

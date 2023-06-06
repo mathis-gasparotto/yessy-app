@@ -185,3 +185,8 @@ export async function getUserWinMultiplierByDoc(userDoc) {
     throw new Error('No such data!')
   }
 }
+export async function getMyLoginStreak() {
+  const ref = doc(db, 'users', auth.currentUser.uid)
+  const snap = await getDoc(ref)
+  return snap.data().loginStreak
+}
