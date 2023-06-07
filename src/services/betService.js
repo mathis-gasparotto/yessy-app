@@ -278,6 +278,7 @@ export async function getMyBets() {
   const ref = query(
     collection(db, 'simple_bets'),
     where('author', '==', doc(db, 'users', auth.currentUser.uid)),
+    where('disabled', '==', false),
     orderBy('createdAt', 'desc')
   )
   const snap = await getDocs(ref)
