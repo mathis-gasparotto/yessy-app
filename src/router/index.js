@@ -43,15 +43,15 @@ export default route(function (/*{ store, ssrContext }*/ { store }) {
         currentUser.getIdToken(true)
       }
     }
-    if (!currentUser && LocalStorage.has('user') && LocalStorage.has('token')) {
-      auth.verifyIdToken(LocalStorage.getItem('token'))
-        .then(() => {
-          isAuthenticated = true
-        })
-        .catch((error) => {
-          LocalStorage.remove('user')
-        })
-    }
+    // if (!currentUser && LocalStorage.has('user') && LocalStorage.has('token')) {
+    //   auth.verifyIdToken(LocalStorage.getItem('token'))
+    //     .then(() => {
+    //       isAuthenticated = true
+    //     })
+    //     .catch((error) => {
+    //       LocalStorage.remove('user')
+    //     })
+    // }
     let isAuthenticated = currentUser && LocalStorage.has('user')
     if (currentUser && !LocalStorage.has('user')) {
       auth.signOut()

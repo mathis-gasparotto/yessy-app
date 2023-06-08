@@ -16,6 +16,7 @@
 	},
 	"server": {
 		"androidScheme": "https",
-		"hostname": "yessy.app"
+		"hostname": "yessy.app",
+		"url": "http://192.168.1.50:9500"
 	}
 }
