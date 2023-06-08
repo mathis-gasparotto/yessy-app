@@ -325,7 +325,7 @@ export default {
       showTimeEndAt: false,
       rewards: [
         {
-          label: 'Jetons',
+          label: 'Smiles',
           value: 'tokens'
         },
         {
