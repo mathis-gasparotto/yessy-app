@@ -3,7 +3,7 @@
     <div class="sub-bg-dark absolute-full"></div>
     <q-page class="page scroll">
       <q-btn
-        class="absolute join-hebdo-bet__close-btn btn-secondary"
+        class="absolute define-winner-choice__close-btn btn-secondary"
         icon="close"
         rounded
         @click="$router.push({ name: 'single-bet', params: { id: bet.id } })"
