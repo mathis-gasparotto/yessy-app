@@ -179,7 +179,6 @@
           color="white"
           rounded
           @click.prevent="share(bet.id)"
-          :loading="deleteLoading"
           padding="xs"
           class="q-mb-md btn btn-secondary btn-bordered--thin single-bet__delete-btn"
           icon="share"
@@ -203,7 +202,7 @@
 </template>
 
 <script>
-import { Loading, Notify } from 'quasar'
+import { Dialog, Loading, Notify } from 'quasar'
 import { useRoute } from 'vue-router'
 import translate from '../../stores/translatting'
 import { auth } from 'src/boot/firebase'
@@ -368,41 +367,61 @@ export default {
         })
     },
     handleDeleteBet() {
-      this.deleteLoading = true
-      deleteBet(this.route.params.id)
-        .then(() => {
-          this.deleteLoading = false
-          this.$router.push({ name: 'public-bets' })
-          Notify.create({
-            message: 'Le pari a bien été supprimé',
-            color: 'positive',
-            icon: 'check_circle',
-            position: 'top',
-            timeout: 3000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
+      Dialog.create({
+        title: 'Annuler le pari',
+        message: 'Êtes-vous sûr de vouloir annuler ce pari ?',
+        // persistent: true,
+        ok: {
+          label: 'Annuler',
+          color: 'negative',
+          unelevated: true
+        },
+        cancel: {
+          label: 'Retour',
+          color: 'primary',
+          unelevated: true
+        }
+      })
+        .onOk( () => {
+          this.deleteLoading = true
+          deleteBet(this.route.params.id)
+            .then(() => {
+              this.deleteLoading = false
+              this.$router.push({ name: 'public-bets' })
+              Notify.create({
+                message: 'Le pari a bien été supprimé',
+                color: 'positive',
+                icon: 'check_circle',
+                position: 'top',
+                timeout: 3000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
+              })
+            })
+            .catch((err) => {
+              this.deleteLoading = false
+              console.log(err)
+              Notify.create({
+                message: translate().translateDeleteBetError(err),
+                color: 'negative',
+                icon: 'report_problem',
+                position: 'top',
+                timeout: 3000,
+                actions: [
+                  {
+                    icon: 'close',
+                    color: 'white'
+                  }
+                ]
+              })
+            })
         })
-        .catch((err) => {
-          this.deleteLoading = false
-          console.log(err)
-          Notify.create({
-            message: translate().translateDeleteBetError(err),
-            color: 'negative',
-            icon: 'report_problem',
-            position: 'top',
-            timeout: 3000,
-            actions: [
-              {
-                icon: 'close',
-                color: 'white'
-              }
-            ]
-          })
+        .onCancel(() => {
+          // this.deleteLoading = false
         })
     },
     leaveBet() {

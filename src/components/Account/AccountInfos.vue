@@ -396,7 +396,7 @@ export default {
       Dialog.create({
         title: 'Supprimer le compte',
         message: 'Êtes-vous sûr de vouloir supprimer votre compte ?',
-        persistent: true,
+        // persistent: true,
         ok: {
           label: 'Supprimer',
           color: 'negative',
