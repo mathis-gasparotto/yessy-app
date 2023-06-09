@@ -7,7 +7,8 @@
         outlined
         label="Intitulé du pari"
         autofocus
-        class="q-mb-md global-input bg-input-white"
+        class="q-mb-md global-input"
+        bg-color="white"
         type="text"
         v-model="form.label"
         lazy-rules
@@ -25,7 +26,8 @@
         rounded
         outlined
         :label="`Choix ${index + 1}`"
-        class="q-mb-md global-input bg-input-white"
+        class="q-mb-md global-input"
+        bg-color="white"
         type="text"
         v-model="choice.label"
         lazy-rules
@@ -52,7 +54,8 @@
         rounded
         outlined
         label="Description"
-        class="q-mb-md global-textarea bg-input-white"
+        class="q-mb-md global-textarea"
+        bg-color="white"
         type="textarea"
         v-model="form.description"
         lazy-rules
@@ -73,7 +76,8 @@
           if (newValue === rewards[1]) openWarningDialog()
         }"
         label="Récompense"
-        class="q-mb-md global-select bg-input-white"
+        class="q-mb-md global-select"
+        bg-color="white"
         lazy-rules
         :rules="[(val) => typeof val === 'object' || 'Veullez renseigner un type de récompense']"
         hide-bottom-space
@@ -88,7 +92,8 @@
         rounded
         outlined
         label="Mise en jeu"
-        class="q-mb-md global-input bg-input-white"
+        class="q-mb-md global-input"
+        bg-color="white"
         type="text"
         v-model="form.customCost"
         lazy-rules
@@ -105,7 +110,8 @@
         rounded
         outlined
         label="Récompense personnalisée"
-        class="q-mb-md global-input bg-input-white"
+        class="q-mb-md global-input"
+        bg-color="white"
         type="text"
         v-model="form.customReward"
         lazy-rules
@@ -136,7 +142,8 @@
           }
         ]"
         label="Date de début"
-        class="q-mb-md global-input q-mb-0 bg-input-white"
+        class="q-mb-md global-input q-mb-0"
+        bg-color="white"
         hide-bottom-space
         mask="datetime"
       >
@@ -218,7 +225,8 @@
           }
         ]"
         label="Date de fin"
-        class="q-mb-md global-input bg-input-white"
+        class="q-mb-md global-input"
+        bg-color="white"
         hide-bottom-space
       >
         <template v-slot:prepend>

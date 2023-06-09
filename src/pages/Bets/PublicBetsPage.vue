@@ -7,55 +7,30 @@
       </div>
       <div class="page-content">
         <div class="public-bets__search-container flex justify-center q-mb-lg">
-          <q-input
-            name="betIdToSearch"
-            rounded
-            outlined
-            label="Code unique du pari"
-            class="bg-input-white public-bets__search-input"
-            type="search"
-            v-model="betIdToSearch"
-            lazy-rules
-            :rules="[(val) => val.trim().length > 0 || 'Veullez renseigner ce champ']"
-            hide-bottom-space
-          >
-            <template v-slot:append>
-              <div class="public-bets__search-btn-container">
-                <q-btn
-                  rounded
-                  color="secondary"
-                  text-color="white"
-                  class="btn btn-secondary public-bets__search-btn"
-                  icon="search"
-                  @click="() => $router.push({ name: 'single-bet', params: { id: betIdToSearch } })"
-                ></q-btn>
-              </div>
-            </template>
-          </q-input>
+          <q-form class="public-bets__search-form form" ref="searchBetByIdForm">
+            <q-input name="betIdToSearch" rounded outlined label="Code unique du pari" class="public-bets__search-input"
+              type="search" v-model="betIdToSearch" bg-color="white" hide-bottom-space>
+              <template v-slot:append>
+                <div class="public-bets__search-btn-container">
+                  <q-btn rounded color="secondary" text-color="white" class="btn btn-secondary public-bets__search-btn"
+                    icon="search" type="submit"
+                    @click.prevent="handleSearchSubmit()"></q-btn>
+                </div>
+              </template>
+            </q-input>
+          </q-form>
         </div>
         <div class="public-bets__categories-container q-my-md">
-          <q-btn
-            v-for="category in betCategories"
-            :key="category.id"
-            rounded
-            :color="`${categoryId === category.id ? 'secondary' : 'primary'}`"
-            text-color="white"
+          <q-btn v-for="category in betCategories" :key="category.id" rounded
+            :color="`${categoryId === category.id ? 'secondary' : 'primary'}`" text-color="white"
             :class="`btn btn-${categoryId === category.id ? 'secondary' : 'primary'} public-bets__categories-btn`"
-            @click="categoryId === category.id ? categoryId = null : categoryId = category.id"
-            ><img :src="category.iconUrl" class="public-bets__categories-btn-icon" />
+            @click="categoryId === category.id ? categoryId = null : categoryId = category.id">
+            <img :src="category.iconUrl" class="public-bets__categories-btn-icon" />
           </q-btn>
         </div>
         <BetList class="bet-list-component" :categoryId="categoryId" />
-        <q-btn
-          class="public-bets__add-bet-btn q-mt-md q-ml-lg fixed"
-          label="Créer un pari"
-          color="secondary"
-          icon="add"
-          round
-          size="25px"
-          padding="0"
-          @click.prevent="() => $router.push({ name: 'add-bets' })"
-        />
+        <q-btn class="public-bets__add-bet-btn q-mt-md q-ml-lg fixed" label="Créer un pari" color="secondary" icon="add"
+          round size="25px" padding="0" @click.prevent="() => $router.push({ name: 'add-bets' })" />
       </div>
     </q-page>
   </div>
@@ -84,6 +59,9 @@ export default {
     this.reloadData()
   },
   methods: {
+    handleSearchSubmit () {
+      if (this.betIdToSearch.trim().length > 0) this.$router.push({ name: 'single-bet', params: { id: this.betIdToSearch } })
+    },
     async reloadData() {
       this.betCategories = await getBetCategories().catch((error) => {
         Notify.create({
@@ -112,8 +90,10 @@ export default {
     &-container {
       gap: 10px;
     }
+
     &-btn {
       height: 100%;
+
       &-container {
         height: 100%;
         margin-right: -13px;
@@ -121,6 +101,7 @@ export default {
       }
     }
   }
+
   &__categories {
     &-container {
       display: flex;
@@ -128,19 +109,23 @@ export default {
       gap: 5px;
       overflow-x: auto;
       height: 38px;
+
       &::-webkit-scrollbar {
         display: none;
       }
     }
+
     &-btn {
       width: 36px;
       height: 36px;
+
       &-icon {
         width: 20px;
         height: 20px;
       }
     }
   }
+
   &__top {
     &-container {
       width: 100%;
@@ -190,9 +175,11 @@ export default {
         flex-direction: column;
         justify-content: start;
         margin: 15px 0 0 -45px;
+
         i {
           margin: 0;
         }
+
         span {
           font-size: 12px;
           text-transform: initial;

@@ -51,7 +51,8 @@
               return date >= max || 'Veuillez renseigner votre vrai date de naissance'
             }
           ]"
-          class="account-input bg-input-white"
+          class="account-input"
+          bg-color="white"
           hide-bottom-space
         >
           <!-- <template v-slot:append>
@@ -116,7 +117,8 @@
           name="email"
           outlined
           autofocus
-          class="account-input bg-input-white"
+          class="account-input"
+          bg-color="white"
           type="email"
           v-model="forms.email.value"
           lazy-rules
@@ -168,7 +170,8 @@
           name="password"
           outlined
           label="Ancien mot de passe"
-          class="q-mb-md account-input bg-input-white"
+          class="q-mb-md account-input"
+          bg-color="white"
           :type="forms.password.showCurrentPassword ? 'text' : 'password'"
           v-model="forms.password.current"
           lazy-rules
@@ -189,7 +192,8 @@
           name="password"
           outlined
           label="Nouveau mot de passe"
-          class="q-mb-md account-input bg-input-white"
+          class="q-mb-md account-input"
+          bg-color="white"
           :type="forms.password.showNewPassword ? 'text' : 'password'"
           v-model="forms.password.new"
           lazy-rules
@@ -216,7 +220,8 @@
           name="confirmPassword"
           outlined
           label="Confirmation du nouveau mot de passe"
-          class="q-mb-md account-input bg-input-white"
+          class="q-mb-md account-input"
+          bg-color="white"
           :type="forms.password.showConfirmPassword ? 'text' : 'password'"
           v-model="forms.password.confirm"
           lazy-rules

@@ -10,7 +10,8 @@
         outlined
         label="Nom d'utilisateur*"
         autofocus
-        class="q-mb-md signup-input bg-input-white"
+        class="q-mb-md signup-input"
+        bg-color="white"
         type="text"
         v-model="form.username"
         lazy-rules
@@ -49,7 +50,8 @@
           }
         ]"
         label="Date d'anniversaire*"
-        class="q-mb-md signup-input bg-input-white"
+        class="q-mb-md signup-input"
+        bg-color="white"
         hide-bottom-space
       >
         <!-- <template v-slot:append>
@@ -76,7 +78,8 @@
         rounded
         outlined
         label="Addresse email*"
-        class="q-mb-md signup-input bg-input-white"
+        class="q-mb-md signup-input"
+        bg-color="white"
         type="email"
         v-model="form.email"
         lazy-rules
@@ -91,7 +94,8 @@
         rounded
         outlined
         label="Mot de passe*"
-        class="q-mb-md signup-input bg-input-white"
+        class="q-mb-md signup-input"
+        bg-color="white"
         :type="showPassword ? 'text' : 'password'"
         v-model="form.password"
         lazy-rules
@@ -119,7 +123,8 @@
         rounded
         outlined
         label="Confirmation du mot de passe*"
-        class="q-mb-md signup-input bg-input-white"
+        class="q-mb-md signup-input"
+        bg-color="white"
         :type="showConfirmPassword ? 'text' : 'password'"
         v-model="form.confirmPassword"
         lazy-rules
@@ -144,7 +149,8 @@
         rounded
         outlined
         label="Code de parrainage"
-        class="q-mb-md signup-input bg-input-white"
+        class="q-mb-md signup-input"
+        bg-color="white"
         type="text"
         v-model="form.referralCode"
         hide-bottom-space
