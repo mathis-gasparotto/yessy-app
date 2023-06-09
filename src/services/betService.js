@@ -112,7 +112,7 @@ export async function getBetWithoutAuthor(id) {
 export async function getBet(id) {
   const ref = doc(db, 'simple_bets', id)
   const snap = await getDoc(ref)
-  if (snap.exists()) {
+  if (snap.exists() && snap.data().disabled === false) {
     const author = await getUserByDoc(snap.data().author).catch(() => {
       return {
         username: 'Utilisateur supprimé',
