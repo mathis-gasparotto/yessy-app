@@ -240,7 +240,8 @@ export default {
       defaultAvatarUrl: process.env.DEFAULT_AVATAR_URL,
       myTokenParticipation: null,
       myChoice: null,
-      updatePrivacyLoading: false
+      updatePrivacyLoading: false,
+      leaveLoading: false
     }
   },
   created() {
