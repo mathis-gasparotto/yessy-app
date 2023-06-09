@@ -29,3 +29,4 @@ yarn-error.log*
 *.sln
 
 .env.local
+.env
