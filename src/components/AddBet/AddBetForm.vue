@@ -69,6 +69,9 @@
         name="reward"
         v-model="form.reward"
         :options="rewards"
+        @update:model-value="(newValue) => {
+          if (newValue === rewards[1]) openWarningDialog()
+        }"
         label="Récompense"
         class="q-mb-md global-select bg-input-white"
         lazy-rules
@@ -284,7 +287,7 @@
 </template>
 
 <script>
-import { Notify } from 'quasar'
+import { Dialog, Notify } from 'quasar'
 
 // import createFormat from '../../stores/formatting'
 
@@ -344,6 +347,13 @@ export default {
     }
   },
   methods: {
+    openWarningDialog() {
+      Dialog.create({
+        title: 'Attention',
+        message: 'Nous vous rappelons que les paris d\'argent sont strictement interdits sur cette application',
+        // persistent: true,
+      })
+    },
     getChoiceIconName(index) {
       switch (index) {
         case 0:
