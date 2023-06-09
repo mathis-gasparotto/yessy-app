@@ -42,7 +42,8 @@
               rounded
               outlined
               label="Smiles à mettre en jeu"
-              class="q-mb-lg global-input bg-input-white"
+              class="q-mb-lg global-input"
+              bg-color="white"
               mask="#"
               type="number"
               reverse-fill-mask
