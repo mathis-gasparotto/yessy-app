@@ -52,7 +52,7 @@
         </div>
         <div class="absolute flex flex-center daily-login__graph-progress-value"
           :style="`--daily-login-progress: ${dailyLoginLinearProgress}`">
-          <q-badge color="secondary" text-color="white" :label="loginStreak" />
+          <q-badge color="secondary" text-color="white" :label="loginStreak" class="flex flex-center" />
         </div>
       </div>
     </div>
