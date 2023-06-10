@@ -61,7 +61,7 @@ export default {
         setTimeout(() => {
           this.betList = response
           this.loadingBets = false
-        }, 700)
+        }, 1000)
       }).catch((e) => {
         console.error(e)
         Notify.create({

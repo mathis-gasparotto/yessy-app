@@ -40,7 +40,7 @@ export default {
           setTimeout(() => {
             this.bets = bets
             this.loadingBets = false
-          }, 700)
+          }, 1000)
         })
         .catch((e) => {
           if (e.message !== 'No such data!') {
