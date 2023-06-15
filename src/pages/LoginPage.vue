@@ -151,7 +151,7 @@ export default {
               })
             })
         } else {
-          console.log('error')
+          // console.log('error')
           this.loading = false
         }
       })
@@ -163,5 +163,8 @@ export default {
 <style lang="scss" scoped>
 .page {
   color: white;
+}
+.bg-primary .q-card {
+  background: none;
 }
 </style>
