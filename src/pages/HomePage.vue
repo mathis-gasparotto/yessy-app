@@ -42,7 +42,7 @@ import { getMyLoginStreak, getUser } from 'src/services/userService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
 import { getHebdoBet } from 'src/services/betService'
-import formatting from 'src/stores/formatting'
+import formatting from 'src/services/formatting'
 
 
 export default {

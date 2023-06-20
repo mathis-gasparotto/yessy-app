@@ -22,7 +22,7 @@
 
 <script>
 import { getBetCategories } from 'src/services/categoryService'
-import createFormat from '../../stores/formatting'
+import createFormat from '../../services/formatting'
 import { Loading, Notify } from 'quasar'
 
 export default {

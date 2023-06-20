@@ -71,7 +71,7 @@
 
 <script>
 import { dailyLogin } from 'src/services/dailyLoginService'
-import { DAILY_TOKEN_GAIN, DAILY_TOKEN_GAIN_AFTER_7_DAYS, DAILY_TOKEN_GAIN_AFTER_14_DAYS, DAILY_TOKEN_GAIN_AFTER_30_DAYS, DAILY_TOKEN_GAIN_FREQUENCY_AFTER_30_DAYS } from 'src/stores/constants'
+import { DAILY_TOKEN_GAIN, DAILY_TOKEN_GAIN_AFTER_7_DAYS, DAILY_TOKEN_GAIN_AFTER_14_DAYS, DAILY_TOKEN_GAIN_AFTER_30_DAYS, DAILY_TOKEN_GAIN_FREQUENCY_AFTER_30_DAYS } from 'src/helpers/dailyRewardHelper'
 
 export default {
   name: 'MainLayout',

@@ -59,7 +59,7 @@ import { useRoute } from 'vue-router'
 import translate from '../../stores/translatting'
 import { getBetWithoutAuthor, setWinnerChoice } from 'src/services/betService'
 import { getBetChoices } from 'src/services/choiceService'
-import format from '../../stores/formatting'
+import format from '../../services/formatting'
 
 export default {
   setup() {

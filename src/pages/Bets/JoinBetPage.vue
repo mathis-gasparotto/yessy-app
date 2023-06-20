@@ -87,7 +87,7 @@ import translate from '../../stores/translatting'
 import { getMyParticipation, participate, updateParticipation } from 'src/services/participationService'
 import { getBetWithoutAuthor } from 'src/services/betService'
 import { getBetChoices } from 'src/services/choiceService'
-import format from '../../stores/formatting'
+import format from '../../services/formatting'
 
 export default {
   setup() {

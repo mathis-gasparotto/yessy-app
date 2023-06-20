@@ -75,7 +75,7 @@
 
 <script>
 import { Loading, Notify } from 'quasar'
-import createFormat from '../stores/formatting'
+import createFormat from '../services/formatting'
 import translate from '../stores/translatting'
 import {
   // AuthCredential,
@@ -92,7 +92,7 @@ import { logout } from 'src/services/authService'
 import { auth } from 'src/boot/firebase'
 import { getMyWallet } from 'src/services/tokenTransactionService'
 import { Clipboard } from '@capacitor/clipboard'
-import formatting from '../stores/formatting'
+import formatting from '../services/formatting'
 // import { Plugins } from '@capacitor/core'
 
 // const { Clipboard } = Plugins

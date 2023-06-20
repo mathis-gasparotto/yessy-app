@@ -214,7 +214,7 @@ import {
 } from 'src/services/participationService'
 import { deleteBet, getBet, updateBetPrivacy } from 'src/services/betService'
 import { getMyChoiceByBetId } from 'src/services/choiceService'
-import formatting from 'src/stores/formatting'
+import formatting from 'src/services/formatting'
 import { Share } from '@capacitor/share'
 import { Clipboard } from '@capacitor/clipboard'
 // import { Plugins } from '@capacitor/core'

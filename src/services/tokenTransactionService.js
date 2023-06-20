@@ -1,6 +1,6 @@
 import { app, auth } from 'src/boot/firebase'
 import { doc, query, collection, getDocs, where, addDoc, getFirestore, deleteDoc, updateDoc } from 'firebase/firestore'
-import { SPONSORSHIP_TOKEN_GAIN, SPONSORSHIP_TOKEN_GAIN_NEW_USER } from 'src/stores/constants'
+import { SPONSORSHIP_TOKEN_GAIN, SPONSORSHIP_TOKEN_GAIN_NEW_USER } from 'src/helpers/signupHelper'
 
 const db = getFirestore(app)
 

@@ -297,7 +297,7 @@
 <script>
 import { Dialog, Notify } from 'quasar'
 
-// import createFormat from '../../stores/formatting'
+// import createFormat from '../../services/formatting'
 
 export default {
   name: 'AddBetForm',

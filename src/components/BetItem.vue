@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import formatting from 'src/stores/formatting'
+import formatting from 'src/services/formatting'
 
 export default {
   name: 'BetItem',

@@ -7,7 +7,7 @@ import {
   DAILY_TOKEN_GAIN_AFTER_30_DAYS,
   DAILY_TOKEN_GAIN_AFTER_7_DAYS,
   DAILY_TOKEN_GAIN_FREQUENCY_AFTER_30_DAYS
-} from 'src/stores/constants'
+} from 'src/helpers/dailyRewardHelper'
 import { LocalStorage } from 'quasar'
 // import { getCurrentUser } from 'src/boot/firebase'
 

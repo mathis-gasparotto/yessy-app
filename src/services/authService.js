@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth'
 import { collection, query, where, getDocs, getFirestore, deleteDoc, doc } from 'firebase/firestore'
 import { app, auth } from 'src/boot/firebase'
-import createFormat from '../stores/formatting'
+import createFormat from '../services/formatting'
 import { LocalStorage } from 'quasar'
 import { addUser, getUser } from './userService'
 import { referralCodeInputedOnSignUp } from './tokenTransactionService'

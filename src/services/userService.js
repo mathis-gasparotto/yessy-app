@@ -4,7 +4,7 @@ import { deleteUser } from 'firebase/auth'
 import { deleteMyParticipations } from './participationService'
 import { addTokenTransaction } from './tokenTransactionService'
 import { LocalStorage, uid } from 'quasar'
-import { DEFAULT_TOKEN_AMOUNT } from 'src/stores/constants'
+import { DEFAULT_TOKEN_AMOUNT } from 'src/helpers/signupHelper'
 
 const db = getFirestore(app)
 

@@ -316,7 +316,7 @@ import {
 } from 'firebase/auth'
 import { deleteUserData, getUser, updateUser, updateUserData } from 'src/services/userService'
 import { logout } from 'src/services/authService'
-import formatting from '../../stores/formatting'
+import formatting from '../../services/formatting'
 
 export default {
   setup () {
