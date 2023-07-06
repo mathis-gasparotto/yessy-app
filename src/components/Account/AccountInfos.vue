@@ -305,7 +305,7 @@
 <script>
 import { Dialog, Loading, Notify } from 'quasar'
 import { auth } from 'src/boot/firebase'
-import translate from '../../stores/translatting'
+import translate from '../../services/translatting'
 import {
   // AuthCredential,
   signInWithEmailAndPassword,

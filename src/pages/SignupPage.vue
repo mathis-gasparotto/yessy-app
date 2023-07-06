@@ -193,7 +193,7 @@
 <script>
 // import { cp } from "fs"
 import { signup } from 'src/services/authService'
-import translate from '../stores/translatting'
+import translate from '../services/translatting'
 import { Notify, openURL } from 'quasar'
 
 export default {

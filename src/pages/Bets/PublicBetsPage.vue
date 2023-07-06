@@ -40,7 +40,7 @@
 import { Notify } from 'quasar'
 import BetList from 'src/components/BetList.vue'
 import { getBetCategories } from 'src/services/categoryService'
-import translate from 'src/stores/translatting'
+import translate from 'src/services/translatting'
 
 export default {
   name: 'PublicBetsPage',

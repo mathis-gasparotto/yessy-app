@@ -56,7 +56,7 @@
 <script>
 import { Loading, Notify } from 'quasar'
 import { useRoute } from 'vue-router'
-import translate from '../../stores/translatting'
+import translate from '../../services/translatting'
 import { getBetWithoutAuthor, setWinnerChoice } from 'src/services/betService'
 import { getBetChoices } from 'src/services/choiceService'
 import format from '../../services/formatting'

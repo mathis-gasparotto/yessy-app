@@ -76,7 +76,7 @@
 <script>
 import { Loading, Notify } from 'quasar'
 import createFormat from '../services/formatting'
-import translate from '../stores/translatting'
+import translate from '../services/translatting'
 import {
   // AuthCredential,
   getAuth,

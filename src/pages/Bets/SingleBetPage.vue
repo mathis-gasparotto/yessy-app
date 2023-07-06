@@ -204,7 +204,7 @@
 <script>
 import { Dialog, Loading, Notify } from 'quasar'
 import { useRoute } from 'vue-router'
-import translate from '../../stores/translatting'
+import translate from '../../services/translatting'
 import { auth } from 'src/boot/firebase'
 import {
   deleteParticipation,
