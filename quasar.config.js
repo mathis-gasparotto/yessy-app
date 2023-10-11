@@ -12,6 +12,9 @@ const { configure } = require('quasar/wrappers')
 
 module.exports = configure(function (/* ctx */) {
   return {
+    bin: {
+      windowsAndroidStudio: 'D:\\Program Files\\JetBrains\\Toolbox\\Android Studio\\bin\\studio64.exe'
+    },
     eslint: {
       // fix: true,
       // include = [],

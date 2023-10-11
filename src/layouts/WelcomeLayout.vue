@@ -60,9 +60,6 @@ export default {
       siteUrl: process.env.SITE_URL
     }
   },
-  created() {
-    console.log()
-  },
   methods: {
     openURL(url) {
       openURL(url)
