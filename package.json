@@ -16,7 +16,7 @@
     "@capacitor/share": "^5.0.2",
     "@ionic/pwa-elements": "^3.1.1",
     "@quasar/extras": "^1.16.7",
-    "firebase": "^9.22.0",
+    "firebase": "^10.14.1",
     "pinia": "^2.0.33",
     "quasar": "^2.12.7",
     "vue": "^3.3.4",
